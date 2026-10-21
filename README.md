@@ -194,15 +194,7 @@ All authenticated application requests are centralized in [`src/js/services/api.
 The application is configured through environment variables in [`.env`](file:///c:/Users/pasan/OneDrive/Desktop/Intellistrata/community_portal/.env):
 
 ```bash
-# Set to 'false' for live Supabase Auth, 'true' for local standalone mock mode
-VITE_USE_MOCK_API=false
 
-# Internal Backend API Base URL
-VITE_API_BASE_URL=http://localhost:3000
-
-# Supabase Project Configuration
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-publishable-key
 ```
 
 ---
