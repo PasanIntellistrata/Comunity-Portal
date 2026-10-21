@@ -459,7 +459,7 @@ export const SupabaseAuth = {
             if (errBody?.msg && (errBody.msg.includes('not enabled') || errBody.msg.includes('Unsupported provider'))) {
               return {
                 success: false,
-                error: `Microsoft (Azure) sign-in is not yet enabled in your Supabase project (qttjnrsbbsucfbbxugeu). Please go to Supabase Dashboard -> Authentication -> Providers -> Azure and enable it with your Microsoft Entra App Client ID & Secret.`,
+                error: `Microsoft (Azure) sign-in is not yet enabled in your Supabase project. Please go to Supabase Dashboard -> Authentication -> Providers -> Azure and enable it with your Microsoft Entra App Client ID & Secret.`,
               };
             }
             if (errBody?.msg) {

@@ -130,7 +130,7 @@ Frontend (Community Portal)  ──[ Supabase JWT Token ]──>  Intellistrata 
 
 ### 3.2 Supabase Auth Schema (`auth.users`)
 
-The portal connects directly to Supabase Auth (`https://qttjnrsbbsucfbbxugeu.supabase.co`):
+The portal connects directly to Supabase Auth (`https://<your-supabase-project-ref>.supabase.co`):
 - User accounts are stored in Supabase's managed `auth.users` table.
 - Extended profile details (`full_name`, `role`, `unit`, `avatar_url`) are stored in `raw_user_meta_data`.
 - OAuth identities are tracked in `auth.identities`.
@@ -165,7 +165,7 @@ All authenticated application requests are centralized in [`src/js/services/api.
   Authorization: Bearer <supabase_access_token>
   ```
 - **Backend Verification**: The backend verifies the token signature against Supabase JWKS:
-  `https://qttjnrsbbsucfbbxugeu.supabase.co/auth/v1/.well-known/jwks.json`
+  `https://<your-supabase-project-ref>.supabase.co/auth/v1/.well-known/jwks.json`
 - **Identity Resolution**: The backend maps the JWT claim `sub` (User UUID) and `email` to its internal resident and property lot databases.
 
 ---
@@ -201,8 +201,8 @@ VITE_USE_MOCK_API=false
 VITE_API_BASE_URL=http://localhost:3000
 
 # Supabase Project Configuration
-VITE_SUPABASE_URL=https://qttjnrsbbsucfbbxugeu.supabase.co
-VITE_SUPABASE_ANON_KEY=sb_publishable_il-MiYy0sjFxDWjn5ICqUg_tG9_Lv_8
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-publishable-key
 ```
 
 ---
@@ -222,7 +222,7 @@ npm run build
 ```
 
 ### Seed Development Test Users
-1. Open [Supabase Dashboard SQL Editor](https://supabase.com/dashboard/project/qttjnrsbbsucfbbxugeu).
+1. Open [Supabase Dashboard SQL Editor](https://supabase.com/dashboard/project).
 2. Paste and run the contents of [`supabase/seed/seed_dummy_users.sql`](file:///c:/Users/pasan/OneDrive/Desktop/Intellistrata/community_portal/supabase/seed/seed_dummy_users.sql).
 3. Test logging in with:
    - Email: `resident.owner@intellistrata.test`
