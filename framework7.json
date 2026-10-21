@@ -1,0 +1,18 @@
+{
+  "cwd": "C:\\Users\\pasan\\OneDrive\\Desktop\\Intellistrata\\community_portal",
+  "type": [
+    "web"
+  ],
+  "name": "Community Portal",
+  "framework": "react",
+  "template": "tabs",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": false,
+    "color": "#007aff",
+    "darkMode": false,
+    "iconFonts": true
+  },
+  "customBuild": false
+}

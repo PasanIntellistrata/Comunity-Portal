@@ -1,0 +1,604 @@
+/* ==========================================================================
+   Mobile-First Sidebar Navigation Styles — Modern Enterprise Drawer (<= 900px)
+   ========================================================================== */
+
+/* ── Hide mobile-only sidebar elements on desktop screens (> 900px) ── */
+@media (min-width: 901px) {
+
+  .mobile-sidebar-close-btn,
+  .mobile-sidebar-property-badge,
+  .mobile-sidebar-user-card,
+  .mobile-sidebar-section-header,
+  .mobile-sidebar-bottom-meta,
+  .invoice-nav-active-pill,
+  .invoice-sidebar-mobile-tag,
+  .mobile-sidebar-footer-icon-wrap,
+  .invoice-nav-child-active-dot {
+    display: none !important;
+  }
+
+  .mobile-sidebar-section {
+    display: contents !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE DRAWER NAVIGATION (<= 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+
+  /* Overlay Backdrop with Glassmorphism */
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(11, 19, 34, 0.65) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    z-index: 998 !important;
+    animation: mobileSidebarFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+
+  @keyframes mobileSidebarFadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Mobile Drawer Container */
+  .invoice-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: min(320px, 86vw) !important;
+    height: 100dvh !important;
+    background: linear-gradient(180deg, #0b1322 0%, #0f1c30 50%, #0a1320 100%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0 12px 12px 0 !important;
+    box-shadow: 16px 0 45px rgba(0, 0, 0, 0.5) !important;
+    z-index: 999 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom)) 14px !important;
+    box-sizing: border-box !important;
+    will-change: transform !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .invoice-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  /* ── 1. Mobile Drawer Header & Logo Row ── */
+  .invoice-sidebar-logo-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 4px 6px 12px 6px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .invoice-sidebar-logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 0 !important;
+    border: none !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+  }
+
+  .invoice-sidebar-logo-icon-wrap {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    background: rgba(13, 148, 136, 0.14) !important;
+    border: 1.5px solid rgba(13, 148, 136, 0.35) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .invoice-sidebar-logo-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .invoice-sidebar-brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .invoice-sidebar-logo-name {
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.2 !important;
+  }
+
+  .invoice-sidebar-mobile-tag {
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    color: #0d9488 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Close (X) Button */
+  .mobile-sidebar-close-btn {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    flex-shrink: 0 !important;
+    padding: 0 !important;
+  }
+
+  .mobile-sidebar-close-btn:active {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+    color: #ef4444 !important;
+    transform: scale(0.95) !important;
+  }
+
+  /* ── 2. Context / Property & Lot Mini-Badge ── */
+  .mobile-sidebar-property-badge {
+    margin: 12px 2px 10px 2px !important;
+    padding: 9px 12px !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-sidebar-prop-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #0d9488 !important;
+    color: #0d9488 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-sidebar-prop-info {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+  }
+
+  .mobile-sidebar-prop-name {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #f1f5f9 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.25 !important;
+  }
+
+  .mobile-sidebar-prop-unit {
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .mobile-sidebar-prop-unit strong {
+    color: #2dd4bf !important;
+    font-weight: 600 !important;
+  }
+
+  /* ── 3. User Profile Mini-Card ── */
+  .mobile-sidebar-user-card {
+    margin: 0 2px 14px 2px !important;
+    padding: 9px 12px !important;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.16) 0%, rgba(15, 23, 42, 0.4) 100%) !important;
+    border: 1px solid rgba(13, 148, 136, 0.28) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-sidebar-user-card:active {
+    background: rgba(13, 148, 136, 0.25) !important;
+    border-color: rgba(13, 148, 136, 0.45) !important;
+    transform: scale(0.99) !important;
+  }
+
+  .mobile-sidebar-user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 9px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #0d9488 !important;
+    color: #0d9488 !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .mobile-sidebar-user-meta {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-sidebar-user-name {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.25 !important;
+  }
+
+  .mobile-sidebar-user-sub {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-size: 11px !important;
+    color: #94a3b8 !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-sidebar-user-role {
+    color: #cbd5e1 !important;
+    font-weight: 500 !important;
+  }
+
+  .mobile-sidebar-user-dot {
+    color: #64748b !important;
+    font-size: 9px !important;
+  }
+
+  .mobile-sidebar-user-unit {
+    color: #2dd4bf !important;
+    font-weight: 600 !important;
+  }
+
+  .mobile-sidebar-user-chevron {
+    color: rgba(255, 255, 255, 0.4) !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── 4. Navigation Section Headers & Items ── */
+  .invoice-sidebar-nav {
+    flex: 1 !important;
+    padding: 4px 2px !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  .invoice-sidebar-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mobile-sidebar-section {
+    margin-bottom: 12px !important;
+  }
+
+  .mobile-sidebar-section-header {
+    display: block !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #64748b !important;
+    padding: 6px 10px 4px 10px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .invoice-nav-item {
+    margin-bottom: 3px !important;
+  }
+
+  /* Nav Links on Mobile */
+  .invoice-nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    padding: 9px 12px !important;
+    border-radius: 12px !important;
+    border: 1px solid transparent !important;
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    width: 100% !important;
+    text-align: left !important;
+    box-sizing: border-box !important;
+    user-select: none !important;
+    min-height: 44px !important;
+  }
+
+  .invoice-nav-link:active {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Active Nav Link */
+  .invoice-nav-link.active {
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.22) 0%, rgba(13, 148, 136, 0.07) 100%) !important;
+    border: 1px solid rgba(13, 148, 136, 0.35) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+  }
+
+  /* Nav Icon Containers — following strict white-bg & colored-border rule */
+  .invoice-nav-icon {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 9px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    transition: all 0.16s ease !important;
+  }
+
+  .invoice-nav-link:active .invoice-nav-icon {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+  }
+
+  /* STRICT RULE: When active, icon has white background and colored border */
+  .invoice-nav-link.active .invoice-nav-icon {
+    background: #ffffff !important;
+    border: 1.5px solid #0d9488 !important;
+    color: #0d9488 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+  }
+
+  .invoice-nav-label {
+    flex: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .invoice-nav-chevron {
+    margin-left: auto !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: transform 0.2s ease !important;
+    flex-shrink: 0 !important;
+  }
+
+  .invoice-nav-link.expanded .invoice-nav-chevron {
+    transform: rotate(180deg) !important;
+    color: #0d9488 !important;
+  }
+
+  .invoice-nav-active-pill {
+    display: block !important;
+    width: 5px !important;
+    height: 16px !important;
+    border-radius: 9999px !important;
+    background: #0d9488 !important;
+    margin-left: auto !important;
+    box-shadow: 0 0 8px rgba(13, 148, 136, 0.6) !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── 5. Children Accordion / Nested Items ── */
+  .invoice-nav-children {
+    padding: 3px 0 4px 18px !important;
+    margin-left: 15px !important;
+    border-left: 2px solid rgba(13, 148, 136, 0.3) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    animation: mobileChildrenFade 0.18s ease forwards !important;
+  }
+
+  @keyframes mobileChildrenFade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .invoice-nav-child-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    border-radius: 9px !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    width: 100% !important;
+    text-align: left !important;
+    transition: all 0.15s ease !important;
+    box-sizing: border-box !important;
+    min-height: 38px !important;
+  }
+
+  .invoice-nav-child-link:active {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .invoice-nav-child-bullet {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    flex-shrink: 0 !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .invoice-nav-child-text {
+    flex: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .invoice-nav-child-link.active {
+    background: rgba(13, 148, 136, 0.18) !important;
+    border-color: rgba(13, 148, 136, 0.35) !important;
+    color: #2dd4bf !important;
+    font-weight: 700 !important;
+  }
+
+  .invoice-nav-child-link.active .invoice-nav-child-bullet {
+    background: #0d9488 !important;
+    box-shadow: 0 0 6px rgba(13, 148, 136, 0.8) !important;
+    transform: scale(1.2) !important;
+  }
+
+  .invoice-nav-child-active-dot {
+    display: block !important;
+    width: 4px !important;
+    height: 4px !important;
+    border-radius: 50% !important;
+    background: #2dd4bf !important;
+    margin-left: auto !important;
+  }
+
+  /* ── 6. Mobile Drawer Footer ── */
+  .invoice-sidebar-footer {
+    padding: 12px 6px 4px 6px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .invoice-sidebar-help-link,
+  .invoice-sidebar-logout-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 10px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    width: 100% !important;
+    text-align: left !important;
+    transition: all 0.15s ease !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    min-height: 40px !important;
+  }
+
+  .mobile-sidebar-footer-icon-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-sidebar-footer-icon-wrap.logout {
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #f87171 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+  }
+
+  .invoice-sidebar-help-link:active {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+  }
+
+  .invoice-sidebar-logout-link {
+    color: #f87171 !important;
+  }
+
+  .invoice-sidebar-logout-link:active {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+  }
+
+  /* Bottom status meta */
+  .mobile-sidebar-bottom-meta {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 4px 2px 4px !important;
+    margin-top: 4px !important;
+  }
+
+  .mobile-sidebar-system-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+  }
+
+  .mobile-sidebar-status-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: #10b981 !important;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6) !important;
+  }
+
+  .mobile-sidebar-version {
+    font-size: 9.5px !important;
+    color: #64748b !important;
+    font-weight: 500 !important;
+    font-family: ui-monospace, SFMono-Regular, monospace !important;
+  }
+}

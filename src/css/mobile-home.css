@@ -1,0 +1,1649 @@
+/* ==========================================================================
+   Mobile-First Home UI Styles — Modern Enterprise-Level Experience (<= 900px)
+   ========================================================================== */
+
+/* Hide mobile experience on desktop screens */
+@media (min-width: 901px) {
+  .home-mobile-view {
+    display: none !important;
+  }
+}
+
+/* Hide desktop elements on mobile screens */
+@media (max-width: 900px) {
+  .home-desktop-view {
+    display: none !important;
+  }
+  .home-mobile-view {
+    display: block !important;
+  }
+  .home-main-area .app-navbar-property-wrap,
+  .home-page .app-navbar-property-wrap {
+    display: none !important;
+  }
+  .home-content-area {
+    padding: 0 !important;
+  }
+  body:has(.mobile-home-sheet-overlay) .floating-action-buttons,
+  body:has(.mobile-home-sheet-overlay) .home-fab-group {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE HOME VIEW WRAPPER & BASE
+   ========================================================================== */
+.home-mobile-view {
+  width: 100%;
+  min-height: 100%;
+  background: var(--color-slate-50, #f8fafc);
+  padding: 12px 14px 96px;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Button Reset inside Mobile Home to prevent Framework7 100% full-width overrides */
+.home-mobile-view button {
+  width: auto;
+  max-width: initial;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. ENTERPRISE MOBILE HEADER & IDENTITY HERO
+   ========================================================================== */
+.mobile-home-hero {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.mobile-home-hero-accent {
+  height: 4px;
+  background: linear-gradient(90deg, #0d9488 0%, #06b6d4 35%, #3b82f6 70%, #6366f1 100%);
+}
+
+.mobile-home-hero-body {
+  padding: 14px 14px 12px;
+}
+
+/* Top Meta Row: Crest, Scheme Name, Status */
+.mobile-home-identity-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mobile-home-crest-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1.5px solid #0284c7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.08);
+}
+
+.mobile-home-crest-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-home-crest-text {
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #0284c7;
+  letter-spacing: 0.06em;
+  margin-top: -2px;
+}
+
+.mobile-home-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  flex-wrap: wrap;
+}
+
+.mobile-home-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.mobile-home-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.mobile-home-plan-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(13, 148, 136, 0.08);
+  color: var(--color-primary, #0d9488);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+.mobile-home-scheme-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0 0 3px;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-home-address-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: var(--color-slate-500, #64748b);
+  line-height: 1.3;
+}
+
+.mobile-home-address-row svg {
+  color: var(--color-primary, #0d9488);
+  flex-shrink: 0;
+}
+
+.mobile-home-address-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Quick Lot & Scheme Switcher Strip */
+.mobile-home-switcher-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-slate-100, #f1f5f9);
+}
+
+.mobile-home-display-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11.5px;
+  color: var(--color-slate-700, #334155);
+  flex: 1;
+  min-width: 0;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.mobile-home-display-pill.interactive:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.mobile-home-display-pill.interactive:active {
+  background: #e2e8f0;
+  transform: translateY(0);
+}
+
+.mobile-home-display-icon {
+  color: var(--color-primary, #0d9488);
+  flex-shrink: 0;
+}
+
+.mobile-home-display-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-slate-500, #64748b);
+  flex-shrink: 0;
+}
+
+.mobile-home-display-val {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-900, #0f172a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-display-chevron {
+  color: var(--color-slate-400, #94a3b8);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.mobile-home-lot-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-lot-pill:active {
+  background: #ffffff;
+  border-color: var(--color-primary, #0d9488);
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-lot-pill-icon {
+  color: var(--color-primary, #0d9488);
+  flex-shrink: 0;
+}
+
+.mobile-home-lot-pill-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.mobile-home-lot-pill-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  color: var(--color-slate-600, #475569);
+  flex-shrink: 0;
+}
+
+.mobile-home-lot-edit-icon {
+  color: var(--color-slate-400, #94a3b8);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   2. EXECUTIVE KPI SNAP CARDS (HORIZONTAL SCROLL)
+   ========================================================================== */
+.mobile-home-kpi-scroll {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-home-kpi-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-home-kpi-card {
+  flex: 1 0 130px;
+  min-width: 130px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.mobile-home-kpi-card:active {
+  transform: scale(0.98);
+  border-color: var(--color-slate-300, #cbd5e1);
+}
+
+.mobile-home-kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Icon Container Rule: White background, colored border, NO solid background fills */
+.mobile-home-kpi-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-kpi-icon.emerald {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.mobile-home-kpi-icon.amber {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.mobile-home-kpi-icon.blue {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.mobile-home-kpi-icon.rose {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.mobile-home-kpi-arrow {
+  color: var(--color-slate-300, #cbd5e1);
+}
+
+.mobile-home-kpi-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-home-kpi-val.emerald {
+  color: #059669;
+}
+
+.mobile-home-kpi-val.amber {
+  color: #d97706;
+}
+
+.mobile-home-kpi-lbl {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--color-slate-500, #64748b);
+  line-height: 1.15;
+}
+
+/* ==========================================================================
+   3. ENTERPRISE SEGMENTED NAVIGATION BAR
+   ========================================================================== */
+.mobile-home-nav-container {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-slate-50, #f8fafc);
+  padding: 2px 0 10px;
+}
+
+.mobile-home-segmented-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-slate-200, #e2e8f0);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.mobile-home-seg-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-slate-600, #475569);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.mobile-home-seg-btn.active {
+  background: #ffffff;
+  color: var(--color-slate-900, #0f172a);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.mobile-home-seg-btn svg {
+  color: var(--color-slate-400, #94a3b8);
+  transition: color 0.15s ease;
+}
+
+.mobile-home-seg-btn.active svg {
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-seg-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--color-primary, #0d9488);
+}
+
+/* ==========================================================================
+   4. CONTENT CARDS & SECTIONS (SHARED MOBILE TOKENS)
+   ========================================================================== */
+.mobile-home-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.mobile-home-card-header {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-slate-100, #f1f5f9);
+  background: #ffffff;
+  gap: 8px;
+}
+
+.mobile-home-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+/* White background, colored border rule */
+.mobile-home-card-icon-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-card-icon-badge.amber {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.mobile-home-card-icon-badge.blue {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.mobile-home-card-icon-badge.emerald {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.mobile-home-card-body {
+  padding: 12px 14px;
+}
+
+/* ==========================================================================
+   5. TAB 1: OVERVIEW SPECIFIC STYLES
+   ========================================================================== */
+/* Urgent Spotlight Banner */
+.mobile-home-alert-spotlight {
+  padding: 10px 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mobile-home-alert-spotlight-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1.5px solid #f59e0b;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-alert-spotlight-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-alert-spotlight-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 2px;
+}
+
+.mobile-home-alert-spotlight-text {
+  font-size: 11.5px;
+  color: #78350f;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Owners Corp Detail Rows (Clean 2-column or list) */
+.mobile-home-oc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-home-oc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-100, #f1f5f9);
+}
+
+.mobile-home-oc-lbl-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-home-oc-row-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-oc-row-icon.user {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.mobile-home-oc-row-icon.amber {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.mobile-home-oc-row-icon.green {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.mobile-home-oc-lbl {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-500, #64748b);
+}
+
+.mobile-home-oc-val {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-slate-900, #0f172a);
+  text-align: right;
+  word-break: break-word;
+}
+
+.mobile-home-oc-val.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Strata Manager Direct Card */
+.mobile-home-manager-card {
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 12px;
+}
+
+.mobile-home-manager-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mobile-home-manager-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1.5px solid #f59e0b;
+  color: #d97706;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.1);
+}
+
+.mobile-home-manager-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-manager-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0 0 2px;
+}
+
+.mobile-home-manager-role {
+  font-size: 11.5px;
+  color: var(--color-slate-500, #64748b);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-home-action-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.mobile-home-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  min-height: 40px;
+}
+
+.mobile-home-action-btn.primary {
+  background: var(--color-primary, #0d9488);
+  color: #ffffff;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+}
+
+.mobile-home-action-btn.primary:active {
+  background: var(--color-primary-dark, #0f766e);
+}
+
+.mobile-home-action-btn.secondary {
+  background: var(--color-slate-50, #f8fafc);
+  color: var(--color-slate-700, #334155);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+}
+
+.mobile-home-action-btn.secondary:active {
+  background: #ffffff;
+  border-color: var(--color-slate-300, #cbd5e1);
+}
+
+/* Quick Navigation Shortcuts 4-Grid */
+.mobile-home-shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mobile-home-shortcut-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.mobile-home-shortcut-card:active {
+  background: var(--color-slate-50, #f8fafc);
+  border-color: var(--color-primary, #0d9488);
+  transform: scale(0.98);
+}
+
+/* Icon Container Rule */
+.mobile-home-shortcut-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-shortcut-icon.blue {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.mobile-home-shortcut-icon.amber {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.mobile-home-shortcut-icon.purple {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.mobile-home-shortcut-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mobile-home-shortcut-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  line-height: 1.25;
+}
+
+.mobile-home-shortcut-sub {
+  font-size: 10.5px;
+  color: var(--color-slate-500, #64748b);
+  line-height: 1.2;
+}
+
+/* Amenities Micro Chips */
+.mobile-home-amenities-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mobile-home-amenity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+}
+
+.mobile-home-amenity-chip svg {
+  color: var(--color-primary, #0d9488);
+}
+
+/* ==========================================================================
+   6. TAB 2: NOTICES & BY-LAWS SPECIFIC STYLES
+   ========================================================================== */
+.mobile-home-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mobile-home-sub-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mobile-home-sub-tab {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-600, #475569);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-home-sub-tab.active {
+  background: rgba(13, 148, 136, 0.1);
+  border-color: rgba(13, 148, 136, 0.25);
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-notice-item {
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+  transition: all 0.15s ease;
+}
+
+.mobile-home-notice-item.important {
+  border-left: 3.5px solid #ef4444;
+}
+
+.mobile-home-notice-item.notice {
+  border-left: 3.5px solid #f59e0b;
+}
+
+.mobile-home-notice-item.informational {
+  border-left: 3.5px solid #0284c7;
+}
+
+.mobile-home-notice-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mobile-home-notice-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.mobile-home-urgency-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.mobile-home-urgency-pill.important {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.mobile-home-urgency-pill.notice {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.mobile-home-urgency-pill.informational {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.mobile-home-notice-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.mobile-home-notice-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3.5px;
+}
+
+.mobile-home-notice-desc {
+  font-size: 12px;
+  color: var(--color-slate-600, #475569);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* By-law Card on Mobile */
+.mobile-home-bylaw-card {
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-home-bylaw-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobile-home-bylaw-tag {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: var(--color-slate-100, #f1f5f9);
+  color: var(--color-slate-700, #334155);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.mobile-home-bylaw-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  flex: 1;
+  margin: 0;
+}
+
+.mobile-home-bylaw-body {
+  font-size: 12px;
+  color: var(--color-slate-600, #475569);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.mobile-home-bylaw-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--color-slate-100, #f1f5f9);
+}
+
+.mobile-home-bylaw-dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-home-bylaw-dl-btn:active {
+  background: var(--color-primary, #0d9488);
+  color: #ffffff;
+  border-color: var(--color-primary, #0d9488);
+}
+
+/* ==========================================================================
+   7. TAB 3: COMMITTEE SPECIFIC STYLES (NO SQUISHED TABLES!)
+   ========================================================================== */
+.mobile-home-committee-banner {
+  background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.mobile-home-committee-banner:active {
+  transform: translateY(1px);
+}
+
+.mobile-home-committee-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-home-committee-banner-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0369a1;
+}
+
+.mobile-home-committee-banner-sub {
+  font-size: 11px;
+  color: #0c4a6e;
+}
+
+.mobile-home-committee-banner-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #7dd3fc;
+  color: #0284c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Member Cards List */
+.mobile-home-member-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-home-member-info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-home-member-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-member-avatar.chairperson {
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+.mobile-home-member-avatar.member {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.mobile-home-member-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mobile-home-member-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-home-member-role-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-home-member-role-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+}
+
+.mobile-home-member-role-badge.chairperson {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.mobile-home-member-role-badge.member {
+  background: var(--color-slate-100, #f1f5f9);
+  color: var(--color-slate-700, #334155);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+}
+
+.mobile-home-member-lot {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-slate-600, #475569);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   8. TAB 4: MANAGEMENT & BUILDING SPECIFIC STYLES
+   ========================================================================== */
+.mobile-home-company-card {
+  padding: 14px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 12px;
+}
+
+.mobile-home-company-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.mobile-home-company-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-home-company-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-home-company-name {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+}
+
+.mobile-home-company-lic {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+  margin: 0;
+}
+
+.mobile-home-company-copy-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary, #0d9488);
+  background: rgba(13, 148, 136, 0.08);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mobile-home-company-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mobile-home-company-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-slate-600, #475569);
+  line-height: 1.35;
+}
+
+.mobile-home-company-row svg {
+  color: var(--color-slate-400, #94a3b8);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mobile-home-company-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* Building Gallery Mobile Styles */
+.mobile-home-gallery-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.mobile-home-gallery-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9.5;
+  background: #0f172a;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-home-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-home-gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.mobile-home-gallery-nav-btn.prev {
+  left: 10px;
+}
+
+.mobile-home-gallery-nav-btn.next {
+  right: 10px;
+}
+
+.mobile-home-gallery-top-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 3;
+}
+
+.mobile-home-gallery-counter {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-home-gallery-tool-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-home-gallery-caption-strip {
+  padding: 10px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--color-slate-100, #f1f5f9);
+}
+
+.mobile-home-gallery-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0 0 2px;
+}
+
+.mobile-home-gallery-desc {
+  font-size: 11.5px;
+  color: var(--color-slate-500, #64748b);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.mobile-home-gallery-thumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #ffffff;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mobile-home-gallery-thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-home-gallery-thumb-btn {
+  width: 54px;
+  height: 38px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  padding: 0;
+  background: #0f172a;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.mobile-home-gallery-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+}
+
+.mobile-home-gallery-thumb-btn.active {
+  border-color: var(--color-primary, #0d9488);
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.25);
+}
+
+.mobile-home-gallery-thumb-btn.active img {
+  opacity: 1;
+}
+
+/* Location & Transit on Mobile */
+.mobile-home-location-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.mobile-home-map-frame-box {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 12px;
+}
+
+.mobile-home-map-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.mobile-home-transit-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-slate-500, #64748b);
+  margin-bottom: 6px;
+}
+
+.mobile-home-transit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.mobile-home-transit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--color-slate-700, #334155);
+}
+
+.mobile-home-transit-dist {
+  font-weight: 700;
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-directions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--color-primary, #0d9488);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 9px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.2);
+}
+
+/* ==========================================================================
+   9. MOBILE BOTTOM SHEETS (LOT & PROPERTY SELECTOR)
+   ========================================================================== */
+.mobile-home-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: mobileSheetFadeIn 0.2s ease;
+}
+
+.mobile-home-sheet-content {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.15);
+  padding: 16px 18px 28px;
+  box-sizing: border-box;
+  animation: mobileSheetSlideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes mobileSheetFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mobileSheetSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-home-sheet-drag-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--color-slate-300, #cbd5e1);
+  margin: 0 auto 12px;
+}
+
+.mobile-home-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mobile-home-sheet-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+}
+
+.mobile-home-sheet-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-slate-100, #f1f5f9);
+  border: none;
+  color: var(--color-slate-500, #64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-home-sheet-scroll {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-home-sheet-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-home-sheet-option.active {
+  background: rgba(13, 148, 136, 0.08);
+  border-color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-sheet-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-home-sheet-option-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-home-sheet-option.active .mobile-home-sheet-option-title {
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-home-sheet-option-sub {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+}
+
+.mobile-home-sheet-check {
+  color: var(--color-primary, #0d9488);
+}

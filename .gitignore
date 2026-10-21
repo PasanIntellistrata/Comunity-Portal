@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output (Vite)
+www/
+dist/
+
+# Capacitor native projects (optional — include these if you want to commit native projects)
+# android/
+# ios/
+
+# Vite cache
+.vite/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

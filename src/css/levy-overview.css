@@ -1,0 +1,1090 @@
+/* ==========================================================================
+   Levy Overview Page Styling — Intellistrata Community Portal
+   ========================================================================== */
+@import './mobile-levy.css';
+
+.levy-overview-page {
+  background: var(--color-slate-50, #f8fafc);
+  min-height: 100vh;
+}
+
+.levy-page-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.levy-page-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--color-slate-50, #f8fafc);
+}
+
+.levy-content-container {
+  padding: 0 0 48px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---------- Breadcrumb ---------- */
+.levy-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-slate-500, #64748b);
+  margin-bottom: 20px;
+}
+
+.levy-breadcrumb-link {
+  color: var(--color-slate-500, #64748b);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.levy-breadcrumb-link:hover {
+  color: var(--color-primary, #0d9488);
+}
+
+.levy-breadcrumb-sep {
+  color: var(--color-slate-400, #94a3b8);
+}
+
+.levy-breadcrumb-current {
+  color: var(--color-primary, #0d9488);
+  font-weight: 600;
+}
+
+/* ---------- Title & Actions Row ---------- */
+.levy-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.levy-title-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.levy-portal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-slate-500, #64748b);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.levy-portal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary, #0d9488);
+}
+
+.levy-page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.levy-page-welcome {
+  font-size: 14px;
+  color: var(--color-slate-700, #334155);
+  margin: 2px 0 0;
+}
+
+.levy-page-managing {
+  font-size: 13px;
+  color: var(--color-slate-500, #64748b);
+  margin: 2px 0 0;
+}
+
+.levy-page-managing strong {
+  color: var(--color-primary, #0d9488);
+}
+
+.levy-title-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* (Download Statement button styled in Payments section) */
+
+/* ---------- Top 3 Cards Row (Same Line) ---------- */
+.levy-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.35fr;
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.levy-kpi-card {
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.levy-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.levy-kpi-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.levy-kpi-icon-wrap.teal {
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--color-primary, #0d9488);
+}
+
+.levy-kpi-icon-wrap.blue {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.levy-kpi-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.levy-kpi-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-slate-500, #64748b);
+  margin-bottom: 4px;
+}
+
+.levy-kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  line-height: 1.1;
+}
+
+.levy-kpi-badge-due {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ef4444;
+  margin-top: 5px;
+}
+
+.levy-kpi-subtext {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-slate-500, #64748b);
+  margin-top: 5px;
+}
+
+/* ---------- Common Card Container ---------- */
+.levy-card {
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.levy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.levy-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+}
+
+.levy-time-dropdown-wrap {
+  position: relative;
+}
+
+.levy-select-time {
+  height: 34px;
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--color-slate-300, #cbd5e1);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.levy-select-time:focus {
+  border-color: var(--color-primary, #0d9488);
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+}
+
+/* ---------- Levy Breakdown Content (Compact & Refined) ---------- */
+.levy-breakdown-card {
+  width: 100%;
+  max-width: none;
+  padding: 14px 16px;
+  margin-bottom: 0;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.levy-breakdown-card .levy-card-header {
+  margin-bottom: 8px;
+}
+
+.levy-breakdown-card .levy-card-title {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.levy-breakdown-card .levy-select-time {
+  height: 28px;
+  padding: 0 22px 0 9px;
+  font-size: 11.5px;
+  border-radius: 6px;
+}
+
+.levy-breakdown-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 auto;
+}
+
+.levy-chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 115px;
+  height: 115px;
+  flex: 0 0 115px;
+}
+
+.levy-donut-svg {
+  display: block;
+  width: 115px;
+  height: 115px;
+}
+
+.levy-donut-center-label {
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--color-slate-400, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.levy-donut-center-value {
+  font-size: 22px;
+  font-weight: 800;
+  fill: var(--color-slate-900, #0f172a);
+}
+
+.levy-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.levy-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3.5px 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.levy-breakdown-row:hover,
+.levy-breakdown-row.highlighted {
+  background: var(--color-slate-100, #f1f5f9);
+}
+
+.levy-fund-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.levy-fund-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.levy-fund-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.levy-fund-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.levy-fund-amount {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  min-width: 60px;
+  text-align: right;
+}
+
+.levy-fund-pct {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-slate-500, #64748b);
+  min-width: 32px;
+  text-align: right;
+}
+
+.levy-breakdown-divider {
+  height: 1px;
+  background: var(--color-slate-200, #e2e8f0);
+  margin: 2px 0;
+}
+
+.levy-breakdown-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+}
+
+.levy-total-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.levy-total-amount {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--color-primary, #0d9488);
+}
+
+/* ---------- Payments Section ---------- */
+.payments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.levy-payments-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.levy-btn-download-statement {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 16px;
+  white-space: nowrap;
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  flex-shrink: 0;
+}
+
+.levy-btn-download-statement:hover {
+  background: var(--color-slate-50, #f8fafc);
+  border-color: var(--color-slate-300, #cbd5e1);
+  color: var(--color-slate-900, #0f172a);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06);
+}
+
+.levy-btn-download-statement:active {
+  transform: scale(0.98);
+}
+
+/* Payments Tab Strip */
+.levy-payments-tab-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1.5px solid var(--color-slate-200, #e2e8f0);
+  margin-bottom: 18px;
+  padding: 0;
+}
+
+.levy-payments-tabs-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.levy-payments-tabs-left::-webkit-scrollbar {
+  display: none;
+}
+
+.levy-tab-btn {
+  appearance: none;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  background: none;
+  border: none;
+  padding: 0 4px 12px 4px;
+  margin-bottom: -1.5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-slate-500, #64748b);
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.levy-tab-btn:hover {
+  color: var(--color-slate-900, #0f172a);
+}
+
+.levy-tab-btn.active {
+  color: var(--color-primary, #0d9488);
+  font-weight: 700;
+}
+
+.levy-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.5px;
+  background: var(--color-primary, #0d9488);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Badge Counter on Tabs */
+.levy-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 9999px;
+  background: var(--color-slate-100, #f1f5f9);
+  color: var(--color-slate-600, #475569);
+  transition: all 0.15s ease;
+}
+
+.levy-tab-btn.active .levy-tab-count {
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--color-primary, #0d9488);
+  font-weight: 700;
+}
+
+.levy-btn-view-all {
+  appearance: none;
+  width: auto !important;
+  min-width: 0 !important;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #0d9488);
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.levy-btn-view-all:hover {
+  background: rgba(13, 148, 136, 0.08);
+}
+
+.levy-table-subbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.levy-table-responsive {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+}
+
+/* ===== MOBILE PAYMENT CARD LIST ===== */
+
+/* Hidden on desktop; shown on mobile */
+.levy-mobile-list {
+  display: none;
+}
+
+.levy-mobile-payment-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-slate-100, #f1f5f9);
+  transition: background 0.12s;
+}
+.levy-mobile-payment-card:last-child {
+  border-bottom: none;
+}
+.levy-mobile-payment-card:hover {
+  background: var(--color-slate-50, #f8fafc);
+}
+
+/* Top row: Invoice ID + status pill */
+.levy-mobile-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.levy-mobile-inv-id {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+/* 2×2 meta grid */
+.levy-mobile-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin-bottom: 12px;
+}
+.levy-mobile-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.levy-mobile-meta-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--color-slate-400, #94a3b8);
+}
+.levy-mobile-meta-value {
+  font-size: 13px;
+  color: var(--color-slate-700, #334155);
+}
+.levy-mobile-amount {
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+/* Footer: receipt button */
+.levy-mobile-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.levy-mobile-receipt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--color-slate-600, #475569);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.levy-mobile-receipt-btn:hover {
+  border-color: var(--color-primary, #0d9488);
+  color: var(--color-primary, #0d9488);
+  background: #f0fdfa;
+}
+
+.levy-mobile-empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--color-slate-400, #94a3b8);
+  font-size: 13.5px;
+}
+
+/* ---------- Responsive Breakpoints ---------- */
+@media (max-width: 860px) {
+  .levy-content-container {
+    padding: 16px 20px 48px;
+  }
+
+  .levy-top-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .levy-breakdown-card {
+    grid-column: span 2;
+    padding: 14px 16px;
+    margin-bottom: 0;
+  }
+
+  .levy-breakdown-card .levy-card-header {
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .levy-breakdown-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .levy-chart-container {
+    width: 110px;
+    height: 110px;
+    flex: 0 0 110px;
+  }
+
+  .levy-donut-svg {
+    width: 110px;
+    height: 110px;
+  }
+
+  .levy-breakdown-list {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    gap: 2px;
+  }
+
+  .levy-breakdown-row {
+    padding: 3.5px 6px;
+  }
+
+  .levy-fund-left {
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .levy-fund-dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .levy-fund-name {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .levy-fund-right {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .levy-fund-amount {
+    font-size: 12px;
+    min-width: 60px;
+  }
+
+  .levy-fund-pct {
+    font-size: 11px;
+    min-width: 32px;
+  }
+
+  .levy-breakdown-divider {
+    margin: 2px 0;
+  }
+
+  .levy-breakdown-total-row {
+    padding: 3px 6px;
+  }
+
+  .levy-total-label {
+    font-size: 12px;
+  }
+
+  .levy-total-amount {
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .levy-breakdown-card {
+    padding: 12px 14px;
+  }
+
+  .levy-breakdown-content {
+    gap: 12px;
+  }
+
+  .levy-chart-container {
+    width: 100px;
+    height: 100px;
+    flex: 0 0 100px;
+  }
+
+  .levy-donut-svg {
+    width: 100px;
+    height: 100px;
+  }
+
+  .levy-donut-center-label {
+    font-size: 14px;
+  }
+
+  .levy-donut-center-value {
+    font-size: 24px;
+  }
+
+  .levy-breakdown-row {
+    padding: 2.5px 4px;
+  }
+
+  .levy-fund-name {
+    font-size: 11.5px;
+  }
+
+  .levy-fund-right {
+    gap: 6px;
+  }
+
+  .levy-fund-amount {
+    font-size: 11.5px;
+    min-width: 54px;
+  }
+
+  .levy-fund-pct {
+    font-size: 10.5px;
+    min-width: 28px;
+  }
+
+  .levy-total-label {
+    font-size: 11.5px;
+  }
+
+  .levy-total-amount {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 340px) {
+  .levy-breakdown-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .levy-chart-container {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Swap table for cards */
+  .levy-table-responsive {
+    display: none;
+  }
+  .levy-mobile-list {
+    display: block;
+    border: 1px solid var(--color-slate-200, #e2e8f0);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+
+
+  /* Payments header: keep title and download button aligned on one row */
+  .payments-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .levy-btn-download-statement {
+    padding: 0 12px;
+    font-size: 12.5px;
+    height: 34px;
+  }
+
+  .levy-payments-tab-strip {
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .levy-tab-btn {
+    font-size: 13px;
+    padding-bottom: 10px;
+  }
+
+  /* KPI & Breakdown cards: stack 1-column */
+  .levy-kpi-grid,
+  .levy-top-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .levy-top-row .levy-breakdown-card {
+    grid-column: auto;
+  }
+
+  /* Content area padding */
+  .levy-content-container {
+    padding: 12px 0 40px;
+  }
+
+  /* Card inner padding tighter */
+  .levy-card {
+    padding: 16px;
+    margin-bottom: 16px;
+    overflow: visible;
+  }
+
+  /* Card header: wrap on mobile */
+  .levy-card-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 440px) {
+  /* Compact screens: icon-only download button */
+  .levy-download-btn-text {
+    display: none;
+  }
+  .levy-btn-download-statement {
+    width: 36px !important;
+    height: 36px;
+    min-width: 36px !important;
+    padding: 0 !important;
+    justify-content: center;
+    border-radius: 8px;
+  }
+}
+
+
+.levy-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.levy-table thead {
+  background: var(--color-slate-50, #f8fafc);
+  border-bottom: 1px solid var(--color-slate-200, #e2e8f0);
+}
+
+.levy-table th {
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-slate-500, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.levy-table td {
+  padding: 14px 16px;
+  color: var(--color-slate-700, #334155);
+  border-bottom: 1px solid var(--color-slate-100, #f1f5f9);
+  white-space: nowrap;
+}
+
+.levy-table tr:last-child td {
+  border-bottom: none;
+}
+
+.levy-table tr:hover td {
+  background: var(--color-slate-50, #f8fafc);
+}
+
+.td-inv-no strong {
+  color: var(--color-slate-900, #0f172a);
+}
+
+.td-amount {
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.th-action,
+.td-action {
+  text-align: center;
+  width: 70px;
+}
+
+.levy-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.levy-status-pill.paid {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.levy-status-pill.pending {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.levy-status-pill.scheduled {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.levy-btn-receipt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  background: #fff;
+  color: var(--color-slate-600, #475569);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.levy-btn-receipt:hover {
+  background: var(--color-slate-100, #f1f5f9);
+  border-color: var(--color-slate-300, #cbd5e1);
+  color: var(--color-primary, #0d9488);
+}
+
+/* ---------- Fund Allocation Section ---------- */
+.levy-funds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.levy-fund-stat-card {
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s ease;
+}
+
+.levy-fund-stat-card:hover {
+  background: #fff;
+  border-color: var(--color-slate-300, #cbd5e1);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.levy-fund-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.levy-fund-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.levy-fund-stat-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-slate-500, #64748b);
+  margin-bottom: 2px;
+}
+
+.levy-fund-stat-amount {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+}
+
+
+

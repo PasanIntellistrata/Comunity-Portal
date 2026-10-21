@@ -1,0 +1,32 @@
+-- ==============================================================================
+-- Intellistrata Community Portal — Supabase Auth Configuration Migration
+-- Migration ID: 20261012000000_auth_configuration
+-- Purpose: Prepares Supabase environment for authentication.
+-- Note: As specified in requirements, no custom application tables (e.g. public.users)
+--       are created here without backend team confirmation. Internal schema and
+--       user mapping is owned by the Intellistrata backend team.
+-- ==============================================================================
+
+-- 1. Ensure required extensions exist for auth and password hashing
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA extensions;
+
+-- 2. Auth Configuration Notes & Directives
+--
+-- The Community Portal utilizes Supabase Auth (`auth.users`) for:
+--   a) Email and Password authentication (predefined dummy / invitation accounts)
+--   b) Google OAuth authentication (provider: 'google')
+--   c) Microsoft Entra ID / Azure AD authentication (provider: 'azure')
+--
+-- Session management:
+--   - JWT tokens issued by Supabase Auth are forwarded to the Intellistrata backend
+--     via the HTTP header: `Authorization: Bearer <access_token>`
+--   - Backend validates JWT using Supabase JWT Secret or JWKS endpoint
+--   - User mapping is performed by matching `auth.users.id` (UUID `sub`)
+--     or `auth.users.email` with internal Intellistrata resident/manager records.
+--
+-- Public Registration Directive:
+--   - Public self-registration is DISABLED in project settings.
+--   - In Supabase Dashboard -> Authentication -> Providers -> Email:
+--     Toggle OFF: "Enable Signup" (or restrict signups to invitation only).
+--   - User creation is strictly performed via backend Admin API, invitation links,
+--     or development seed scripts.

@@ -1,0 +1,172 @@
+/* Design tokens & color palette */
+@import './colors.css';
+
+/* Login page styles */
+@import './login.css';
+
+/* Invoice approval styles */
+@import './invoice-approval.css';
+
+/* Mobile sidebar navigation styles */
+@import './mobile-sidebar.css';
+
+/* Report issues & maintenance styles */
+@import './report-issues.css';
+
+/* Maintenance page styles */
+@import './maintenance.css';
+
+/* Common portal components: Navbar & Lot Selector */
+@import './portal-components.css';
+
+/* Levy overview page styles */
+@import './levy-overview.css';
+
+/* My documents page styles */
+@import './my-documents.css';
+
+/* My profile page styles */
+@import './my-profile.css';
+
+/* Home page styles */
+@import './home.css';
+
+/* Committee decisions page styles */
+@import './committee-decisions.css';
+
+/* Payment plan page styles */
+@import './payment-plan.css';
+
+/* Mobile property and lot picker component */
+@import './mobile-property-lot-picker.css';
+
+/* ======================================================
+   CSS Custom Properties (Design Tokens)
+   ====================================================== */
+:root {
+  --brand-primary: var(--color-primary, #0d9488);
+  --brand-secondary: #5856d6;
+  --brand-success: var(--color-success, #10b981);
+  --brand-warning: var(--color-warning, #f59e0b);
+  --brand-danger: var(--color-error, #ef4444);
+  --brand-surface: var(--color-surface-subtle, #f8fafc);
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ======================================================
+   Global Resets & UI Scaling (80%)
+   ====================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  zoom: 0.8;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--brand-surface);
+  overflow: hidden;
+}
+
+/* Hide all scrollbars globally across all browsers and elements */
+*,
+*::before,
+*::after,
+html,
+body,
+#app,
+.framework7-root,
+.view,
+.page,
+.page-content {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar,
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ======================================================
+   Desktop SPA Page Transitions (Stationary Sidebar + Content Fade)
+   ====================================================== */
+
+/* Prevent mobile-style horizontal sliding of entire pages and sidebars */
+.view-main .page {
+  transition: none !important;
+  transform: none !important;
+}
+
+.view-main .page-previous,
+.view-main .page-next {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+.view-main .page-current {
+  opacity: 1 !important;
+  display: block !important;
+  transform: none !important;
+}
+
+/* Silky, subtle fade & micro-lift on page content entry */
+@keyframes portalContentFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.invoice-main-area,
+.report-main-area {
+  animation: portalContentFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ======================================================
+   Framework7 Theme Overrides
+   ====================================================== */
+
+/* iOS-style large title color */
+.navbar-large .title-large-text {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Rounded card list items */
+.list.inset .item-inner {
+  border-radius: 12px;
+}
+
+/* Tab bar icon active color */
+.tabbar-label a.tab-link-active {
+  color: var(--brand-primary);
+}
+
+/* ======================================================
+   Utility Classes
+   ====================================================== */
+.text-center {
+  text-align: center;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}

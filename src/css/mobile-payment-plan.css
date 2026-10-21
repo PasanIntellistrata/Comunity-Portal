@@ -1,0 +1,1146 @@
+/* ==========================================================================
+   Mobile-First Payment Plan UI Styles — Modern Enterprise Experience (<= 900px)
+   ========================================================================== */
+
+/* Hide mobile experience on desktop screens (> 900px) */
+@media (min-width: 901px) {
+  .payment-plan-mobile-view {
+    display: none !important;
+  }
+}
+
+/* Hide desktop elements on mobile screens (<= 900px) */
+@media (max-width: 900px) {
+  .payment-plan-desktop-view {
+    display: none !important;
+  }
+  .payment-plan-mobile-view {
+    display: block !important;
+  }
+  .payment-plan-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    gap: 0 !important;
+  }
+  .payment-plan-content-area {
+    padding: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE PAYMENT PLAN VIEW CONTAINER
+   ========================================================================== */
+.payment-plan-mobile-view {
+  width: 100%;
+  min-height: 100%;
+  background: var(--color-slate-50, #f8fafc);
+  padding: 12px 14px 100px;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Framework7 Button Reset */
+.payment-plan-mobile-view button {
+  width: auto;
+  max-width: initial;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. SCHEME & LOT CONTEXT CARD
+   ========================================================================== */
+.mobile-pp-context-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.mobile-pp-context-left,
+.mobile-pp-context-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 4px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-context-btn:hover {
+  background: #f8fafc;
+}
+
+.mobile-pp-context-btn:active {
+  background: #f1f5f9;
+}
+
+.mobile-pp-context-chevron {
+  color: #94a3b8;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+.mobile-pp-prop-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-pp-context-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mobile-pp-context-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.25;
+}
+
+.mobile-pp-context-sub {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-pp-lot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: var(--color-slate-100, #f1f5f9);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-lot-chip:active {
+  background: #ffffff;
+  border-color: var(--color-primary, #0d9488);
+  color: var(--color-primary, #0d9488);
+}
+
+/* ==========================================================================
+   2. FINTECH HERO BALANCE & INSTALLMENT CARD
+   ========================================================================== */
+.mobile-pp-hero-card {
+  position: relative;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 45%, #115e59 100%);
+  border-radius: 18px;
+  padding: 16px 14px 14px;
+  color: #ffffff;
+  box-shadow: 0 8px 22px -4px rgba(13, 148, 136, 0.35), 0 4px 10px -2px rgba(15, 23, 42, 0.08);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.mobile-pp-hero-pattern {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.mobile-pp-hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.mobile-pp-hero-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mobile-pp-hero-freq-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mobile-pp-hero-amount-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mobile-pp-hero-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.75);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.mobile-pp-hero-amount {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.mobile-pp-hero-installment-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.mobile-pp-hero-inst-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #a7f3d0;
+  letter-spacing: -0.01em;
+}
+
+.mobile-pp-hero-inst-due {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Progress Box */
+.mobile-pp-hero-progress-box {
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 10px;
+  padding: 8px 10px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  margin-bottom: 14px;
+}
+
+.mobile-pp-hero-progress-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4px;
+}
+
+.mobile-pp-hero-progress-labels strong {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.mobile-pp-hero-progress-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.mobile-pp-hero-progress-fill {
+  height: 100%;
+  background: #a7f3d0;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.mobile-pp-hero-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Actions Row */
+.mobile-pp-hero-actions-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 8px;
+}
+
+.mobile-pp-hero-btn-pay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-hero-btn-pay:active {
+  background: #f1f5f9;
+  transform: translateY(1px);
+}
+
+.mobile-pp-hero-btn-doc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-hero-btn-doc:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* No Plan Hero Card */
+.mobile-pp-no-plan-hero {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 24px 16px;
+  text-align: center;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.mobile-pp-no-plan-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.mobile-pp-no-plan-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0 0 6px;
+}
+
+.mobile-pp-no-plan-desc {
+  font-size: 12px;
+  color: var(--color-slate-500, #64748b);
+  line-height: 1.45;
+  margin: 0 0 16px;
+}
+
+.mobile-pp-btn-apply-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #0d9488;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-btn-apply-hero:active {
+  background: #0f766e;
+}
+
+/* ==========================================================================
+   3. 2x2 COMPACT METRICS GRID
+   ========================================================================== */
+.mobile-pp-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mobile-pp-metric-item {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 10px 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-pp-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.mobile-pp-metric-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500, #64748b);
+}
+
+/* Strict white background, colored border rule */
+.mobile-pp-metric-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-pp-metric-icon.blue {
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.mobile-pp-metric-icon.amber {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.mobile-pp-metric-icon.emerald {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.mobile-pp-metric-icon.purple {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.mobile-pp-metric-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin-bottom: 2px;
+}
+
+.mobile-pp-metric-sub {
+  font-size: 10.5px;
+  color: var(--color-slate-500, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   4. STICKY SEGMENTED NAVIGATION BAR
+   ========================================================================== */
+.mobile-pp-nav-container {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--color-slate-50, #f8fafc);
+  padding: 2px 0 10px;
+}
+
+.mobile-pp-segmented-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-slate-200, #e2e8f0);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.mobile-pp-seg-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-slate-600, #475569);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.mobile-pp-seg-btn.active {
+  background: #ffffff;
+  color: var(--color-slate-900, #0f172a);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.mobile-pp-seg-btn svg {
+  color: var(--color-slate-400, #94a3b8);
+  transition: color 0.15s ease;
+}
+
+.mobile-pp-seg-btn.active svg {
+  color: var(--color-primary, #0d9488);
+}
+
+.mobile-pp-seg-count {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--color-primary, #0d9488);
+}
+
+/* ==========================================================================
+   5. TAB 1: UPCOMING SCHEDULE CARDS
+   ========================================================================== */
+.mobile-pp-auto-debit-box {
+  padding: 11px 13px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mobile-pp-auto-debit-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #10b981;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-pp-auto-debit-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #166534;
+  margin-bottom: 2px;
+}
+
+.mobile-pp-auto-debit-text {
+  font-size: 11px;
+  color: #15803d;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Schedule List */
+.mobile-pp-schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-pp-schedule-card {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 12px;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-pp-schedule-card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-pp-schedule-card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-pp-schedule-inst-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-schedule-due-date {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+}
+
+.mobile-pp-schedule-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.mobile-pp-schedule-amount {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.mobile-pp-status-badge.pending {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.mobile-pp-status-badge.scheduled {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.mobile-pp-status-badge.paid {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.mobile-pp-status-badge.active {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+/* ==========================================================================
+   6. TAB 2: PAYMENT HISTORY & RECEIPTS
+   ========================================================================== */
+.mobile-pp-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-pp-search-box svg {
+  color: var(--color-slate-400, #94a3b8);
+  flex-shrink: 0;
+}
+
+.mobile-pp-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 12.5px;
+  color: var(--color-slate-900, #0f172a);
+  background: transparent;
+}
+
+.mobile-pp-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-pp-history-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-pp-history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.mobile-pp-history-inst-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-pp-history-inst-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-history-amount {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-history-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.mobile-pp-history-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.mobile-pp-history-detail-lbl {
+  color: var(--color-slate-500, #64748b);
+}
+
+.mobile-pp-history-detail-val {
+  color: var(--color-slate-700, #334155);
+  font-weight: 600;
+}
+
+.mobile-pp-history-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-slate-100, #f1f5f9);
+}
+
+.mobile-pp-btn-receipt-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-slate-700, #334155);
+  cursor: pointer;
+}
+
+.mobile-pp-btn-receipt-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-primary, #0d9488);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-btn-receipt-download:active {
+  background: var(--color-primary, #0d9488);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   7. TAB 3: AGREEMENT SPECIFICATIONS
+   ========================================================================== */
+.mobile-pp-details-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.mobile-pp-details-card-header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.mobile-pp-details-card-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #0d9488;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-pp-details-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+}
+
+.mobile-pp-details-card-sub {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+  display: block;
+}
+
+.mobile-pp-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-pp-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 10px;
+}
+
+.mobile-pp-detail-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-slate-600, #475569);
+}
+
+.mobile-pp-detail-val {
+  font-size: 12px;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-detail-val.bold {
+  font-weight: 700;
+}
+
+.mobile-pp-detail-val.teal-text {
+  color: #0d9488;
+}
+
+.mobile-pp-details-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--color-slate-200, #e2e8f0);
+}
+
+.mobile-pp-btn-download-full {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d9488;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-btn-download-full:active {
+  background: #0d9488;
+  color: #ffffff;
+}
+
+.mobile-pp-empty-state {
+  text-align: center;
+  padding: 28px 14px;
+  color: var(--color-slate-500, #64748b);
+  font-size: 12.5px;
+}
+
+/* ==========================================================================
+   8. LOT SWITCHER BOTTOM SHEET
+   ========================================================================== */
+.mobile-pp-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  animation: mobilePpSheetFadeIn 0.2s ease;
+}
+
+@keyframes mobilePpSheetFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-pp-sheet-content {
+  width: 100%;
+  max-height: 80vh;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 16px 28px;
+  box-sizing: border-box;
+  animation: mobilePpSheetSlideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes mobilePpSheetSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-pp-sheet-drag-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-slate-300, #cbd5e1);
+  margin: 0 auto 12px;
+}
+
+.mobile-pp-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.mobile-pp-sheet-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-slate-900, #0f172a);
+  margin: 0;
+}
+
+.mobile-pp-sheet-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-slate-100, #f1f5f9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-slate-500, #64748b);
+  cursor: pointer;
+  padding: 0;
+}
+
+.mobile-pp-lot-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.mobile-pp-lot-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--color-slate-50, #f8fafc);
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-pp-lot-option.selected {
+  background: rgba(13, 148, 136, 0.08);
+  border-color: #0d9488;
+}
+
+.mobile-pp-lot-option-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-pp-lot-option-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-slate-900, #0f172a);
+}
+
+.mobile-pp-lot-option-sub {
+  font-size: 11px;
+  color: var(--color-slate-500, #64748b);
+}
+
+/* ==========================================================================
+   7. FLOATING ACTION BUTTONS & POPUPS ON MOBILE (<= 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+  /* Fix FAB buttons sizing and position in Payment Plan mobile */
+  .payment-plan-page .invoice-fab-group {
+    position: fixed !important;
+    bottom: 22px !important;
+    right: 16px !important;
+    gap: 10px !important;
+    z-index: 1050 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    transition: opacity 0.2s ease, visibility 0.2s ease !important;
+  }
+
+  body:has(.mobile-pp-sheet-overlay) .payment-plan-page .invoice-fab-group,
+  body:has(.payment-plan-modal-overlay) .payment-plan-page .invoice-fab-group {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
+  .payment-plan-page button.invoice-fab,
+  .payment-plan-page .invoice-fab {
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease !important;
+  }
+
+  .payment-plan-page button.invoice-fab:active,
+  .payment-plan-page .invoice-fab:active {
+    transform: scale(0.92) !important;
+  }
+
+  .payment-plan-page button.invoice-fab-quick,
+  .payment-plan-page .invoice-fab-quick {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1.5px solid #00bfa5 !important;
+    box-shadow: 0 4px 14px rgba(0, 191, 165, 0.25) !important;
+  }
+
+  .payment-plan-page .invoice-fab-quick svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .payment-plan-page button.invoice-fab-ai,
+  .payment-plan-page .invoice-fab-ai {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 6px 20px rgba(13, 148, 136, 0.42) !important;
+  }
+
+  .payment-plan-page .invoice-fab-ai svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  /* Popup responsive positioning on mobile */
+  .payment-plan-page .invoice-popup-card {
+    position: fixed !important;
+    bottom: 84px !important;
+    right: 16px !important;
+    left: auto !important;
+    width: min(350px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: calc(100dvh - 120px) !important;
+    z-index: 1200 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.28) !important;
+  }
+}

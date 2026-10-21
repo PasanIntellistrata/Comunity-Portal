@@ -1,0 +1,1500 @@
+/* ==========================================================================
+   Mobile-First Documents UI Styles — Modern Enterprise Experience (<= 900px)
+   ========================================================================== */
+
+/* ── Hide mobile experience on desktop screens (> 900px) ── */
+@media (min-width: 901px) {
+  .docs-mobile-view {
+    display: none !important;
+  }
+}
+
+/* ── Hide desktop elements on mobile screens (<= 900px) ── */
+@media (max-width: 900px) {
+  .docs-desktop-view {
+    display: none !important;
+  }
+  .docs-mobile-view {
+    display: block !important;
+  }
+  .invoice-main-area .app-navbar-property-wrap {
+    display: none !important;
+  }
+  .invoice-content-area {
+    padding: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE DOCUMENTS VIEW WRAPPER & CONTAINER
+   ========================================================================== */
+.docs-mobile-view {
+  width: 100%;
+  min-height: 100%;
+  background: var(--color-slate-50, #f8fafc);
+  padding: 12px 14px 96px;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Button Reset inside Mobile Documents to prevent Framework7 100% full-width overrides */
+.docs-mobile-view button {
+  width: auto;
+  max-width: initial;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.docs-mobile-view .mobile-docs-lot-trigger,
+.docs-mobile-view .mobile-docs-btn-full,
+.docs-mobile-view .mobile-docs-lot-item,
+.docs-mobile-view .mobile-docs-action-row,
+.docs-mobile-view .mobile-docs-compact-row {
+  width: 100% !important;
+}
+
+.docs-mobile-view .mobile-docs-upload-cta {
+  width: auto !important;
+  max-width: fit-content !important;
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+}
+
+.docs-mobile-view .mobile-docs-tab-btn {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.docs-mobile-view .mobile-docs-star-btn {
+  width: 32px !important;
+  height: 32px !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.docs-mobile-view .mobile-docs-clear-filter-btn {
+  width: auto !important;
+  flex-shrink: 0 !important;
+}
+
+.mobile-docs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. SCHEME & CONTEXT HEADER CARD
+   ========================================================================== */
+.mobile-docs-header-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-docs-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mobile-docs-scheme-info,
+.mobile-docs-scheme-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-scheme-btn:hover {
+  background: #f8fafc;
+}
+
+.mobile-docs-scheme-btn:active {
+  background: #f1f5f9;
+}
+
+.mobile-docs-scheme-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(20, 184, 166, 0.1);
+  border: 1.5px solid rgba(20, 184, 166, 0.35);
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-docs-scheme-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.mobile-docs-scheme-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mobile-docs-scheme-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.mobile-docs-scheme-chevron {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.mobile-docs-switch-pill.sm {
+  font-size: 9.5px;
+  padding: 1px 6px;
+}
+
+.mobile-docs-scheme-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.mobile-docs-dot {
+  color: #cbd5e1;
+}
+
+.mobile-docs-status-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0d9488;
+  background: rgba(20, 184, 166, 0.1);
+  padding: 1px 6px;
+  border-radius: 9999px;
+}
+
+.mobile-docs-upload-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  border: 1px solid #14b8a6;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.mobile-docs-upload-cta:active {
+  transform: scale(0.97);
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+}
+
+/* Lot Selector Bar */
+.mobile-docs-lot-bar {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+
+.mobile-docs-lot-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-lot-trigger:active {
+  background: #f1f5f9;
+}
+
+.mobile-docs-lot-trigger-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.mobile-docs-lot-trigger-left strong {
+  color: #0f172a;
+}
+
+.mobile-docs-lot-trigger-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.mobile-docs-switch-pill {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0d9488;
+  background: rgba(13, 148, 136, 0.1);
+  padding: 1.5px 6px;
+  border-radius: 5px;
+}
+
+/* ==========================================================================
+   2. KPI STATS HERO CHIPS
+   ========================================================================== */
+.mobile-docs-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mobile-docs-kpi-chip {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 12px;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.mobile-docs-kpi-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-docs-kpi-icon.blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.mobile-docs-kpi-icon.amber {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.mobile-docs-kpi-icon.emerald {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.mobile-docs-kpi-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-docs-kpi-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.mobile-docs-kpi-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   3. SEGMENTED TABS (All | Folders | Recent)
+   ========================================================================== */
+.mobile-docs-tabs-nav {
+  display: flex;
+  background: #e2e8f0;
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.mobile-docs-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.mobile-docs-tab-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-docs-tab-count {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.mobile-docs-tab-btn.active .mobile-docs-tab-count {
+  background: rgba(13, 148, 136, 0.12);
+  color: #0d9488;
+}
+
+/* ==========================================================================
+   4. FOLDERS VIEW (Grid of 20 Property Folders)
+   ========================================================================== */
+.mobile-docs-folders-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-docs-section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 2px;
+}
+
+.mobile-docs-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.mobile-docs-section-desc {
+  font-size: 11px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.mobile-docs-badge-subtle {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.mobile-docs-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.mobile-docs-folder-card {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-folder-card:active {
+  transform: scale(0.98);
+  border-color: #0d9488;
+}
+
+.mobile-docs-folder-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-docs-folder-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.mobile-docs-folder-desc {
+  font-size: 10.5px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.mobile-docs-folder-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.mobile-docs-folder-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d9488;
+}
+
+.mobile-docs-folder-arrow {
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   5. ALL FILES: SNAP-SCROLL CHIPS & SEARCH TOOLBAR
+   ========================================================================== */
+.mobile-docs-files-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Active Folder Filter Banner */
+.mobile-docs-active-folder-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  color: #0f766e;
+  font-size: 11.5px;
+}
+
+.mobile-docs-active-folder-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mobile-docs-clear-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(13, 148, 136, 0.15);
+  border: none;
+  color: #0d9488;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Snap-Scroll Folder Pills */
+.mobile-docs-folder-pills-scroll {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-docs-folder-pills-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-docs-folder-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-folder-pill.active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
+}
+
+.mobile-docs-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mobile-docs-pill-count {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.mobile-docs-folder-pill.active .mobile-docs-pill-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Search & View Mode Toolbar */
+.mobile-docs-search-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mobile-docs-search-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-docs-search-icon {
+  position: absolute;
+  left: 11px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.mobile-docs-search-input {
+  width: 100%;
+  padding: 8px 30px 8px 32px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.mobile-docs-search-input:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+}
+
+.mobile-docs-search-clear {
+  position: absolute;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  border: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mobile-docs-view-toggle {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.mobile-docs-mode-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-mode-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* Category & Type Selects Row */
+.mobile-docs-selects-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mobile-docs-filter-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 500;
+  outline: none;
+}
+
+.mobile-docs-filter-select:focus {
+  border-color: #0d9488;
+}
+
+/* Results Meta */
+.mobile-docs-results-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.mobile-docs-reset-filters-link {
+  background: none;
+  border: none;
+  color: #0d9488;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ==========================================================================
+   6. DOCUMENT CARDS STREAM (CARDS VIEW)
+   ========================================================================== */
+.mobile-docs-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-docs-card {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-card:active {
+  transform: scale(0.99);
+  border-color: #0d9488;
+}
+
+.mobile-docs-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mobile-docs-file-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-icon-red {
+  color: #ef4444;
+}
+
+.doc-icon-emerald {
+  color: #10b981;
+}
+
+.doc-icon-blue {
+  color: #3b82f6;
+}
+
+.doc-icon-amber {
+  color: #f59e0b;
+}
+
+.doc-icon-rose {
+  color: #f43f5e;
+}
+
+.mobile-docs-card-header-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.mobile-docs-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.mobile-docs-card-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.mobile-docs-category-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1.5px 7px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.mobile-docs-folder-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 1.5px 7px;
+  border-radius: 6px;
+}
+
+.mobile-docs-star-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.mobile-docs-star-btn.starred {
+  color: #f59e0b;
+}
+
+/* Card Meta Row */
+.mobile-docs-card-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #64748b;
+  border-top: 1px solid #f8fafc;
+  padding-top: 6px;
+}
+
+.mobile-docs-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mobile-docs-meta-chip.size {
+  margin-left: auto;
+  font-weight: 700;
+  color: #0d9488;
+}
+
+/* Card Actions Strip */
+.mobile-docs-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.mobile-docs-action-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-action-btn:active {
+  background: #e2e8f0;
+}
+
+.mobile-docs-action-btn.primary {
+  background: #f0fdfa;
+  border-color: #99f6e4;
+  color: #0f766e;
+}
+
+.mobile-docs-action-btn.primary:active {
+  background: #ccfbf1;
+}
+
+.mobile-docs-action-btn.icon-only {
+  flex: 0 0 32px;
+  padding: 7px 0;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   7. COMPACT LIST VIEW
+   ========================================================================== */
+.mobile-docs-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobile-docs-compact-row {
+  background: #ffffff;
+  border: 1px solid var(--color-slate-200, #e2e8f0);
+  border-radius: 10px;
+  padding: 9px 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+.mobile-docs-compact-row:active {
+  background: #f8fafc;
+}
+
+.mobile-docs-compact-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  flex: 1;
+}
+
+.mobile-docs-compact-icon {
+  flex-shrink: 0;
+}
+
+.mobile-docs-compact-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mobile-docs-compact-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-docs-compact-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.mobile-docs-compact-actions {
+  flex-shrink: 0;
+}
+
+.mobile-docs-compact-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0d9488;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   8. EMPTY STATE
+   ========================================================================== */
+.mobile-docs-empty-state {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+.mobile-docs-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.mobile-docs-empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.mobile-docs-empty-desc {
+  font-size: 12px;
+  color: #64748b;
+  max-width: 260px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.mobile-docs-empty-btn {
+  margin-top: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #0d9488;
+  border: none;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   9. MODALS & BOTTOM SHEETS (Preview, Upload, Lot Selector, Actions)
+   ========================================================================== */
+.mobile-docs-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: mobileDocsFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes mobileDocsFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-docs-preview-sheet,
+.mobile-docs-upload-sheet,
+.mobile-docs-lot-sheet,
+.mobile-docs-action-sheet {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 12px 18px 24px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  animation: mobileDocsSlideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+@keyframes mobileDocsSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-docs-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  margin: 0 auto 12px;
+}
+
+/* Preview Sheet */
+.mobile-docs-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.mobile-docs-preview-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-docs-preview-title-box {
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-docs-preview-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  word-break: break-word;
+}
+
+.mobile-docs-preview-cat {
+  font-size: 11px;
+  color: #0d9488;
+  font-weight: 600;
+}
+
+.mobile-docs-sheet-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Details Box */
+.mobile-docs-details-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.mobile-docs-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-docs-detail-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mobile-docs-detail-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1px;
+}
+
+/* Rendered Paper Mockup */
+.mobile-docs-rendered-preview {
+  margin: 12px 0 16px;
+  background: #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-docs-preview-paper {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  width: 100%;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-docs-preview-paper-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.mobile-docs-preview-crest-stamp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mobile-docs-preview-ref {
+  font-size: 9px;
+  font-family: monospace;
+  color: #64748b;
+}
+
+.mobile-docs-preview-body-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0.25;
+}
+
+.mobile-docs-line {
+  height: 6px;
+  border-radius: 4px;
+  background: #334155;
+}
+
+.mobile-docs-line.bold {
+  height: 10px;
+  width: 70%;
+  margin-bottom: 4px;
+}
+
+.mobile-docs-line.medium {
+  width: 50%;
+}
+
+.mobile-docs-line.full {
+  width: 100%;
+}
+
+.mobile-docs-line.short {
+  width: 40%;
+}
+
+.mobile-docs-preview-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(13, 148, 136, 0.15);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Modal Action Buttons */
+.mobile-docs-preview-actions,
+.mobile-docs-upload-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-docs-btn-full {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.mobile-docs-btn-full.primary {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.3);
+}
+
+.mobile-docs-btn-full.secondary {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+}
+
+/* Upload Sheet */
+.mobile-docs-sheet-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.mobile-docs-sheet-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.mobile-docs-sheet-desc {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.mobile-docs-upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-docs-dropzone {
+  border: 2px dashed #99f6e4;
+  border-radius: 12px;
+  padding: 18px 12px;
+  background: #f0fdfa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-dropzone:active {
+  background: #ccfbf1;
+}
+
+.mobile-docs-drop-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0f766e;
+}
+
+.mobile-docs-drop-sub {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.mobile-docs-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-docs-form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mobile-docs-form-input,
+.mobile-docs-form-select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 9px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.mobile-docs-form-input:focus,
+.mobile-docs-form-select:focus {
+  border-color: #0d9488;
+}
+
+.mobile-docs-form-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 8px;
+}
+
+/* Lot Sheet */
+.mobile-docs-lot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.mobile-docs-lot-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-lot-item.active {
+  background: #f0fdfa;
+  border-color: #99f6e4;
+}
+
+.mobile-docs-lot-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-docs-lot-item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mobile-docs-lot-check {
+  color: #0d9488;
+}
+
+/* Action Sheet */
+.mobile-docs-action-sheet-head {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-docs-action-sheet-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mobile-docs-action-sheet-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.mobile-docs-action-sheet-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.mobile-docs-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 9px;
+  background: transparent;
+  border: none;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.mobile-docs-action-row:active {
+  background: #f1f5f9;
+  color: #0d9488;
+}
+
+/* Subtle fade in utility */
+.animate-fade-in {
+  animation: mobileFadeIn 0.18s ease-out forwards;
+}
+
+@keyframes mobileFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

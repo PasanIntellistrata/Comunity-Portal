@@ -1,0 +1,54 @@
+/* ======================================================
+   Community Portal — Design Tokens & Color Palette
+   Centralized color codes to avoid hardcoding colors.
+   ====================================================== */
+
+:root {
+  /* Brand / Teal Primary */
+  --color-primary:             #0d9488;
+  --color-primary-light:       #14b8a6;
+  --color-primary-dark:        #0f766e;
+  --color-primary-rgb:         13, 148, 136;
+  --color-cyan:                #06b6d4;
+
+  /* Neutrals / Navy */
+  --color-navy:                #0f172a;
+  --color-navy-light:          #1e293b;
+  --color-navy-rgb:            15, 23, 42;
+
+  /* Neutral Slate Scale */
+  --color-slate-900:           #0f172a;
+  --color-slate-800:           #1e293b;
+  --color-slate-700:           #334155;
+  --color-slate-600:           #475569;
+  --color-slate-500:           #64748b;
+  --color-slate-400:           #94a3b8;
+  --color-slate-300:           #cbd5e1;
+  --color-slate-200:           #e2e8f0;
+  --color-slate-100:           #f1f5f9;
+  --color-slate-50:            #f8fafc;
+  --color-white:               #ffffff;
+
+  /* Semantic Roles */
+  --color-text-title:          var(--color-slate-800);
+  --color-text-body:           var(--color-slate-700);
+  --color-text-muted:          var(--color-slate-500);
+  --color-text-placeholder:    var(--color-slate-500);
+  --color-text-on-primary:     var(--color-white);
+
+  --color-surface:             var(--color-white);
+  --color-surface-subtle:      var(--color-slate-50);
+
+  --color-border:              var(--color-slate-200);
+  --color-border-light:        var(--color-slate-300);
+  --color-border-input:        var(--color-slate-300);
+  --color-border-input-hover:  var(--color-slate-400);
+  --color-border-focus:        var(--color-primary);
+
+  /* Status Colors */
+  --color-error:               #ef4444;
+  --color-error-rgb:           239, 68, 68;
+  --color-success:             #10b981;
+  --color-warning:             #f59e0b;
+  --color-info:                #0ea5e9;
+}
