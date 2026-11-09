@@ -1,0 +1,32 @@
+[
+  {
+    "id": "e1",
+    "title": "Summer Community BBQ",
+    "date": "2026-09-05T14:00:00Z",
+    "dateFormatted": "05 Sep 2026 · 2:00 PM",
+    "location": "Rooftop Sky Garden & BBQ",
+    "description": "Annual summer gathering for all owners and residents. Soft drinks and snacks provided.",
+    "rsvpCount": 18,
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "e2",
+    "title": "Quarterly Strata Committee Meeting",
+    "date": "2026-09-10T19:00:00Z",
+    "dateFormatted": "10 Sep 2026 · 7:00 PM",
+    "location": "Level 1 Meeting Room & Hybrid Zoom",
+    "description": "Executive review of capital works projects, financial levy budgets, and by-law revisions.",
+    "rsvpCount": 7,
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "e3",
+    "title": "Annual General Meeting (AGM)",
+    "date": "2026-11-20T18:30:00Z",
+    "dateFormatted": "20 Nov 2026 · 6:30 PM",
+    "location": "Main Foyer Conference Hall",
+    "description": "Statutory Annual General Meeting for Owners Corporation SP98214.",
+    "rsvpCount": 32,
+    "propertyId": "prop-1"
+  }
+]

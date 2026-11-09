@@ -73,20 +73,24 @@ const AuthCallbackPage = ({ onLoginSuccess }) => {
           }
         } else {
           const errorMsg = result.error || 'Authentication could not be completed.';
+          const redirectPath = result.isUnlinked
+            ? `/login/?error=unlinked_oauth&email=${encodeURIComponent(result.email || '')}`
+            : '/login/';
+
           f7.toast
             .create({
               text: errorMsg,
               position: 'top',
-              closeTimeout: 4000,
+              closeTimeout: 5000,
               cssClass: 'color-red',
             })
             .open();
 
           try {
-            f7.views.main.router.navigate('/login/', { reloadCurrent: true, ignoreCache: true });
-          } catch (e) {
-            window.location.href = '/login/';
-          }
+            window.history.replaceState({}, document.title, redirectPath);
+          } catch (e) { }
+
+          window.location.href = redirectPath;
         }
       } catch (err) {
         if (!isMounted) return;

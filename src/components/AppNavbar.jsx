@@ -107,11 +107,11 @@ const AppNavbar = ({
 
   const initials = user.name
     ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase()
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase()
     : 'AS';
 
   const formatUnit = (unit) => {
@@ -233,9 +233,8 @@ const AppNavbar = ({
             {/* Property Selector */}
             <div className="app-navbar-property-wrap invoice-property-menu-wrap" ref={propertyMenuRef}>
               <div
-                className={`app-navbar-property-selector invoice-property-selector ${
-                  isPropertyMenuOpen ? 'active' : ''
-                }`}
+                className={`app-navbar-property-selector invoice-property-selector ${isPropertyMenuOpen ? 'active' : ''
+                  }`}
                 onClick={() => {
                   setIsPropertyMenuOpen((prev) => !prev);
                   setIsNotifOpen(false);
@@ -268,9 +267,8 @@ const AppNavbar = ({
                   </div>
                 </div>
                 <span
-                  className={`app-navbar-property-chevron invoice-property-selector-chevron ${
-                    isPropertyMenuOpen ? 'open' : ''
-                  }`}
+                  className={`app-navbar-property-chevron invoice-property-selector-chevron ${isPropertyMenuOpen ? 'open' : ''
+                    }`}
                 >
                   <ChevronDown size={14} />
                 </span>
@@ -289,9 +287,8 @@ const AppNavbar = ({
                       <button
                         key={prop.id}
                         type="button"
-                        className={`app-navbar-dropdown-item invoice-property-item ${
-                          prop.id === currentProp.id ? 'selected' : ''
-                        }`}
+                        className={`app-navbar-dropdown-item invoice-property-item ${prop.id === currentProp.id ? 'selected' : ''
+                          }`}
                         onClick={() => {
                           if (onSelectProperty) onSelectProperty(prop);
                           setIsPropertyMenuOpen(false);
@@ -440,9 +437,8 @@ const AppNavbar = ({
                   </div>
                 </div>
                 <span
-                  className={`app-navbar-user-chevron ${
-                    isUserMenuOpen ? 'open' : ''
-                  }`}
+                  className={`app-navbar-user-chevron ${isUserMenuOpen ? 'open' : ''
+                    }`}
                 >
                   <ChevronDown size={14} />
                 </span>

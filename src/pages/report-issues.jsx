@@ -594,42 +594,42 @@ const ReportIssuesPage = ({ onLogout }) => {
 
             {/* Issue Categories Grid */}
             <div className="report-categories-wrap">
-                <div className="report-section-heading">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-primary, #0d9488)' }}>
-                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-                    <line x1="7" y1="7" x2="7.01" y2="7" />
-                  </svg>
-                  <span>Issue Categories</span>
-                </div>
-                <div className="report-categories-grid">
-                  {categoriesWithCounts.map((cat) => {
-                    const isSelected = categoryFilter === cat.name;
-                    return (
-                      <div
-                        key={cat.id}
-                        className={`report-category-card ${isSelected ? 'selected' : ''}`}
-                        onClick={() => handleCategoryCardClick(cat)}
-                      >
-                        <div className="report-category-left">
-                          <div
-                            className="report-category-icon-box"
-                            style={{ background: cat.bgColor, color: cat.color }}
-                          >
-                            {renderCategoryIcon(cat.id)}
-                          </div>
-                          <div className="report-category-info">
-                            <h4>{cat.name}</h4>
-                            <p>{cat.description}</p>
-                          </div>
+              <div className="report-section-heading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-primary, #0d9488)' }}>
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                  <line x1="7" y1="7" x2="7.01" y2="7" />
+                </svg>
+                <span>Issue Categories</span>
+              </div>
+              <div className="report-categories-grid">
+                {categoriesWithCounts.map((cat) => {
+                  const isSelected = categoryFilter === cat.name;
+                  return (
+                    <div
+                      key={cat.id}
+                      className={`report-category-card ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleCategoryCardClick(cat)}
+                    >
+                      <div className="report-category-left">
+                        <div
+                          className="report-category-icon-box"
+                          style={{ background: cat.bgColor, color: cat.color }}
+                        >
+                          {renderCategoryIcon(cat.id)}
                         </div>
-                        <div className="report-category-badge">
-                          {cat.count} {cat.count === 1 ? 'issue' : 'issues'}
+                        <div className="report-category-info">
+                          <h4>{cat.name}</h4>
+                          <p>{cat.description}</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div className="report-category-badge">
+                        {cat.count} {cat.count === 1 ? 'issue' : 'issues'}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+            </div>
 
             {/* Reported Issues Table Section */}
             <div className="report-table-card">
@@ -641,200 +641,200 @@ const ReportIssuesPage = ({ onLogout }) => {
                   </span>
                 </div>
 
-                  <div className="report-table-filters">
-                    {/* Search filter */}
-                    <div className="report-table-search-wrap">
-                      <Search size={15} className="report-table-search-icon" />
-                      <input
-                        type="text"
-                        className="report-table-search"
-                        placeholder="Search issues..."
-                        value={tableSearch}
-                        onChange={(e) => {
-                          setTableSearch(e.target.value);
+                <div className="report-table-filters">
+                  {/* Search filter */}
+                  <div className="report-table-search-wrap">
+                    <Search size={15} className="report-table-search-icon" />
+                    <input
+                      type="text"
+                      className="report-table-search"
+                      placeholder="Search issues..."
+                      value={tableSearch}
+                      onChange={(e) => {
+                        setTableSearch(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    {tableSearch && (
+                      <button
+                        type="button"
+                        className="report-table-search-clear"
+                        onClick={() => {
+                          setTableSearch('');
                           setCurrentPage(1);
                         }}
-                      />
-                      {tableSearch && (
-                        <button
-                          type="button"
-                          className="report-table-search-clear"
-                          onClick={() => {
-                            setTableSearch('');
-                            setCurrentPage(1);
-                          }}
-                          aria-label="Clear search"
-                        >
-                          <X size={13} />
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Status dropdown */}
-                    <select
-                      className="report-table-select"
-                      value={statusFilter}
-                      onChange={(e) => {
-                        setStatusFilter(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value="All">All Status</option>
-                      <option value="Open">Open</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Resolved">Resolved</option>
-                    </select>
-
-                    {/* Category dropdown */}
-                    <select
-                      className="report-table-select"
-                      value={categoryFilter}
-                      onChange={(e) => {
-                        setCategoryFilter(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value="All">All Categories</option>
-                      <option value="Plumbing">Plumbing</option>
-                      <option value="Electrical">Electrical</option>
-                      <option value="Cleaning">Cleaning</option>
-                      <option value="Security">Security</option>
-                      <option value="Infrastructure">Infrastructure</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Table Data */}
-                <div className="report-table-wrap">
-                  <table className="report-table">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                        <th>Reported</th>
-                        <th style={{ textAlign: 'center' }}>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pagedIssues.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan="8"
-                            style={{
-                              textAlign: 'center',
-                              padding: '36px',
-                              color: '#94a3b8',
-                            }}
-                          >
-                            No maintenance issues found matching your filters.
-                          </td>
-                        </tr>
-                      ) : (
-                        pagedIssues.map((issue) => (
-                          <tr key={issue.id}>
-                            <td className="report-issue-id">{issue.id}</td>
-                            <td className="report-issue-title">
-                              {issue.isEmergency && (
-                                <span title="Emergency Issue" style={{ color: '#ef4444', display: 'inline-flex', alignItems: 'center', marginRight: 4 }}>
-                                  <AlertTriangle size={15} />
-                                </span>
-                              )}
-                              <span>{issue.title}</span>
-                            </td>
-                            <td>
-                              <span className="report-issue-category-tag">
-                                <span>{issue.category}</span>
-                              </span>
-                            </td>
-                            <td>{issue.location}</td>
-                            <td>
-                              <span
-                                className={`report-status-badge ${issue.status
-                                  .toLowerCase()
-                                  .replace(' ', '-')}`}
-                              >
-                                {issue.status === 'Resolved' && (
-                                  <Check size={12} strokeWidth={3} style={{ marginRight: 4, verticalAlign: 'middle' }} />
-                                )}
-                                {issue.status}
-                              </span>
-                            </td>
-                            <td>
-                              <span
-                                className={`report-priority-tag ${issue.priority.toLowerCase()}`}
-                              >
-                                <span className="report-priority-dot"></span>
-                                <span>{issue.priority}</span>
-                              </span>
-                            </td>
-                            <td style={{ whiteSpace: 'nowrap', color: '#64748b' }}>
-                              {issue.reported}
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <button
-                                type="button"
-                                className="report-action-btn"
-                                onClick={() => setViewingIssue(issue)}
-                                title="View Issue Details"
-                                aria-label="View Issue Details"
-                              >
-                                <Icon ios="f7:eye" md="material:visibility" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Pagination */}
-                <div className="report-pagination">
-                  <div className="report-pagination-info">
-                    Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
-                    {Math.min(currentPage * itemsPerPage, filteredIssues.length)} of{' '}
-                    {filteredIssues.length} issues
-                  </div>
-
-                  <div className="report-pagination-controls">
-                    <button
-                      type="button"
-                      className="report-page-btn"
-                      disabled={currentPage === 1}
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                      aria-label="Previous Page"
-                    >
-                      ‹
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        className={`report-page-btn ${currentPage === p ? 'active' : ''}`}
-                        onClick={() => setCurrentPage(p)}
+                        aria-label="Clear search"
                       >
-                        {p}
+                        <X size={13} />
                       </button>
-                    ))}
-                    <button
-                      type="button"
-                      className="report-page-btn"
-                      disabled={currentPage === totalPages}
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                      }
-                      aria-label="Next Page"
-                    >
-                      ›
-                    </button>
+                    )}
                   </div>
+
+                  {/* Status dropdown */}
+                  <select
+                    className="report-table-select"
+                    value={statusFilter}
+                    onChange={(e) => {
+                      setStatusFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="All">All Status</option>
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+
+                  {/* Category dropdown */}
+                  <select
+                    className="report-table-select"
+                    value={categoryFilter}
+                    onChange={(e) => {
+                      setCategoryFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value="All">All Categories</option>
+                    <option value="Plumbing">Plumbing</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Security">Security</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
               </div>
+
+              {/* Table Data */}
+              <div className="report-table-wrap">
+                <table className="report-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                      <th>Priority</th>
+                      <th>Reported</th>
+                      <th style={{ textAlign: 'center' }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pagedIssues.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan="8"
+                          style={{
+                            textAlign: 'center',
+                            padding: '36px',
+                            color: '#94a3b8',
+                          }}
+                        >
+                          No maintenance issues found matching your filters.
+                        </td>
+                      </tr>
+                    ) : (
+                      pagedIssues.map((issue) => (
+                        <tr key={issue.id}>
+                          <td className="report-issue-id">{issue.id}</td>
+                          <td className="report-issue-title">
+                            {issue.isEmergency && (
+                              <span title="Emergency Issue" style={{ color: '#ef4444', display: 'inline-flex', alignItems: 'center', marginRight: 4 }}>
+                                <AlertTriangle size={15} />
+                              </span>
+                            )}
+                            <span>{issue.title}</span>
+                          </td>
+                          <td>
+                            <span className="report-issue-category-tag">
+                              <span>{issue.category}</span>
+                            </span>
+                          </td>
+                          <td>{issue.location}</td>
+                          <td>
+                            <span
+                              className={`report-status-badge ${issue.status
+                                .toLowerCase()
+                                .replace(' ', '-')}`}
+                            >
+                              {issue.status === 'Resolved' && (
+                                <Check size={12} strokeWidth={3} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                              )}
+                              {issue.status}
+                            </span>
+                          </td>
+                          <td>
+                            <span
+                              className={`report-priority-tag ${issue.priority.toLowerCase()}`}
+                            >
+                              <span className="report-priority-dot"></span>
+                              <span>{issue.priority}</span>
+                            </span>
+                          </td>
+                          <td style={{ whiteSpace: 'nowrap', color: '#64748b' }}>
+                            {issue.reported}
+                          </td>
+                          <td style={{ textAlign: 'center' }}>
+                            <button
+                              type="button"
+                              className="report-action-btn"
+                              onClick={() => setViewingIssue(issue)}
+                              title="View Issue Details"
+                              aria-label="View Issue Details"
+                            >
+                              <Icon ios="f7:eye" md="material:visibility" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Pagination */}
+              <div className="report-pagination">
+                <div className="report-pagination-info">
+                  Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
+                  {Math.min(currentPage * itemsPerPage, filteredIssues.length)} of{' '}
+                  {filteredIssues.length} issues
+                </div>
+
+                <div className="report-pagination-controls">
+                  <button
+                    type="button"
+                    className="report-page-btn"
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                    aria-label="Previous Page"
+                  >
+                    ‹
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      className={`report-page-btn ${currentPage === p ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className="report-page-btn"
+                    disabled={currentPage === totalPages}
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                    }
+                    aria-label="Next Page"
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

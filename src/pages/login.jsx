@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Page, f7, Icon } from 'framework7-react';
 import { authService } from '../js/services/auth.js';
 
@@ -108,51 +108,119 @@ const LoginPage = ({ onLoginSuccess }) => {
     );
   }, []);
 
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get('error');
+    const oauthEmail = params.get('email');
+    if (oauthError === 'unlinked_oauth') {
+      f7.dialog.alert(
+        `Access Denied: The account ${oauthEmail ? `(${oauthEmail})` : ''} has not been saved in your profile yet. Please log in using your portal credentials (e.g. resident.owner) first and save your Google or Microsoft email in your Profile section.`,
+        'Access Denied — Account Not Linked'
+      );
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (e) { }
+    }
+  }, []);
+
   // ---------- Social OAuth Authentication ----------
   const handleSocialAuth = useCallback(
     async (provider) => {
-      setIsLoading(true);
-      try {
-        const result = await authService.loginWithOAuth(provider);
-        if (result.success) {
-          // If in mock mode or immediate user was returned
-          if (result.user) {
-            if (onLoginSuccess) {
-              onLoginSuccess?.(result.user);
+      const isGoogle = (provider || '').toLowerCase().includes('google');
+      const providerLabel = isGoogle ? 'Google' : 'Microsoft';
+
+      const performOAuth = async (emailOverride) => {
+        setIsLoading(true);
+        try {
+          const result = await authService.loginWithOAuth(provider, emailOverride ? { email: emailOverride } : {});
+          if (result.success) {
+            // If in mock mode or immediate user was returned
+            if (result.user) {
+              if (onLoginSuccess) {
+                onLoginSuccess?.(result.user);
+              }
+              try {
+                f7.views.main.router.navigate('/home/', { reloadCurrent: true, ignoreCache: true });
+              } catch (e) {
+                window.location.href = '/home/';
+              }
             }
-            try {
-              f7.views.main.router.navigate('/home/', { reloadCurrent: true, ignoreCache: true });
-            } catch (e) {
-              window.location.href = '/home/';
-            }
-          }
-          // In live Supabase mode, browser redirects automatically to provider login
-        } else {
-          const isConfigNotice = result.error && (result.error.includes('Supabase') || result.error.includes('Azure') || result.error.includes('enable'));
-          if (isConfigNotice) {
-            f7.dialog.alert(result.error, `${provider} Sign-In Notice`);
+            // In live Supabase mode, browser redirects automatically to provider login
           } else {
-            f7.toast
-              .create({
-                text: result.error || `${provider} sign-in failed. Please try again.`,
-                position: 'center',
-                closeTimeout: 4000,
-                cssClass: 'color-red',
-              })
-              .open();
+            if (result.isUnlinked) {
+              f7.dialog.alert(result.error, 'Access Denied — Account Not Linked');
+            } else if (result.error && (result.error.includes('Supabase') || result.error.includes('Azure') || result.error.includes('enable'))) {
+              f7.dialog.alert(result.error, `${providerLabel} Sign-In Notice`);
+            } else {
+              f7.toast
+                .create({
+                  text: result.error || `${providerLabel} sign-in failed. Please try again.`,
+                  position: 'center',
+                  closeTimeout: 4000,
+                  cssClass: 'color-red',
+                })
+                .open();
+            }
           }
+        } catch (err) {
+          f7.toast
+            .create({
+              text: `Unable to connect to ${providerLabel}. Please check your connection.`,
+              position: 'top',
+              closeTimeout: 3500,
+              cssClass: 'color-red',
+            })
+            .open();
+        } finally {
+          setIsLoading(false);
         }
-      } catch (err) {
-        f7.toast
-          .create({
-            text: `Unable to connect to ${provider}. Please check your connection.`,
-            position: 'top',
-            closeTimeout: 3500,
-            cssClass: 'color-red',
-          })
-          .open();
-      } finally {
-        setIsLoading(false);
+      };
+
+      // In mock mode, prompt the user for their registered OAuth email
+      if (typeof authService.isMockMode === 'function' && authService.isMockMode()) {
+        f7.dialog.create({
+          title: `Sign In with ${providerLabel}`,
+          text: `Enter the ${providerLabel} email registered to your member account. Only members who have linked their ${providerLabel} account via My Profile can sign in.`,
+          content: `
+            <div class="list no-hairlines-md" style="margin: 12px 0 0 0;">
+              <ul>
+                <li class="item-content item-input" style="padding: 0;">
+                  <div class="item-inner" style="padding: 0;">
+                    <div class="item-input-wrap">
+                      <input type="email" id="sso-email-input" placeholder="e.g. yourname@gmail.com" style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; width: 100%; box-sizing: border-box; font-size: 14px;" />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div style="font-size: 12px; color: #64748b; margin-top: 8px; line-height: 1.4;">
+                <strong>Restricted Member Access:</strong><br/>
+                First-time sign in? Please log in with your username/password and register your ${providerLabel} account under <strong>My Profile &rarr; Security & Access</strong>. Unregistered accounts will be denied.
+              </div>
+            </div>
+          `,
+          buttons: [
+            {
+              text: 'Cancel',
+              color: 'gray',
+            },
+            {
+              text: 'Sign In',
+              bold: true,
+              onClick: () => {
+                const inputEl = document.getElementById('sso-email-input');
+                const enteredEmail = inputEl ? inputEl.value.trim() : '';
+                if (!enteredEmail) {
+                  f7.toast.create({ text: `Please enter your ${providerLabel} email address.`, position: 'top', closeTimeout: 2500, cssClass: 'color-red' }).open();
+                  return;
+                }
+                performOAuth(enteredEmail);
+              },
+            },
+          ],
+        }).open();
+      } else {
+        performOAuth();
       }
     },
     [onLoginSuccess]
@@ -389,6 +457,7 @@ const LoginPage = ({ onLoginSuccess }) => {
           <div className="login-social-buttons">
             <button
               type="button"
+              id="microsoft-signin-btn"
               className="login-social-btn"
               disabled={isLoading}
               onClick={() => handleSocialAuth('Microsoft')}
@@ -405,6 +474,7 @@ const LoginPage = ({ onLoginSuccess }) => {
 
             <button
               type="button"
+              id="google-signin-btn"
               className="login-social-btn"
               disabled={isLoading}
               onClick={() => handleSocialAuth('Google')}

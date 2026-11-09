@@ -1,0 +1,86 @@
+[
+  {
+    "username": "resident.owner",
+    "email": "resident.owner@intellistrata.test",
+    "name": "Pasan Udara",
+    "role": "Resident Owner",
+    "unit": "101",
+    "internal_user_id": "usr_pasan",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "lot-1-a03",
+    "lot_number": "Lot A-03"
+  },
+  {
+    "username": "committee.member",
+    "email": "committee.member@intellistrata.test",
+    "name": "Alice Smith",
+    "role": "Strata Committee Member",
+    "unit": "102",
+    "internal_user_id": "usr_alice",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "lot-1-a01",
+    "lot_number": "Lot A-01"
+  },
+  {
+    "username": "strata.manager",
+    "email": "strata.manager@intellistrata.test",
+    "name": "Admin Manager",
+    "role": "Strata Manager",
+    "unit": "100",
+    "internal_user_id": "usr_admin",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "all",
+    "lot_number": "All Lots"
+  },
+  {
+    "username": "bob",
+    "email": "bob@demo.com",
+    "name": "Bob Johnson",
+    "role": "Strata Committee Member",
+    "unit": "205",
+    "internal_user_id": "usr_bob",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "lot-1-b01",
+    "lot_number": "Lot B-01"
+  },
+  {
+    "username": "charlie",
+    "email": "charlie@demo.com",
+    "name": "Charlie Brown",
+    "role": "Resident Owner",
+    "unit": "304",
+    "internal_user_id": "usr_charlie",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "lot-1-b02",
+    "lot_number": "Lot B-02"
+  },
+  {
+    "username": "admin",
+    "email": "admin@intellistrata.com",
+    "name": "Admin Manager",
+    "role": "Strata Manager",
+    "unit": "100",
+    "internal_user_id": "usr_admin",
+    "property_id": "prop-1",
+    "property_name": "Green Valley Residence",
+    "lot_id": "all",
+    "lot_number": "All Lots"
+  },
+  {
+    "username": "empty.user",
+    "email": "empty.user@intellistrata.test",
+    "name": "Taylor Blank",
+    "role": "Prospective Resident",
+    "unit": null,
+    "internal_user_id": "usr_empty",
+    "property_id": "prop-empty",
+    "property_name": "Sunset Bay Villas (Unoccupied Scheme)",
+    "lot_id": null,
+    "lot_number": null
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "faq-1",
+    "question": "What are the swimming pool and gym hours?",
+    "answer": "The heated lap pool is open daily from 6:00 AM to 10:00 PM. The fitness center has 24/7 key fob access for all residents.",
+    "category": "Amenities",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "faq-2",
+    "question": "How do I book the BBQ area or function room?",
+    "answer": "The BBQ terrace is generally available on a first-come, first-served basis. For exclusive gatherings over 8 people, submit a request via the portal at least 48 hours in advance.",
+    "category": "Amenities",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "faq-3",
+    "question": "Who do I contact for urgent out-of-hours facilities emergencies?",
+    "answer": "Call the Intellistrata 24/7 emergency hotline on 1800 555 888. For life-threatening emergencies, always dial 000 immediately.",
+    "category": "Maintenance",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "faq-4",
+    "question": "How can I set up an automated payment plan for levies?",
+    "answer": "Navigate to the Payment Plan tab in the portal, choose your preferred installment frequency (weekly, fortnightly, or monthly), and link your direct debit account or debit card.",
+    "category": "Finance",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "faq-5",
+    "question": "What are the rules regarding moving in or out?",
+    "answer": "All moves must be booked through the building manager at least 3 business days prior to reserve lift curtains and loading dock bay access.",
+    "category": "Rules & Bylaws",
+    "propertyId": "prop-1"
+  }
+]

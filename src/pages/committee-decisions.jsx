@@ -715,25 +715,25 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
       prev.map((d) =>
         d.id === decisionToEdit.id
           ? {
-              ...d,
-              topic: formData.topic.trim(),
-              category: formData.category,
-              meetingType: formData.meetingType,
-              decision: formData.decision.trim(),
-              fullResolution: formData.fullResolution.trim() || formData.decision.trim(),
-              inFavourMembers: formData.inFavourMembers,
-              againstMembers: formData.againstMembers,
-              abstainMembers: formData.abstainMembers,
-              inFavourVotes: inFav,
-              againstVotes: against,
-              abstainVotes: abstain,
-              totalVotes: total,
-              inFavourPct: pct,
-              decisionDate: formData.decisionDate,
-              submittedBy: formData.submittedBy,
-              status,
-              actionItems: formData.actionItems,
-            }
+            ...d,
+            topic: formData.topic.trim(),
+            category: formData.category,
+            meetingType: formData.meetingType,
+            decision: formData.decision.trim(),
+            fullResolution: formData.fullResolution.trim() || formData.decision.trim(),
+            inFavourMembers: formData.inFavourMembers,
+            againstMembers: formData.againstMembers,
+            abstainMembers: formData.abstainMembers,
+            inFavourVotes: inFav,
+            againstVotes: against,
+            abstainVotes: abstain,
+            totalVotes: total,
+            inFavourPct: pct,
+            decisionDate: formData.decisionDate,
+            submittedBy: formData.submittedBy,
+            status,
+            actionItems: formData.actionItems,
+          }
           : d
       )
     );
@@ -1168,8 +1168,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                                   {item.submitterRole
                                     ? `(${item.submitterRole})`
                                     : item.submittedBy.includes('(')
-                                    ? `(${item.submittedBy.split('(')[1]}`
-                                    : ''}
+                                      ? `(${item.submittedBy.split('(')[1]}`
+                                      : ''}
                                 </span>
                               </td>
                             </tr>
@@ -1473,9 +1473,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                       <div className="committee-member-multiselect-container">
                         <button
                           type="button"
-                          className={`committee-custom-select-trigger ${isSubmittedByDropdownOpen ? 'open' : ''} ${
-                            submittedByTouched && !formData.submittedBy ? 'has-error' : ''
-                          }`}
+                          className={`committee-custom-select-trigger ${isSubmittedByDropdownOpen ? 'open' : ''} ${submittedByTouched && !formData.submittedBy ? 'has-error' : ''
+                            }`}
                           onClick={() => setIsSubmittedByDropdownOpen(!isSubmittedByDropdownOpen)}
                         >
                           <span className={formData.submittedBy ? 'committee-member-option-name' : 'committee-member-placeholder'}>
@@ -1520,11 +1519,11 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                     {(formData.inFavourMembers?.length || 0) +
                       (formData.againstMembers?.length || 0) +
                       (formData.abstainMembers?.length || 0) === 0 && (
-                      <div className="committee-form-warning-alert">
-                        <AlertCircle size={17} className="committee-warning-icon" />
-                        <span>Please select at least one committee member from any tab.</span>
-                      </div>
-                    )}
+                        <div className="committee-form-warning-alert">
+                          <AlertCircle size={17} className="committee-warning-icon" />
+                          <span>Please select at least one committee member from any tab.</span>
+                        </div>
+                      )}
 
                     {/* Voting Tabs Card */}
                     <div className="committee-voting-card">
@@ -1574,8 +1573,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                             {(activeVoteTab === 'inFavour'
                               ? formData.inFavourMembers
                               : activeVoteTab === 'against'
-                              ? formData.againstMembers
-                              : formData.abstainMembers
+                                ? formData.againstMembers
+                                : formData.abstainMembers
                             )?.length === 0 ? (
                               <span className="committee-member-placeholder">Select committee members...</span>
                             ) : (
@@ -1583,13 +1582,13 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                                 {(activeVoteTab === 'inFavour'
                                   ? formData.inFavourMembers
                                   : activeVoteTab === 'against'
-                                  ? formData.againstMembers
-                                  : formData.abstainMembers
+                                    ? formData.againstMembers
+                                    : formData.abstainMembers
                                 )?.length} member{(activeVoteTab === 'inFavour'
                                   ? formData.inFavourMembers
                                   : activeVoteTab === 'against'
-                                  ? formData.againstMembers
-                                  : formData.abstainMembers
+                                    ? formData.againstMembers
+                                    : formData.abstainMembers
                                 )?.length > 1 ? 's' : ''} selected
                               </span>
                             )}
@@ -1623,8 +1622,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                                   activeVoteTab === 'inFavour'
                                     ? formData.inFavourMembers || []
                                     : activeVoteTab === 'against'
-                                    ? formData.againstMembers || []
-                                    : formData.abstainMembers || [];
+                                      ? formData.againstMembers || []
+                                      : formData.abstainMembers || [];
                                 const isSelected = currentList.includes(m.display);
 
                                 const inFav = formData.inFavourMembers?.includes(m.display);
@@ -1665,29 +1664,29 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                         {((activeVoteTab === 'inFavour'
                           ? formData.inFavourMembers
                           : activeVoteTab === 'against'
-                          ? formData.againstMembers
-                          : formData.abstainMembers) || []).length > 0 && (
-                          <div className="committee-member-chips-wrap">
-                            {(activeVoteTab === 'inFavour'
-                              ? formData.inFavourMembers
-                              : activeVoteTab === 'against'
-                              ? formData.againstMembers
-                              : formData.abstainMembers
-                            ).map((memberText) => (
-                              <span key={memberText} className="committee-member-chip">
-                                <span>{memberText}</span>
-                                <button
-                                  type="button"
-                                  className="committee-member-chip-remove"
-                                  onClick={(e) => handleRemoveMemberVote(activeVoteTab, memberText, e)}
-                                  title="Remove vote"
-                                >
-                                  <X size={12} />
-                                </button>
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                            ? formData.againstMembers
+                            : formData.abstainMembers) || []).length > 0 && (
+                            <div className="committee-member-chips-wrap">
+                              {(activeVoteTab === 'inFavour'
+                                ? formData.inFavourMembers
+                                : activeVoteTab === 'against'
+                                  ? formData.againstMembers
+                                  : formData.abstainMembers
+                              ).map((memberText) => (
+                                <span key={memberText} className="committee-member-chip">
+                                  <span>{memberText}</span>
+                                  <button
+                                    type="button"
+                                    className="committee-member-chip-remove"
+                                    onClick={(e) => handleRemoveMemberVote(activeVoteTab, memberText, e)}
+                                    title="Remove vote"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     </div>
 
@@ -1918,9 +1917,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                       <div className="committee-member-multiselect-container">
                         <button
                           type="button"
-                          className={`committee-custom-select-trigger ${isEditSubmittedByDropdownOpen ? 'open' : ''} ${
-                            submittedByTouched && !formData.submittedBy ? 'has-error' : ''
-                          }`}
+                          className={`committee-custom-select-trigger ${isEditSubmittedByDropdownOpen ? 'open' : ''} ${submittedByTouched && !formData.submittedBy ? 'has-error' : ''
+                            }`}
                           onClick={() => setIsEditSubmittedByDropdownOpen(!isEditSubmittedByDropdownOpen)}
                         >
                           <span className={formData.submittedBy ? 'committee-member-option-name' : 'committee-member-placeholder'}>
@@ -1965,11 +1963,11 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                     {(formData.inFavourMembers?.length || 0) +
                       (formData.againstMembers?.length || 0) +
                       (formData.abstainMembers?.length || 0) === 0 && (
-                      <div className="committee-form-warning-alert">
-                        <AlertCircle size={17} className="committee-warning-icon" />
-                        <span>Please select at least one committee member from any tab.</span>
-                      </div>
-                    )}
+                        <div className="committee-form-warning-alert">
+                          <AlertCircle size={17} className="committee-warning-icon" />
+                          <span>Please select at least one committee member from any tab.</span>
+                        </div>
+                      )}
 
                     {/* Voting Tabs Card */}
                     <div className="committee-voting-card">
@@ -2018,8 +2016,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                             {(activeVoteTab === 'inFavour'
                               ? formData.inFavourMembers
                               : activeVoteTab === 'against'
-                              ? formData.againstMembers
-                              : formData.abstainMembers
+                                ? formData.againstMembers
+                                : formData.abstainMembers
                             )?.length === 0 ? (
                               <span className="committee-member-placeholder">Select committee members...</span>
                             ) : (
@@ -2027,13 +2025,13 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                                 {(activeVoteTab === 'inFavour'
                                   ? formData.inFavourMembers
                                   : activeVoteTab === 'against'
-                                  ? formData.againstMembers
-                                  : formData.abstainMembers
+                                    ? formData.againstMembers
+                                    : formData.abstainMembers
                                 )?.length} member{(activeVoteTab === 'inFavour'
                                   ? formData.inFavourMembers
                                   : activeVoteTab === 'against'
-                                  ? formData.againstMembers
-                                  : formData.abstainMembers
+                                    ? formData.againstMembers
+                                    : formData.abstainMembers
                                 )?.length > 1 ? 's' : ''} selected
                               </span>
                             )}
@@ -2067,8 +2065,8 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                                   activeVoteTab === 'inFavour'
                                     ? formData.inFavourMembers || []
                                     : activeVoteTab === 'against'
-                                    ? formData.againstMembers || []
-                                    : formData.abstainMembers || [];
+                                      ? formData.againstMembers || []
+                                      : formData.abstainMembers || [];
                                 const isSelected = currentList.includes(m.display);
 
                                 const inFav = formData.inFavourMembers?.includes(m.display);
@@ -2109,29 +2107,29 @@ const CommitteeDecisionsPage = ({ onLogout }) => {
                         {((activeVoteTab === 'inFavour'
                           ? formData.inFavourMembers
                           : activeVoteTab === 'against'
-                          ? formData.againstMembers
-                          : formData.abstainMembers) || []).length > 0 && (
-                          <div className="committee-member-chips-wrap">
-                            {(activeVoteTab === 'inFavour'
-                              ? formData.inFavourMembers
-                              : activeVoteTab === 'against'
-                              ? formData.againstMembers
-                              : formData.abstainMembers
-                            ).map((memberText) => (
-                              <span key={memberText} className="committee-member-chip">
-                                <span>{memberText}</span>
-                                <button
-                                  type="button"
-                                  className="committee-member-chip-remove"
-                                  onClick={(e) => handleRemoveMemberVote(activeVoteTab, memberText, e)}
-                                  title="Remove vote"
-                                >
-                                  <X size={12} />
-                                </button>
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                            ? formData.againstMembers
+                            : formData.abstainMembers) || []).length > 0 && (
+                            <div className="committee-member-chips-wrap">
+                              {(activeVoteTab === 'inFavour'
+                                ? formData.inFavourMembers
+                                : activeVoteTab === 'against'
+                                  ? formData.againstMembers
+                                  : formData.abstainMembers
+                              ).map((memberText) => (
+                                <span key={memberText} className="committee-member-chip">
+                                  <span>{memberText}</span>
+                                  <button
+                                    type="button"
+                                    className="committee-member-chip-remove"
+                                    onClick={(e) => handleRemoveMemberVote(activeVoteTab, memberText, e)}
+                                    title="Remove vote"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     </div>
 

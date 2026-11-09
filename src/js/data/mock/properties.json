@@ -1,0 +1,429 @@
+[
+  {
+    "id": "prop-1",
+    "name": "Green Valley Residence",
+    "code": "GVR",
+    "planNumber": "SP98214",
+    "schemeName": "Owners Corporation SP98214",
+    "legalEntityName": "The Owners of Green Valley Residence - SP98214",
+    "propertyType": "Residential & Mixed Use Strata Scheme",
+    "address": "12-18 Valley Road, Glen Iris VIC 3146",
+    "formattedAddress": {
+      "line1": "12-18 Valley Road",
+      "suburb": "Glen Iris",
+      "state": "VIC",
+      "postcode": "3146",
+      "country": "Australia",
+      "fullFormatted": "12-18 Valley Road, Glen Iris VIC 3146, Australia"
+    },
+    "totalLots": 42,
+    "activeEntitlements": 10000,
+    "registrationDate": "2021-11-12",
+    "managingCompany": {
+      "name": "Intellistrata Management Pty Ltd",
+      "abn": "48 102 938 412",
+      "license": "VIC Strata Lic #003912 / NSW Lic #2049182",
+      "address": "Level 12, 500 Collins Street, Melbourne VIC 3000",
+      "phone": "1300 123 456",
+      "phoneRaw": "1300123456",
+      "website": "intellistrata.com.au",
+      "websiteUrl": "https://intellistrata.com.au",
+      "email": "info@intellistrata.com.au",
+      "hours": "Monday – Friday: 8:30 AM – 5:30 PM AEST"
+    },
+    "strataManager": {
+      "name": "Sarah Jenkins",
+      "role": "Licensed Strata Community Manager",
+      "email": "s.jenkins@intellistrata.com.au",
+      "phone": "+61 3 9820 4110",
+      "directPhone": "+61 3 9820 4110",
+      "mobile": "0412 345 678",
+      "avatarInitials": "SJ",
+      "department": "Residential Management Division"
+    },
+    "committeeMembers": [
+      {
+        "id": "cm-1",
+        "name": "Alice Smith",
+        "position": "Chairperson",
+        "role": "Chairperson",
+        "initials": "AS",
+        "lot": "Lot A-01",
+        "userId": "usr_alice"
+      },
+      {
+        "id": "cm-2",
+        "name": "Bob Johnson",
+        "position": "Secretary",
+        "role": "Secretary",
+        "initials": "BJ",
+        "lot": "Lot B-01",
+        "userId": "usr_bob"
+      },
+      {
+        "id": "cm-3",
+        "name": "Judy Fizz",
+        "position": "Treasurer",
+        "role": "Treasurer",
+        "initials": "JF",
+        "lot": "Lot A-02",
+        "userId": "usr_owner_a02"
+      }
+    ],
+    "emergencyContact": {
+      "label": "24/7 Urgent Facilities & Building Emergency",
+      "phone": "1800 555 888",
+      "phoneRaw": "1800555888",
+      "contractor": "Intellistrata Rapid Response Hub"
+    },
+    "amenities": [
+      {
+        "id": "pool",
+        "label": "Heated Lap Pool",
+        "icon": "waves",
+        "location": "Level 1 Podium",
+        "hours": "6:00 AM - 10:00 PM"
+      },
+      {
+        "id": "gym",
+        "label": "Fitness Center",
+        "icon": "dumbbell",
+        "location": "Level 1 North",
+        "hours": "24 Hours Access"
+      },
+      {
+        "id": "terrace",
+        "label": "Sky Garden & BBQ",
+        "icon": "sun",
+        "location": "Rooftop Level 5",
+        "hours": "7:00 AM - 10:30 PM"
+      },
+      {
+        "id": "parking",
+        "label": "Secure Basement Parking",
+        "icon": "car",
+        "location": "Basement B1-B2",
+        "hours": "Restricted Access"
+      },
+      {
+        "id": "waste",
+        "label": "Waste & Recycling Chutes",
+        "icon": "trash",
+        "location": "Every Floor Core",
+        "hours": "24 Hours"
+      },
+      {
+        "id": "ev",
+        "label": "EV Charging Bays",
+        "icon": "zap",
+        "location": "B1 Bays 01-08",
+        "hours": "App-activated"
+      }
+    ],
+    "wasteSchedule": {
+      "general": "Tuesdays & Fridays (early morning collection)",
+      "recycle": "Wednesdays (yellow commingled bins)",
+      "bulk": "Quarterly hard waste booking available via portal"
+    },
+    "lots": [
+      "All Lots",
+      "Lot A-01",
+      "Lot A-02",
+      "Lot A-03",
+      "Lot B-01",
+      "Lot B-02",
+      "Lot C-05",
+      "Commercial Lot 1"
+    ]
+  },
+  {
+    "id": "prop-2",
+    "name": "Harbour View Towers",
+    "code": "HVT",
+    "planNumber": "SP84291",
+    "schemeName": "Owners Corporation SP84291",
+    "legalEntityName": "The Owners of Harbour View Towers - SP84291",
+    "propertyType": "High-Rise Waterfront Strata Scheme",
+    "address": "88 Harbour Promenade, Docklands VIC 3008",
+    "formattedAddress": {
+      "line1": "88 Harbour Promenade",
+      "suburb": "Docklands",
+      "state": "VIC",
+      "postcode": "3008",
+      "country": "Australia",
+      "fullFormatted": "88 Harbour Promenade, Docklands VIC 3008, Australia"
+    },
+    "totalLots": 76,
+    "activeEntitlements": 15000,
+    "registrationDate": "2020-05-18",
+    "managingCompany": {
+      "name": "Intellistrata Management Pty Ltd",
+      "abn": "48 102 938 412",
+      "license": "VIC Strata Lic #003912",
+      "address": "Level 12, 500 Collins Street, Melbourne VIC 3000",
+      "phone": "1300 123 456",
+      "phoneRaw": "1300123456",
+      "website": "intellistrata.com.au",
+      "websiteUrl": "https://intellistrata.com.au",
+      "email": "docklands@intellistrata.com.au",
+      "hours": "Monday – Friday: 8:30 AM – 5:30 PM AEST"
+    },
+    "strataManager": {
+      "name": "Marcus Vance",
+      "role": "Senior Strata Portfolio Manager",
+      "email": "m.vance@intellistrata.com.au",
+      "phone": "+61 3 9820 4118",
+      "directPhone": "+61 3 9820 4118",
+      "mobile": "0422 998 112",
+      "avatarInitials": "MV",
+      "department": "Commercial & High-Rise Division"
+    },
+    "committeeMembers": [
+      {
+        "id": "cm-201",
+        "name": "Elena Rostova",
+        "position": "Chairperson",
+        "role": "Chairperson",
+        "initials": "ER",
+        "lot": "Penthouse A",
+        "userId": "usr_hvt_pent"
+      }
+    ],
+    "emergencyContact": {
+      "label": "24/7 Waterfront Building Maintenance Emergency",
+      "phone": "1800 555 888",
+      "phoneRaw": "1800555888",
+      "contractor": "Docklands Emergency Facility Care"
+    },
+    "amenities": [
+      {
+        "id": "harbour-lounge",
+        "label": "Marina View Residents Lounge",
+        "icon": "waves",
+        "location": "Level 25 Skydeck",
+        "hours": "7:00 AM - 11:00 PM"
+      },
+      {
+        "id": "sauna",
+        "label": "Thermal Sauna & Spa",
+        "icon": "waves",
+        "location": "Level 2 Wellness Suite",
+        "hours": "6:00 AM - 9:00 PM"
+      }
+    ],
+    "wasteSchedule": {
+      "general": "Mondays & Thursdays",
+      "recycle": "Tuesdays & Fridays",
+      "bulk": "First Monday of every month"
+    },
+    "lots": [
+      "All Lots",
+      "Lot 101",
+      "Lot 102",
+      "Lot 204",
+      "Lot 305",
+      "Lot 412",
+      "Penthouse A"
+    ]
+  },
+  {
+    "id": "prop-3",
+    "name": "Skyline Heights",
+    "code": "SKH",
+    "planNumber": "SP71034",
+    "schemeName": "Owners Corporation SP71034",
+    "legalEntityName": "The Owners of Skyline Heights - SP71034",
+    "propertyType": "CBD Residential Apartments",
+    "address": "240 Collins Street, Melbourne VIC 3000",
+    "formattedAddress": {
+      "line1": "240 Collins Street",
+      "suburb": "Melbourne",
+      "state": "VIC",
+      "postcode": "3000",
+      "country": "Australia",
+      "fullFormatted": "240 Collins Street, Melbourne VIC 3000, Australia"
+    },
+    "totalLots": 54,
+    "activeEntitlements": 12000,
+    "registrationDate": "2019-08-22",
+    "managingCompany": {
+      "name": "Intellistrata Management Pty Ltd",
+      "abn": "48 102 938 412",
+      "license": "VIC Strata Lic #003912",
+      "address": "Level 12, 500 Collins Street, Melbourne VIC 3000",
+      "phone": "1300 123 456",
+      "phoneRaw": "1300123456",
+      "website": "intellistrata.com.au",
+      "websiteUrl": "https://intellistrata.com.au",
+      "email": "cbd@intellistrata.com.au",
+      "hours": "Monday – Friday: 8:30 AM – 5:30 PM AEST"
+    },
+    "strataManager": {
+      "name": "Sarah Jenkins",
+      "role": "Licensed Strata Community Manager",
+      "email": "s.jenkins@intellistrata.com.au",
+      "phone": "+61 3 9820 4110",
+      "directPhone": "+61 3 9820 4110",
+      "mobile": "0412 345 678",
+      "avatarInitials": "SJ",
+      "department": "Residential Management Division"
+    },
+    "emergencyContact": {
+      "label": "CBD Building Emergency Line",
+      "phone": "1800 555 888",
+      "phoneRaw": "1800555888",
+      "contractor": "Intellistrata Rapid Response Hub"
+    },
+    "amenities": [
+      {
+        "id": "concierge",
+        "label": "24/7 Security & Concierge Desk",
+        "icon": "shield",
+        "location": "Ground Foyer",
+        "hours": "24 Hours"
+      }
+    ],
+    "wasteSchedule": {
+      "general": "Daily chute disposal",
+      "recycle": "Daily chute disposal",
+      "bulk": "By appointment with building manager"
+    },
+    "lots": [
+      "All Lots",
+      "Lot 12",
+      "Lot 18",
+      "Lot 24",
+      "Lot 32",
+      "Penthouse B"
+    ]
+  },
+  {
+    "id": "prop-4",
+    "name": "Parkside Residences",
+    "code": "PSR",
+    "planNumber": "SP65419",
+    "schemeName": "Owners Corporation SP65419",
+    "legalEntityName": "The Owners of Parkside Residences - SP65419",
+    "propertyType": "Boutique Residential Townhouses",
+    "address": "45 Park Avenue, South Yarra VIC 3141",
+    "formattedAddress": {
+      "line1": "45 Park Avenue",
+      "suburb": "South Yarra",
+      "state": "VIC",
+      "postcode": "3141",
+      "country": "Australia",
+      "fullFormatted": "45 Park Avenue, South Yarra VIC 3141, Australia"
+    },
+    "totalLots": 28,
+    "activeEntitlements": 8000,
+    "registrationDate": "2022-03-10",
+    "managingCompany": {
+      "name": "Intellistrata Management Pty Ltd",
+      "abn": "48 102 938 412",
+      "license": "VIC Strata Lic #003912",
+      "address": "Level 12, 500 Collins Street, Melbourne VIC 3000",
+      "phone": "1300 123 456",
+      "phoneRaw": "1300123456",
+      "website": "intellistrata.com.au",
+      "websiteUrl": "https://intellistrata.com.au",
+      "email": "southyarra@intellistrata.com.au",
+      "hours": "Monday – Friday: 8:30 AM – 5:30 PM AEST"
+    },
+    "strataManager": {
+      "name": "David Thorne",
+      "role": "Strata Community Manager",
+      "email": "d.thorne@intellistrata.com.au",
+      "phone": "+61 3 9820 4115",
+      "directPhone": "+61 3 9820 4115",
+      "mobile": "0433 112 445",
+      "avatarInitials": "DT",
+      "department": "Residential Management Division"
+    },
+    "emergencyContact": {
+      "label": "24/7 Urgent Facilities Emergency",
+      "phone": "1800 555 888",
+      "phoneRaw": "1800555888",
+      "contractor": "Intellistrata Rapid Response Hub"
+    },
+    "amenities": [
+      {
+        "id": "garden",
+        "label": "Landscaped Courtyard",
+        "icon": "sun",
+        "location": "Central Courtyard",
+        "hours": "7:00 AM - 9:00 PM"
+      }
+    ],
+    "wasteSchedule": {
+      "general": "Wednesday mornings",
+      "recycle": "Thursday mornings",
+      "bulk": "Quarterly"
+    },
+    "lots": [
+      "All Lots",
+      "Lot 1A",
+      "Lot 2B",
+      "Lot 3C",
+      "Lot 4D",
+      "Penthouse C"
+    ]
+  },
+  {
+    "id": "prop-empty",
+    "name": "Sunset Bay Villas (Unoccupied Scheme)",
+    "code": "SBV",
+    "planNumber": "SP99999",
+    "schemeName": "Owners Corporation SP99999",
+    "legalEntityName": "The Owners of Sunset Bay Villas - SP99999",
+    "propertyType": "New Residential Development (Empty State Fixture)",
+    "address": "1 Coastal Way, St Kilda VIC 3182",
+    "formattedAddress": {
+      "line1": "1 Coastal Way",
+      "suburb": "St Kilda",
+      "state": "VIC",
+      "postcode": "3182",
+      "country": "Australia",
+      "fullFormatted": "1 Coastal Way, St Kilda VIC 3182, Australia"
+    },
+    "totalLots": 0,
+    "activeEntitlements": 0,
+    "registrationDate": "2026-10-01",
+    "managingCompany": {
+      "name": "Intellistrata Management Pty Ltd",
+      "abn": "48 102 938 412",
+      "license": "VIC Strata Lic #003912",
+      "address": "Level 12, 500 Collins Street, Melbourne VIC 3000",
+      "phone": "1300 123 456",
+      "phoneRaw": "1300123456",
+      "website": "intellistrata.com.au",
+      "websiteUrl": "https://intellistrata.com.au",
+      "email": "info@intellistrata.com.au",
+      "hours": "Monday – Friday: 8:30 AM – 5:30 PM AEST"
+    },
+    "strataManager": {
+      "name": "Sarah Jenkins",
+      "role": "Licensed Strata Community Manager",
+      "email": "s.jenkins@intellistrata.com.au",
+      "phone": "+61 3 9820 4110",
+      "directPhone": "+61 3 9820 4110",
+      "mobile": "0412 345 678",
+      "avatarInitials": "SJ",
+      "department": "Residential Management Division"
+    },
+    "emergencyContact": {
+      "label": "Building Emergency Line",
+      "phone": "1800 555 888",
+      "phoneRaw": "1800555888",
+      "contractor": "Intellistrata Rapid Response Hub"
+    },
+    "amenities": [],
+    "wasteSchedule": {
+      "general": "To be scheduled",
+      "recycle": "To be scheduled",
+      "bulk": "To be scheduled"
+    },
+    "lots": [
+      "All Lots"
+    ]
+  }
+]

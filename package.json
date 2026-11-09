@@ -16,7 +16,8 @@
     "cap:ios": "npx cap open ios",
     "cap:run:android": "npx cap run android",
     "cap:run:ios": "npx cap run ios",
-    "build:cap": "npm run build && npx cap sync"
+    "build:cap": "npm run build && npx cap sync",
+    "seed:users": "node supabase/seed/create-test-users.js"
   },
   "browserslist": [
     "IOS >= 15",

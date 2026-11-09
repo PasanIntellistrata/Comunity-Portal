@@ -10,41 +10,41 @@
 /* ---------- Design Tokens ---------- */
 .login-page {
   /* Brand */
-  --login-teal:                var(--color-primary, #0d9488);
-  --login-teal-light:          var(--color-primary-light, #14b8a6);
-  --login-teal-dark:           var(--color-primary-dark, #0f766e);
-  --login-teal-rgb:            var(--color-primary-rgb, 13, 148, 136);
-  --login-cyan:                var(--color-cyan, #06b6d4);
+  --login-teal: var(--color-primary, #0d9488);
+  --login-teal-light: var(--color-primary-light, #14b8a6);
+  --login-teal-dark: var(--color-primary-dark, #0f766e);
+  --login-teal-rgb: var(--color-primary-rgb, 13, 148, 136);
+  --login-cyan: var(--color-cyan, #06b6d4);
 
   /* Backgrounds & Neutrals */
-  --login-navy:                var(--color-navy, #0f172a);
-  --login-navy-light:          var(--color-navy-light, #1e293b);
-  --login-navy-rgb:            var(--color-navy-rgb, 15, 23, 42);
+  --login-navy: var(--color-navy, #0f172a);
+  --login-navy-light: var(--color-navy-light, #1e293b);
+  --login-navy-rgb: var(--color-navy-rgb, 15, 23, 42);
 
-  --login-surface:             var(--color-surface, #ffffff);
-  --login-surface-subtle:      var(--color-surface-subtle, #f8fafc);
-  --login-white:               var(--color-white, #ffffff);
+  --login-surface: var(--color-surface, #ffffff);
+  --login-surface-subtle: var(--color-surface-subtle, #f8fafc);
+  --login-white: var(--color-white, #ffffff);
 
   /* Typography */
-  --login-text:                var(--color-text-title, #1e293b);
-  --login-text-body:           var(--color-text-body, #334155);
-  --login-text-muted:          var(--color-text-muted, #64748b);
-  --login-placeholder:         var(--color-text-placeholder, #64748b);
+  --login-text: var(--color-text-title, #1e293b);
+  --login-text-body: var(--color-text-body, #334155);
+  --login-text-muted: var(--color-text-muted, #64748b);
+  --login-placeholder: var(--color-text-placeholder, #64748b);
 
   /* Borders */
-  --login-border:              var(--color-border, #e2e8f0);
-  --login-border-light:        var(--color-border-light, #cbd5e1);
-  --login-border-input:        var(--color-border-input, #cbd5e1);
-  --login-border-hover:        var(--color-border-input-hover, #94a3b8);
+  --login-border: var(--color-border, #e2e8f0);
+  --login-border-light: var(--color-border-light, #cbd5e1);
+  --login-border-input: var(--color-border-input, #cbd5e1);
+  --login-border-hover: var(--color-border-input-hover, #94a3b8);
 
   /* Status */
-  --login-error:               var(--color-error, #ef4444);
-  --login-error-rgb:           var(--color-error-rgb, 239, 68, 68);
+  --login-error: var(--color-error, #ef4444);
+  --login-error-rgb: var(--color-error-rgb, 239, 68, 68);
 
   /* Dimensions & Font */
-  --login-radius:              12px;
-  --login-font:                'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display',
-                                'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --login-radius: 12px;
+  --login-font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display',
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ---------- Page Shell ---------- */
@@ -80,13 +80,27 @@
 
 /* ---------- Fade-in animation ---------- */
 @keyframes loginFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes loginSlideInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* ======================================================
@@ -121,12 +135,10 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.75) 0%,
-    rgba(15, 23, 42, 0.55) 40%,
-    rgba(15, 23, 42, 0.85) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(15, 23, 42, 0.75) 0%,
+      rgba(15, 23, 42, 0.55) 40%,
+      rgba(15, 23, 42, 0.85) 100%);
   z-index: 1;
 }
 
@@ -763,11 +775,9 @@
     justify-content: center;
     text-align: center;
     padding: 48px 24px 24px;
-    background: linear-gradient(
-      180deg,
-      var(--login-navy) 0%,
-      var(--login-navy-light) 100%
-    );
+    background: linear-gradient(180deg,
+        var(--login-navy) 0%,
+        var(--login-navy-light) 100%);
     position: relative;
     overflow: hidden;
   }
@@ -1065,3 +1075,262 @@
   box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
 }
 
+/* ======================================================
+   Google & Microsoft OAuth Account Chooser Popup Modal
+   ====================================================== */
+.oauth-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: oauthFadeIn 0.2s ease-out;
+}
+
+@keyframes oauthFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.oauth-popup-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  animation: oauthScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes oauthScaleUp {
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.oauth-popup-header {
+  padding: 28px 24px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.oauth-popup-logo {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oauth-popup-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+  font-family: var(--login-font, 'Plus Jakarta Sans', sans-serif);
+}
+
+.oauth-popup-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.oauth-popup-list {
+  padding: 8px 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oauth-popup-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.oauth-popup-item:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.oauth-popup-item:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.oauth-popup-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.oauth-popup-avatar.alt-action {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.oauth-popup-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.oauth-popup-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.oauth-popup-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oauth-popup-role-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.oauth-popup-email {
+  font-size: 12.5px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oauth-popup-chevron {
+  color: #94a3b8;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.oauth-popup-custom-form {
+  padding: 8px 6px 12px;
+}
+
+.oauth-popup-custom-input-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.oauth-popup-custom-input-wrap input {
+  flex: 1;
+  height: 42px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 13.5px;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.oauth-popup-custom-input-wrap input:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.oauth-popup-custom-submit {
+  height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: #0d9488;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.oauth-popup-custom-submit:hover:not(:disabled) {
+  background: #0f766e;
+}
+
+.oauth-popup-custom-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.oauth-popup-footer {
+  padding: 16px 20px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.oauth-popup-disclaimer {
+  font-size: 11.5px;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.oauth-popup-cancel-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.oauth-popup-cancel-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #1e293b;
+}

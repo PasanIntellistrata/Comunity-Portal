@@ -39,7 +39,7 @@ const InvoiceApprovalPage = ({ onLogout }) => {
 
   // State
   const [invoices, setInvoices] = useState(INITIAL_INVOICES);
-  
+
   // Shared Property & Lot Selection
   const {
     selectedProperty,
@@ -512,650 +512,646 @@ const InvoiceApprovalPage = ({ onLogout }) => {
             <div className="invoice-desktop-view">
               {/* Breadcrumb */}
               <nav className="invoice-breadcrumb" aria-label="Breadcrumb">
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                Dashboard
-              </a>
-              <span className="sep">›</span>
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                Invoices
-              </a>
-              <span className="sep">›</span>
-              <span className="current">Invoice Approval</span>
-            </nav>
+                <a href="#" onClick={(e) => e.preventDefault()}>
+                  Dashboard
+                </a>
+                <span className="sep">›</span>
+                <a href="#" onClick={(e) => e.preventDefault()}>
+                  Invoices
+                </a>
+                <span className="sep">›</span>
+                <span className="current">Invoice Approval</span>
+              </nav>
 
-            {/* Title Row */}
-            <div className="invoice-page-title-row">
-              <div>
-                <h1 className="invoice-page-title">Invoice Approval</h1>
-                <p className="invoice-page-subtitle">
-                  Managing{' '}
-                  <span className="property-highlight">
-                    {selectedProperty.name}
-                  </span>{' '}
-                  &bull; <span className="lot-highlight">{selectedLot}</span>
-                </p>
+              {/* Title Row */}
+              <div className="invoice-page-title-row">
+                <div>
+                  <h1 className="invoice-page-title">Invoice Approval</h1>
+                  <p className="invoice-page-subtitle">
+                    Managing{' '}
+                    <span className="property-highlight">
+                      {selectedProperty.name}
+                    </span>{' '}
+                    &bull; <span className="lot-highlight">{selectedLot}</span>
+                  </p>
+                </div>
+
+                <LotSelector
+                  selectedLot={selectedLot}
+                  lots={selectedProperty.lots}
+                  propertyName={selectedProperty.name}
+                  onSelectLot={handleSelectLot}
+                />
               </div>
 
-              <LotSelector
-                selectedLot={selectedLot}
-                lots={selectedProperty.lots}
-                propertyName={selectedProperty.name}
-                onSelectLot={handleSelectLot}
-              />
-            </div>
-
-            {/* Stats Cards */}
-            <div className="invoice-stats-grid">
-              {stats.map((stat) => (
-                <div key={stat.id} className="invoice-stat-card">
-                  <div
-                    className="invoice-stat-icon"
-                    style={{ background: stat.iconBg, color: stat.iconColor }}
-                  >
-                    {stat.id === 'pending' && <Clock size={18} />}
-                    {stat.id === 'overdue' && <AlertCircle size={18} />}
-                    {stat.id === 'approved' && <CheckCircle2 size={18} />}
-                    {stat.id === 'total' && <DollarSign size={18} />}
-                    {!['pending', 'overdue', 'approved', 'total'].includes(stat.id) && <FileText size={18} />}
-                  </div>
-                  <div className="invoice-stat-body">
-                    <div className="invoice-stat-label">{stat.label}</div>
+              {/* Stats Cards */}
+              <div className="invoice-stats-grid">
+                {stats.map((stat) => (
+                  <div key={stat.id} className="invoice-stat-card">
                     <div
-                      className={`invoice-stat-value ${
-                        String(stat.value).startsWith('$') ? 'large-money' : ''
-                      }`}
+                      className="invoice-stat-icon"
+                      style={{ background: stat.iconBg, color: stat.iconColor }}
                     >
-                      {stat.value}
+                      {stat.id === 'pending' && <Clock size={18} />}
+                      {stat.id === 'overdue' && <AlertCircle size={18} />}
+                      {stat.id === 'approved' && <CheckCircle2 size={18} />}
+                      {stat.id === 'total' && <DollarSign size={18} />}
+                      {!['pending', 'overdue', 'approved', 'total'].includes(stat.id) && <FileText size={18} />}
                     </div>
-                    {stat.sub && (
+                    <div className="invoice-stat-body">
+                      <div className="invoice-stat-label">{stat.label}</div>
                       <div
-                        className={`invoice-stat-sub ${stat.trend || ''}`}
+                        className={`invoice-stat-value ${String(stat.value).startsWith('$') ? 'large-money' : ''
+                          }`}
                       >
-                        {stat.sub}
+                        {stat.value}
                       </div>
+                      {stat.sub && (
+                        <div
+                          className={`invoice-stat-sub ${stat.trend || ''}`}
+                        >
+                          {stat.sub}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Main Card (Filters + Table + Pagination) */}
+              <div className="invoice-main-card">
+                {/* Filter Bar */}
+                <div className="invoice-filter-bar">
+                  <div className="invoice-filter-search-wrap">
+                    <span className="invoice-filter-search-icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                    </span>
+                    <input
+                      type="text"
+                      className="invoice-filter-search"
+                      placeholder="Search invoices..."
+                      value={searchTerm}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        className="invoice-search-clear-btn"
+                        onClick={() => setSearchTerm('')}
+                        aria-label="Clear search"
+                      >
+                        <X size={12} />
+                      </button>
                     )}
                   </div>
-                </div>
-              ))}
-            </div>
 
-            {/* Main Card (Filters + Table + Pagination) */}
-            <div className="invoice-main-card">
-              {/* Filter Bar */}
-              <div className="invoice-filter-bar">
-                <div className="invoice-filter-search-wrap">
-                  <span className="invoice-filter-search-icon">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                  </span>
-                  <input
-                    type="text"
-                    className="invoice-filter-search"
-                    placeholder="Search invoices..."
-                    value={searchTerm}
+                  <select
+                    className="invoice-filter-select"
+                    value={statusFilter}
                     onChange={(e) => {
-                      setSearchTerm(e.target.value);
+                      setStatusFilter(e.target.value);
                       setCurrentPage(1);
                     }}
-                  />
-                  {searchTerm && (
-                    <button
-                      type="button"
-                      className="invoice-search-clear-btn"
-                      onClick={() => setSearchTerm('')}
-                      aria-label="Clear search"
-                    >
-                      <X size={12} />
-                    </button>
-                  )}
+                    aria-label="Filter by status"
+                  >
+                    <option value="">Status: All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Overdue">Overdue</option>
+                    <option value="Approved">Approved</option>
+                  </select>
+
+                  <select
+                    className="invoice-filter-select"
+                    value={vendorFilter}
+                    onChange={(e) => {
+                      setVendorFilter(e.target.value === 'All Vendors' ? '' : e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    aria-label="Filter by vendor"
+                  >
+                    {VENDORS.map((v) => (
+                      <option key={v} value={v === 'All Vendors' ? '' : v}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button
+                    type="button"
+                    className="invoice-filter-btn"
+                    onClick={() => showToast('Date range filter coming soon')}
+                  >
+                    <Calendar size={14} />
+                    <span>01 May 2026 – 25 May 2026</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="invoice-btn-export"
+                    onClick={() => showToast('Exporting invoices to CSV...', 'success')}
+                  >
+                    <Download size={14} />
+                    <span>Export CSV</span>
+                  </button>
                 </div>
 
-                <select
-                  className="invoice-filter-select"
-                  value={statusFilter}
-                  onChange={(e) => {
-                    setStatusFilter(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  aria-label="Filter by status"
-                >
-                  <option value="">Status: All</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Overdue">Overdue</option>
-                  <option value="Approved">Approved</option>
-                </select>
-
-                <select
-                  className="invoice-filter-select"
-                  value={vendorFilter}
-                  onChange={(e) => {
-                    setVendorFilter(e.target.value === 'All Vendors' ? '' : e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  aria-label="Filter by vendor"
-                >
-                  {VENDORS.map((v) => (
-                    <option key={v} value={v === 'All Vendors' ? '' : v}>
-                      {v}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  type="button"
-                  className="invoice-filter-btn"
-                  onClick={() => showToast('Date range filter coming soon')}
-                >
-                  <Calendar size={14} />
-                  <span>01 May 2026 – 25 May 2026</span>
-                </button>
-
-                <button
-                  type="button"
-                  className="invoice-btn-export"
-                  onClick={() => showToast('Exporting invoices to CSV...', 'success')}
-                >
-                  <Download size={14} />
-                  <span>Export CSV</span>
-                </button>
-              </div>
-
-              {/* Bulk Action Bar */}
-              {selectedIds.size > 0 && (
-                <div className="invoice-bulk-bar">
-                  <span className="selected-count">
-                    Selected {selectedIds.size} invoice
-                    {selectedIds.size !== 1 ? 's' : ''}
-                  </span>
-                  <div className="invoice-bulk-actions">
-                    <button
-                      type="button"
-                      className="invoice-btn-approve-sel"
-                      onClick={handleApproveSelected}
-                    >
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                {/* Bulk Action Bar */}
+                {selectedIds.size > 0 && (
+                  <div className="invoice-bulk-bar">
+                    <span className="selected-count">
+                      Selected {selectedIds.size} invoice
+                      {selectedIds.size !== 1 ? 's' : ''}
+                    </span>
+                    <div className="invoice-bulk-actions">
+                      <button
+                        type="button"
+                        className="invoice-btn-approve-sel"
+                        onClick={handleApproveSelected}
                       >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span>Approve Selected</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="invoice-btn-reject-sel"
-                      onClick={handleRejectSelected}
-                    >
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                      <span>Reject Selected</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Table — hidden on mobile via CSS */}
-              <div className="invoice-table-wrap">
-                <table className="invoice-table">
-                  <thead>
-                    <tr>
-                      <th>
-                        <label className="invoice-checkbox-label">
-                          <input
-                            type="checkbox"
-                            className="invoice-checkbox-input"
-                            checked={allOnPageSelected}
-                            onChange={(e) => handleSelectAll(!allOnPageSelected)}
-                            aria-label="Select all invoices on page"
-                          />
-                          <span
-                            className={`invoice-checkbox-box ${
-                              allOnPageSelected
-                                ? 'checked'
-                                : someOnPageSelected
-                                ? 'indeterminate'
-                                : ''
-                            }`}
-                          >
-                            {allOnPageSelected && (
-                              <svg
-                                width="11"
-                                height="11"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3.2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                            )}
-                            {!allOnPageSelected && someOnPageSelected && (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3.5"
-                                strokeLinecap="round"
-                              >
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                              </svg>
-                            )}
-                          </span>
-                        </label>
-                      </th>
-                      <th>Invoice No.</th>
-                      <th>Vendor</th>
-                      <th>Date</th>
-                      <th>Due Date</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Submitted By</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pagedInvoices.length === 0 ? (
-                      <tr>
-                        <td
-                          colSpan="9"
-                          style={{
-                            textAlign: 'center',
-                            padding: '40px',
-                            color: 'var(--color-text-muted)',
-                          }}
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
-                          No invoices match your filter criteria.
-                        </td>
-                      </tr>
-                    ) : (
-                      pagedInvoices.map((inv) => {
-                        const isSelected = selectedIds.has(inv.id);
-                        const statusClass =
-                          inv.status === 'Pending'
-                            ? 'invoice-badge-pending'
-                            : inv.status === 'Overdue'
-                            ? 'invoice-badge-overdue'
-                            : 'invoice-badge-approved';
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span>Approve Selected</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="invoice-btn-reject-sel"
+                        onClick={handleRejectSelected}
+                      >
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                        <span>Reject Selected</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-                        return (
-                          <tr
-                            key={inv.id}
-                            className={isSelected ? 'selected' : ''}
+                {/* Table — hidden on mobile via CSS */}
+                <div className="invoice-table-wrap">
+                  <table className="invoice-table">
+                    <thead>
+                      <tr>
+                        <th>
+                          <label className="invoice-checkbox-label">
+                            <input
+                              type="checkbox"
+                              className="invoice-checkbox-input"
+                              checked={allOnPageSelected}
+                              onChange={(e) => handleSelectAll(!allOnPageSelected)}
+                              aria-label="Select all invoices on page"
+                            />
+                            <span
+                              className={`invoice-checkbox-box ${allOnPageSelected
+                                  ? 'checked'
+                                  : someOnPageSelected
+                                    ? 'indeterminate'
+                                    : ''
+                                }`}
+                            >
+                              {allOnPageSelected && (
+                                <svg
+                                  width="11"
+                                  height="11"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3.2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              )}
+                              {!allOnPageSelected && someOnPageSelected && (
+                                <svg
+                                  width="10"
+                                  height="10"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3.5"
+                                  strokeLinecap="round"
+                                >
+                                  <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                              )}
+                            </span>
+                          </label>
+                        </th>
+                        <th>Invoice No.</th>
+                        <th>Vendor</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Submitted By</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pagedInvoices.length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan="9"
+                            style={{
+                              textAlign: 'center',
+                              padding: '40px',
+                              color: 'var(--color-text-muted)',
+                            }}
                           >
-                            <td>
-                              <label className="invoice-checkbox-label">
-                                <input
-                                  type="checkbox"
-                                  className="invoice-checkbox-input"
-                                  checked={isSelected}
-                                  onChange={(e) =>
-                                    handleSelectRow(inv.id, e.target.checked)
-                                  }
-                                  aria-label={`Select invoice ${inv.id}`}
-                                />
-                                <span
-                                  className={`invoice-checkbox-box ${
-                                    isSelected ? 'checked' : ''
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <svg
-                                      width="11"
-                                      height="11"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="3.2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    >
-                                      <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                  )}
-                                </span>
-                              </label>
-                            </td>
-                            <td>
-                              <span
-                                className="invoice-id-cell"
-                                onClick={() =>
-                                  showToast(`Viewing details for ${inv.id}`)
-                                }
-                              >
-                                {inv.id}
-                              </span>
-                            </td>
-                            <td>
-                              <span className="invoice-vendor-name">
-                                {inv.vendor}
-                              </span>
-                            </td>
-                            <td className="invoice-date-cell">{inv.date}</td>
-                            <td className="invoice-date-cell">{inv.dueDate}</td>
-                            <td className="invoice-amount-cell">{inv.amount}</td>
-                            <td>
-                              <span className={`invoice-badge ${statusClass}`}>
-                                {inv.status}
-                              </span>
-                            </td>
-                            <td style={{ color: 'var(--color-text-body)' }}>
-                              {inv.submittedBy}
-                            </td>
-                            <td>
-                              <div className="invoice-action-cell">
-                                <button
-                                  type="button"
-                                  className="invoice-action-btn action-view"
-                                  title="View invoice"
-                                  onClick={() =>
-                                    showToast(`Previewing invoice ${inv.id}`)
-                                  }
-                                >
-                                  <svg
-                                    width="14"
-                                    height="14"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2.2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
+                            No invoices match your filter criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        pagedInvoices.map((inv) => {
+                          const isSelected = selectedIds.has(inv.id);
+                          const statusClass =
+                            inv.status === 'Pending'
+                              ? 'invoice-badge-pending'
+                              : inv.status === 'Overdue'
+                                ? 'invoice-badge-overdue'
+                                : 'invoice-badge-approved';
+
+                          return (
+                            <tr
+                              key={inv.id}
+                              className={isSelected ? 'selected' : ''}
+                            >
+                              <td>
+                                <label className="invoice-checkbox-label">
+                                  <input
+                                    type="checkbox"
+                                    className="invoice-checkbox-input"
+                                    checked={isSelected}
+                                    onChange={(e) =>
+                                      handleSelectRow(inv.id, e.target.checked)
+                                    }
+                                    aria-label={`Select invoice ${inv.id}`}
+                                  />
+                                  <span
+                                    className={`invoice-checkbox-box ${isSelected ? 'checked' : ''
+                                      }`}
                                   >
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                  </svg>
-                                </button>
-                                {inv.status !== 'Approved' && (
-                                  <>
-                                    <button
-                                      type="button"
-                                      className="invoice-action-btn approve"
-                                      title="Approve invoice"
-                                      onClick={() => handleApprove(inv.id)}
-                                    >
+                                    {isSelected && (
                                       <svg
-                                        width="13"
-                                        height="13"
+                                        width="11"
+                                        height="11"
                                         viewBox="0 0 24 24"
                                         fill="none"
                                         stroke="currentColor"
-                                        strokeWidth="2.8"
+                                        strokeWidth="3.2"
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                       >
                                         <polyline points="20 6 9 17 4 12" />
                                       </svg>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="invoice-action-btn reject"
-                                      title="Reject invoice"
-                                      onClick={() => handleReject(inv.id)}
+                                    )}
+                                  </span>
+                                </label>
+                              </td>
+                              <td>
+                                <span
+                                  className="invoice-id-cell"
+                                  onClick={() =>
+                                    showToast(`Viewing details for ${inv.id}`)
+                                  }
+                                >
+                                  {inv.id}
+                                </span>
+                              </td>
+                              <td>
+                                <span className="invoice-vendor-name">
+                                  {inv.vendor}
+                                </span>
+                              </td>
+                              <td className="invoice-date-cell">{inv.date}</td>
+                              <td className="invoice-date-cell">{inv.dueDate}</td>
+                              <td className="invoice-amount-cell">{inv.amount}</td>
+                              <td>
+                                <span className={`invoice-badge ${statusClass}`}>
+                                  {inv.status}
+                                </span>
+                              </td>
+                              <td style={{ color: 'var(--color-text-body)' }}>
+                                {inv.submittedBy}
+                              </td>
+                              <td>
+                                <div className="invoice-action-cell">
+                                  <button
+                                    type="button"
+                                    className="invoice-action-btn action-view"
+                                    title="View invoice"
+                                    onClick={() =>
+                                      showToast(`Previewing invoice ${inv.id}`)
+                                    }
+                                  >
+                                    <svg
+                                      width="14"
+                                      height="14"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2.2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
                                     >
-                                      <svg
-                                        width="13"
-                                        height="13"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2.8"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
+                                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                      <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                  </button>
+                                  {inv.status !== 'Approved' && (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className="invoice-action-btn approve"
+                                        title="Approve invoice"
+                                        onClick={() => handleApprove(inv.id)}
                                       >
-                                        <line x1="18" y1="6" x2="6" y2="18" />
-                                        <line x1="6" y1="6" x2="18" y2="18" />
-                                      </svg>
-                                    </button>
-                                  </>
+                                        <svg
+                                          width="13"
+                                          height="13"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeWidth="2.8"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        >
+                                          <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="invoice-action-btn reject"
+                                        title="Reject invoice"
+                                        onClick={() => handleReject(inv.id)}
+                                      >
+                                        <svg
+                                          width="13"
+                                          height="13"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          strokeWidth="2.8"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        >
+                                          <line x1="18" y1="6" x2="6" y2="18" />
+                                          <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card List — hidden on desktop via CSS */}
+                <div className="invoice-mobile-list">
+                  {pagedInvoices.length === 0 ? (
+                    <div className="invoice-mobile-empty">
+                      No invoices match your filter criteria.
+                    </div>
+                  ) : (
+                    pagedInvoices.map((inv) => {
+                      const isSelected = selectedIds.has(inv.id);
+                      const isExpanded = expandedCardId === inv.id;
+                      const statusClass =
+                        inv.status === 'Pending'
+                          ? 'invoice-badge-pending'
+                          : inv.status === 'Overdue'
+                            ? 'invoice-badge-overdue'
+                            : 'invoice-badge-approved';
+                      return (
+                        <div
+                          key={inv.id}
+                          className={`invoice-mobile-card${isSelected ? ' selected' : ''}`}
+                        >
+                          {/* Row 1: checkbox + vendor + status badge */}
+                          <div className="invoice-mobile-card-row1">
+                            <label className="invoice-checkbox-label">
+                              <input
+                                type="checkbox"
+                                className="invoice-checkbox-input"
+                                checked={isSelected}
+                                onChange={(e) => handleSelectRow(inv.id, e.target.checked)}
+                                aria-label={`Select invoice ${inv.id}`}
+                              />
+                              <span className={`invoice-checkbox-box${isSelected ? ' checked' : ''}`}>
+                                {isSelected && (
+                                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
                                 )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                              </span>
+                            </label>
+                            <span className="invoice-mobile-card-vendor">{inv.vendor}</span>
+                            <span className={`invoice-badge ${statusClass}`}>{inv.status}</span>
+                          </div>
 
-              {/* Mobile Card List — hidden on desktop via CSS */}
-              <div className="invoice-mobile-list">
-                {pagedInvoices.length === 0 ? (
-                  <div className="invoice-mobile-empty">
-                    No invoices match your filter criteria.
-                  </div>
-                ) : (
-                  pagedInvoices.map((inv) => {
-                    const isSelected = selectedIds.has(inv.id);
-                    const isExpanded = expandedCardId === inv.id;
-                    const statusClass =
-                      inv.status === 'Pending'
-                        ? 'invoice-badge-pending'
-                        : inv.status === 'Overdue'
-                        ? 'invoice-badge-overdue'
-                        : 'invoice-badge-approved';
-                    return (
-                      <div
-                        key={inv.id}
-                        className={`invoice-mobile-card${isSelected ? ' selected' : ''}`}
-                      >
-                        {/* Row 1: checkbox + vendor + status badge */}
-                        <div className="invoice-mobile-card-row1">
-                          <label className="invoice-checkbox-label">
-                            <input
-                              type="checkbox"
-                              className="invoice-checkbox-input"
-                              checked={isSelected}
-                              onChange={(e) => handleSelectRow(inv.id, e.target.checked)}
-                              aria-label={`Select invoice ${inv.id}`}
-                            />
-                            <span className={`invoice-checkbox-box${isSelected ? ' checked' : ''}`}>
-                              {isSelected && (
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-                                  <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                              )}
-                            </span>
-                          </label>
-                          <span className="invoice-mobile-card-vendor">{inv.vendor}</span>
-                          <span className={`invoice-badge ${statusClass}`}>{inv.status}</span>
-                        </div>
-
-                        {/* Row 2: invoice ID · due date · amount · actions */}
-                        <div className="invoice-mobile-card-row2">
-                          <span
-                            className="invoice-id-cell"
-                            onClick={() => showToast(`Viewing details for ${inv.id}`)}
-                          >
-                            {inv.id}
-                          </span>
-                          <span className="invoice-mobile-dot-sep">·</span>
-                          <span className="invoice-mobile-due">Due {inv.dueDate}</span>
-                          <span className="invoice-mobile-amount">{inv.amount}</span>
-                          <div className="invoice-mobile-actions">
-                            <button
-                              type="button"
-                              className="invoice-action-btn action-view"
-                              title="View invoice"
-                              onClick={() => showToast(`Previewing invoice ${inv.id}`)}
+                          {/* Row 2: invoice ID · due date · amount · actions */}
+                          <div className="invoice-mobile-card-row2">
+                            <span
+                              className="invoice-id-cell"
+                              onClick={() => showToast(`Viewing details for ${inv.id}`)}
                             >
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                <circle cx="12" cy="12" r="3" />
-                              </svg>
-                            </button>
-                            {inv.status !== 'Approved' && (
+                              {inv.id}
+                            </span>
+                            <span className="invoice-mobile-dot-sep">·</span>
+                            <span className="invoice-mobile-due">Due {inv.dueDate}</span>
+                            <span className="invoice-mobile-amount">{inv.amount}</span>
+                            <div className="invoice-mobile-actions">
                               <button
                                 type="button"
-                                className="invoice-mobile-more-btn"
-                                title="Actions"
-                                onClick={() => setExpandedCardId(isExpanded ? null : inv.id)}
+                                className="invoice-action-btn action-view"
+                                title="View invoice"
+                                onClick={() => showToast(`Previewing invoice ${inv.id}`)}
                               >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                  <circle cx="12" cy="5" r="1.5" fill="currentColor" />
-                                  <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                                  <circle cx="12" cy="19" r="1.5" fill="currentColor" />
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                  <circle cx="12" cy="12" r="3" />
                                 </svg>
                               </button>
-                            )}
+                              {inv.status !== 'Approved' && (
+                                <button
+                                  type="button"
+                                  className="invoice-mobile-more-btn"
+                                  title="Actions"
+                                  onClick={() => setExpandedCardId(isExpanded ? null : inv.id)}
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="5" r="1.5" fill="currentColor" />
+                                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                                    <circle cx="12" cy="19" r="1.5" fill="currentColor" />
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
                           </div>
+
+                          {/* Expanded actions row */}
+                          {isExpanded && inv.status !== 'Approved' && (
+                            <div className="invoice-mobile-expanded-actions">
+                              <span className="invoice-mobile-submitter">By {inv.submittedBy}</span>
+                              <button
+                                type="button"
+                                className="invoice-action-btn approve"
+                                title="Approve invoice"
+                                onClick={() => { handleApprove(inv.id); setExpandedCardId(null); }}
+                              >
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              </button>
+                              <button
+                                type="button"
+                                className="invoice-action-btn reject"
+                                title="Reject invoice"
+                                onClick={() => { handleReject(inv.id); setExpandedCardId(null); }}
+                              >
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <line x1="18" y1="6" x2="6" y2="18" />
+                                  <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                              </button>
+                            </div>
+                          )}
                         </div>
-
-                        {/* Expanded actions row */}
-                        {isExpanded && inv.status !== 'Approved' && (
-                          <div className="invoice-mobile-expanded-actions">
-                            <span className="invoice-mobile-submitter">By {inv.submittedBy}</span>
-                            <button
-                              type="button"
-                              className="invoice-action-btn approve"
-                              title="Approve invoice"
-                              onClick={() => { handleApprove(inv.id); setExpandedCardId(null); }}
-                            >
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                            </button>
-                            <button
-                              type="button"
-                              className="invoice-action-btn reject"
-                              title="Reject invoice"
-                              onClick={() => { handleReject(inv.id); setExpandedCardId(null); }}
-                            >
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                              </svg>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-
-              {/* Pagination */}
-              <div className="invoice-pagination-bar">
-                <div className="invoice-pagination-info">
-                  {filteredInvoices.length > 0 ? (
-                    `Showing ${(currentPage - 1) * itemsPerPage + 1} to ${Math.min(
-                      currentPage * itemsPerPage,
-                      filteredInvoices.length
-                    )} of ${filteredInvoices.length} invoices`
-                  ) : (
-                    'No invoices to display'
+                      );
+                    })
                   )}
                 </div>
 
-                <div className="invoice-pagination-pages">
-                  <button
-                    type="button"
-                    className="invoice-page-btn nav-btn"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    aria-label="Previous page"
-                  >
-                    ‹
-                  </button>
+                {/* Pagination */}
+                <div className="invoice-pagination-bar">
+                  <div className="invoice-pagination-info">
+                    {filteredInvoices.length > 0 ? (
+                      `Showing ${(currentPage - 1) * itemsPerPage + 1} to ${Math.min(
+                        currentPage * itemsPerPage,
+                        filteredInvoices.length
+                      )} of ${filteredInvoices.length} invoices`
+                    ) : (
+                      'No invoices to display'
+                    )}
+                  </div>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        className={`invoice-page-btn ${
-                          p === currentPage ? 'active' : ''
-                        }`}
-                        onClick={() => setCurrentPage(p)}
-                        aria-label={`Page ${p}`}
-                      >
-                        {p}
-                      </button>
-                    )
-                  )}
+                  <div className="invoice-pagination-pages">
+                    <button
+                      type="button"
+                      className="invoice-page-btn nav-btn"
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      aria-label="Previous page"
+                    >
+                      ‹
+                    </button>
 
-                  <button
-                    type="button"
-                    className="invoice-page-btn nav-btn"
-                    disabled={currentPage === totalPages}
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    aria-label="Next page"
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          className={`invoice-page-btn ${p === currentPage ? 'active' : ''
+                            }`}
+                          onClick={() => setCurrentPage(p)}
+                          aria-label={`Page ${p}`}
+                        >
+                          {p}
+                        </button>
+                      )
+                    )}
+
+                    <button
+                      type="button"
+                      className="invoice-page-btn nav-btn"
+                      disabled={currentPage === totalPages}
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
+                      aria-label="Next page"
+                    >
+                      ›
+                    </button>
+                  </div>
+
+                  <select
+                    className="invoice-per-page-select"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    aria-label="Invoices per page"
                   >
-                    ›
-                  </button>
+                    <option value={5}>5 / page</option>
+                    <option value={10}>10 / page</option>
+                    <option value={25}>25 / page</option>
+                    <option value={50}>50 / page</option>
+                  </select>
                 </div>
-
-                <select
-                  className="invoice-per-page-select"
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                  aria-label="Invoices per page"
-                >
-                  <option value={5}>5 / page</option>
-                  <option value={10}>10 / page</option>
-                  <option value={25}>25 / page</option>
-                  <option value={50}>50 / page</option>
-                </select>
               </div>
             </div>
-          </div>
 
-          {/* MOBILE EXPERIENCE (<= 900px) */}
-          <MobileInvoiceApproval
-            invoices={invoices}
-            onApprove={handleApprove}
-            onReject={handleReject}
-            onApproveSelected={handleApproveSelected}
-            onRejectSelected={handleRejectSelected}
-            selectedIds={selectedIds}
-            onSelectRow={handleSelectRow}
-            onSelectAll={handleSelectAll}
-            selectedProperty={selectedProperty}
-            selectedLot={selectedLot}
-            properties={properties}
-            onSelectProperty={handleSelectProperty}
-            onSelectLot={handleSelectLot}
-            showToast={showToast}
-            currentUser={currentUser}
-          />
-        </main>
+            {/* MOBILE EXPERIENCE (<= 900px) */}
+            <MobileInvoiceApproval
+              invoices={invoices}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              onApproveSelected={handleApproveSelected}
+              onRejectSelected={handleRejectSelected}
+              selectedIds={selectedIds}
+              onSelectRow={handleSelectRow}
+              onSelectAll={handleSelectAll}
+              selectedProperty={selectedProperty}
+              selectedLot={selectedLot}
+              properties={properties}
+              onSelectProperty={handleSelectProperty}
+              onSelectLot={handleSelectLot}
+              showToast={showToast}
+              currentUser={currentUser}
+            />
+          </main>
         </div>
       </div>
 

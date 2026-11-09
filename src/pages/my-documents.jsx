@@ -403,528 +403,528 @@ const MyDocumentsPage = () => {
             {/* DESKTOP EXPERIENCE (> 900px) */}
             <div className="docs-desktop-view">
               {/* Breadcrumb Navigation */}
-            <nav className="invoice-breadcrumb" aria-label="Breadcrumb">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  try {
-                    f7.views.main.router.navigate('/');
-                  } catch (err) {
-                    window.location.href = '/';
+              <nav className="invoice-breadcrumb" aria-label="Breadcrumb">
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    try {
+                      f7.views.main.router.navigate('/');
+                    } catch (err) {
+                      window.location.href = '/';
+                    }
+                  }}
+                >
+                  Dashboard
+                </a>
+                <span className="sep">&gt;</span>
+                <span className="current">My Documents</span>
+              </nav>
+
+              {/* Sub-label badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0d9488' }} />
+                <span style={{ fontSize: '11px', fontWeight: '700', color: '#0d9488', letterSpacing: '0.06em' }}>
+                  COMMUNITY PORTAL
+                </span>
+              </div>
+
+              {/* Title Row */}
+              <div className="invoice-page-title-row">
+                <div>
+                  <h1 className="invoice-page-title">My Documents</h1>
+                  <p className="invoice-page-subtitle">
+                    Managing{' '}
+                    <span className="property-highlight">
+                      {selectedProperty?.name || 'Green Valley Residence'}
+                    </span>{' '}
+                    &bull; <span className="lot-highlight">{selectedLot}</span>
+                  </p>
+                </div>
+
+                <LotSelector
+                  selectedLot={selectedLot}
+                  lots={
+                    selectedProperty?.lots || [
+                      'All Lots',
+                      'Lot A-01',
+                      'Lot A-02',
+                      'Lot A-03',
+                      'Lot B-01',
+                      'Lot B-02',
+                    ]
                   }
-                }}
-              >
-                Dashboard
-              </a>
-              <span className="sep">&gt;</span>
-              <span className="current">My Documents</span>
-            </nav>
-
-            {/* Sub-label badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#0d9488' }} />
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#0d9488', letterSpacing: '0.06em' }}>
-                COMMUNITY PORTAL
-              </span>
-            </div>
-
-            {/* Title Row */}
-            <div className="invoice-page-title-row">
-              <div>
-                <h1 className="invoice-page-title">My Documents</h1>
-                <p className="invoice-page-subtitle">
-                  Managing{' '}
-                  <span className="property-highlight">
-                    {selectedProperty?.name || 'Green Valley Residence'}
-                  </span>{' '}
-                  &bull; <span className="lot-highlight">{selectedLot}</span>
-                </p>
+                  propertyName={selectedProperty?.name || 'Green Valley Residence'}
+                  onSelectLot={(lot) => {
+                    setSelectedLot(lot);
+                    showToast(`Selected ${lot}`);
+                  }}
+                />
               </div>
 
-              <LotSelector
-                selectedLot={selectedLot}
-                lots={
-                  selectedProperty?.lots || [
-                    'All Lots',
-                    'Lot A-01',
-                    'Lot A-02',
-                    'Lot A-03',
-                    'Lot B-01',
-                    'Lot B-02',
-                  ]
-                }
-                propertyName={selectedProperty?.name || 'Green Valley Residence'}
-                onSelectLot={(lot) => {
-                  setSelectedLot(lot);
-                  showToast(`Selected ${lot}`);
-                }}
-              />
-            </div>
-
-            {/* Top KPI Stat Cards */}
-            <div className="docs-kpi-grid">
-              <div className="docs-kpi-card">
-                <div className="docs-kpi-icon-wrap blue">
-                  <FileText size={24} />
+              {/* Top KPI Stat Cards */}
+              <div className="docs-kpi-grid">
+                <div className="docs-kpi-card">
+                  <div className="docs-kpi-icon-wrap blue">
+                    <FileText size={24} />
+                  </div>
+                  <div className="docs-kpi-info">
+                    <span className="docs-kpi-label">Total Documents</span>
+                    <span className="docs-kpi-stat">82</span>
+                    <span className="docs-kpi-subtext">Documents uploaded by you</span>
+                  </div>
                 </div>
-                <div className="docs-kpi-info">
-                  <span className="docs-kpi-label">Total Documents</span>
-                  <span className="docs-kpi-stat">82</span>
-                  <span className="docs-kpi-subtext">Documents uploaded by you</span>
+
+                <div className="docs-kpi-card">
+                  <div className="docs-kpi-icon-wrap purple">
+                    <Clock size={24} />
+                  </div>
+                  <div className="docs-kpi-info">
+                    <span className="docs-kpi-label">Recently Added</span>
+                    <span className="docs-kpi-stat">12</span>
+                    <span className="docs-kpi-subtext">Added in the last 7 days</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="docs-kpi-card">
-                <div className="docs-kpi-icon-wrap purple">
-                  <Clock size={24} />
-                </div>
-                <div className="docs-kpi-info">
-                  <span className="docs-kpi-label">Recently Added</span>
-                  <span className="docs-kpi-stat">12</span>
-                  <span className="docs-kpi-subtext">Added in the last 7 days</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Two-Column Main Layout */}
-            <div className="docs-main-grid">
-              {/* Left Column: Property Folders */}
-              <div className="docs-folders-card">
-                <div className="docs-folders-header">
-                  <div className="docs-folders-header-row1">
-                    <h2 className="docs-card-title">Property Folders</h2>
-                    <div className="docs-folders-header-actions">
-                      <div className="docs-view-toggle-group">
+              {/* Two-Column Main Layout */}
+              <div className="docs-main-grid">
+                {/* Left Column: Property Folders */}
+                <div className="docs-folders-card">
+                  <div className="docs-folders-header">
+                    <div className="docs-folders-header-row1">
+                      <h2 className="docs-card-title">Property Folders</h2>
+                      <div className="docs-folders-header-actions">
+                        <div className="docs-view-toggle-group">
+                          <button
+                            type="button"
+                            className={`docs-view-toggle-btn ${folderViewMode === 'grid' ? 'active' : ''}`}
+                            onClick={() => setFolderViewMode('grid')}
+                            title="Grid View"
+                          >
+                            <LayoutGrid size={15} />
+                          </button>
+                          <button
+                            type="button"
+                            className={`docs-view-toggle-btn ${folderViewMode === 'list' ? 'active' : ''}`}
+                            onClick={() => setFolderViewMode('list')}
+                            title="List View"
+                          >
+                            <List size={15} />
+                          </button>
+                        </div>
                         <button
                           type="button"
-                          className={`docs-view-toggle-btn ${folderViewMode === 'grid' ? 'active' : ''}`}
-                          onClick={() => setFolderViewMode('grid')}
-                          title="Grid View"
+                          className="docs-btn-primary docs-btn-upload-files"
+                          onClick={() => setUploadModalOpen(true)}
+                          title="Upload Files"
                         >
-                          <LayoutGrid size={15} />
-                        </button>
-                        <button
-                          type="button"
-                          className={`docs-view-toggle-btn ${folderViewMode === 'list' ? 'active' : ''}`}
-                          onClick={() => setFolderViewMode('list')}
-                          title="List View"
-                        >
-                          <List size={15} />
+                          <Upload size={13} />
+                          <span>Upload Files</span>
                         </button>
                       </div>
-                      <button
-                        type="button"
-                        className="docs-btn-primary docs-btn-upload-files"
-                        onClick={() => setUploadModalOpen(true)}
-                        title="Upload Files"
-                      >
-                        <Upload size={13} />
-                        <span>Upload Files</span>
-                      </button>
+                    </div>
+
+                    <div className="docs-folders-header-row2">
+                      <p className="docs-card-subtitle">
+                        Browse the documents stored for the selected property and lot
+                      </p>
+                      <span className="docs-folders-count-badge">
+                        {PROPERTY_FOLDERS.length} folders
+                      </span>
                     </div>
                   </div>
 
-                  <div className="docs-folders-header-row2">
-                    <p className="docs-card-subtitle">
-                      Browse the documents stored for the selected property and lot
-                    </p>
-                    <span className="docs-folders-count-badge">
-                      {PROPERTY_FOLDERS.length} folders
-                    </span>
-                  </div>
-                </div>
-
-                {/* Folder List or Grid */}
-                {folderViewMode === 'list' ? (
-                  <div className="docs-folders-list">
-                    {PROPERTY_FOLDERS.map((folder) => {
-                      const isSelected = selectedFolderId === folder.id;
-                      return (
-                        <button
-                          type="button"
-                          key={folder.id}
-                          className={`docs-folder-item ${isSelected ? 'active' : ''}`}
-                          onClick={() => {
-                            setSelectedFolderId(isSelected ? null : folder.id);
-                            setCurrentPage(1);
-                            if (!isSelected) {
-                              showToast(`Filtered by folder: ${folder.name}`);
-                            }
-                          }}
-                        >
-                          <div className="docs-folder-left">
+                  {/* Folder List or Grid */}
+                  {folderViewMode === 'list' ? (
+                    <div className="docs-folders-list">
+                      {PROPERTY_FOLDERS.map((folder) => {
+                        const isSelected = selectedFolderId === folder.id;
+                        return (
+                          <button
+                            type="button"
+                            key={folder.id}
+                            className={`docs-folder-item ${isSelected ? 'active' : ''}`}
+                            onClick={() => {
+                              setSelectedFolderId(isSelected ? null : folder.id);
+                              setCurrentPage(1);
+                              if (!isSelected) {
+                                showToast(`Filtered by folder: ${folder.name}`);
+                              }
+                            }}
+                          >
+                            <div className="docs-folder-left">
+                              <div
+                                className="docs-folder-icon-box"
+                                style={{ background: folder.bgColor }}
+                              >
+                                {renderFolderIcon(folder.iconType, folder.color)}
+                              </div>
+                              <div className="docs-folder-text-wrap">
+                                <span className="docs-folder-name">{folder.name}</span>
+                                <span className="docs-folder-desc">{folder.description}</span>
+                              </div>
+                            </div>
+                            <span className="docs-folder-chevron">
+                              <ChevronRight size={16} />
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="docs-folders-grid">
+                      {PROPERTY_FOLDERS.map((folder) => {
+                        const isSelected = selectedFolderId === folder.id;
+                        return (
+                          <div
+                            key={folder.id}
+                            className={`docs-folder-grid-item ${isSelected ? 'active' : ''}`}
+                            onClick={() => {
+                              setSelectedFolderId(isSelected ? null : folder.id);
+                              setCurrentPage(1);
+                            }}
+                          >
                             <div
                               className="docs-folder-icon-box"
-                              style={{ background: folder.bgColor }}
+                              style={{ background: folder.bgColor, width: 44, height: 44 }}
                             >
                               {renderFolderIcon(folder.iconType, folder.color)}
                             </div>
-                            <div className="docs-folder-text-wrap">
-                              <span className="docs-folder-name">{folder.name}</span>
-                              <span className="docs-folder-desc">{folder.description}</span>
-                            </div>
+                            <span className="docs-folder-name">{folder.name}</span>
+                            <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+                              {folder.documentCount} files
+                            </span>
                           </div>
-                          <span className="docs-folder-chevron">
-                            <ChevronRight size={16} />
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="docs-folders-grid">
-                    {PROPERTY_FOLDERS.map((folder) => {
-                      const isSelected = selectedFolderId === folder.id;
-                      return (
-                        <div
-                          key={folder.id}
-                          className={`docs-folder-grid-item ${isSelected ? 'active' : ''}`}
-                          onClick={() => {
-                            setSelectedFolderId(isSelected ? null : folder.id);
-                            setCurrentPage(1);
-                          }}
-                        >
-                          <div
-                            className="docs-folder-icon-box"
-                            style={{ background: folder.bgColor, width: 44, height: 44 }}
-                          >
-                            {renderFolderIcon(folder.iconType, folder.color)}
-                          </div>
-                          <span className="docs-folder-name">{folder.name}</span>
-                          <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                            {folder.documentCount} files
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <div className="docs-folders-footer">
-                  {selectedFolderId ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <span>Filtered by <strong>{selectedFolderId}</strong></span>
-                      <button
-                        type="button"
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#0d9488',
-                          fontSize: '12px',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => setSelectedFolderId(null)}
-                      >
-                        (Clear Filter)
-                      </button>
+                        );
+                      })}
                     </div>
-                  ) : (
-                    <span>20 property folders &bull; Select a folder to open it</span>
                   )}
-                </div>
-              </div>
 
-              {/* Right Column: Documents Table */}
-              <div className="docs-table-card">
-                <div className="docs-card-header-row docs-table-header-row">
-                  <div>
-                    {selectedFolderId && (
-                      <div className="docs-active-folder-badge">
-                        <span>Folder: <strong>{PROPERTY_FOLDERS.find((f) => f.id === selectedFolderId)?.name || selectedFolderId}</strong></span>
+                  <div className="docs-folders-footer">
+                    {selectedFolderId ? (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                        <span>Filtered by <strong>{selectedFolderId}</strong></span>
                         <button
                           type="button"
-                          className="docs-clear-folder-btn"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#0d9488',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                          }}
                           onClick={() => setSelectedFolderId(null)}
-                          title="Clear folder filter"
                         >
-                          &times;
+                          (Clear Filter)
                         </button>
                       </div>
+                    ) : (
+                      <span>20 property folders &bull; Select a folder to open it</span>
                     )}
                   </div>
-                  <div className="docs-table-top-actions">
-                    <button
-                      type="button"
-                      className="docs-btn-primary"
-                      onClick={() => setUploadModalOpen(true)}
-                    >
-                      <Upload size={14} />
-                      <span>Upload Document</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="docs-btn-secondary"
-                      onClick={() => {
-                        // Quick reset or toggle filters
-                        if (selectedCategory !== 'All Categories' || selectedType !== 'All Types' || searchQuery || navbarSearch) {
-                          setSelectedCategory('All Categories');
-                          setSelectedType('All Types');
-                          setSearchQuery('');
-                          setNavbarSearch('');
-                          showToast('Filters cleared');
-                        } else {
-                          showToast('Use search or category dropdowns below to filter documents');
-                        }
-                      }}
-                    >
-                      <Filter size={14} />
-                      <span>Filter</span>
-                    </button>
-                  </div>
                 </div>
 
-                {/* Search & Dropdown Controls */}
-                <div className="docs-table-controls">
-                  <div className="docs-search-wrap">
-                    <span className="docs-search-icon">
-                      <Search size={15} />
-                    </span>
-                    <input
-                      type="text"
-                      className="docs-search-input"
-                      placeholder="Search documents..."
-                      value={searchQuery}
+                {/* Right Column: Documents Table */}
+                <div className="docs-table-card">
+                  <div className="docs-card-header-row docs-table-header-row">
+                    <div>
+                      {selectedFolderId && (
+                        <div className="docs-active-folder-badge">
+                          <span>Folder: <strong>{PROPERTY_FOLDERS.find((f) => f.id === selectedFolderId)?.name || selectedFolderId}</strong></span>
+                          <button
+                            type="button"
+                            className="docs-clear-folder-btn"
+                            onClick={() => setSelectedFolderId(null)}
+                            title="Clear folder filter"
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="docs-table-top-actions">
+                      <button
+                        type="button"
+                        className="docs-btn-primary"
+                        onClick={() => setUploadModalOpen(true)}
+                      >
+                        <Upload size={14} />
+                        <span>Upload Document</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="docs-btn-secondary"
+                        onClick={() => {
+                          // Quick reset or toggle filters
+                          if (selectedCategory !== 'All Categories' || selectedType !== 'All Types' || searchQuery || navbarSearch) {
+                            setSelectedCategory('All Categories');
+                            setSelectedType('All Types');
+                            setSearchQuery('');
+                            setNavbarSearch('');
+                            showToast('Filters cleared');
+                          } else {
+                            showToast('Use search or category dropdowns below to filter documents');
+                          }
+                        }}
+                      >
+                        <Filter size={14} />
+                        <span>Filter</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Search & Dropdown Controls */}
+                  <div className="docs-table-controls">
+                    <div className="docs-search-wrap">
+                      <span className="docs-search-icon">
+                        <Search size={15} />
+                      </span>
+                      <input
+                        type="text"
+                        className="docs-search-input"
+                        placeholder="Search documents..."
+                        value={searchQuery}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setCurrentPage(1);
+                        }}
+                      />
+                    </div>
+
+                    <select
+                      className="docs-filter-select"
+                      value={selectedCategory}
                       onChange={(e) => {
-                        setSearchQuery(e.target.value);
+                        setSelectedCategory(e.target.value);
                         setCurrentPage(1);
                       }}
-                    />
+                    >
+                      {DOCUMENT_CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      className="docs-filter-select"
+                      value={selectedType}
+                      onChange={(e) => {
+                        setSelectedType(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      {DOCUMENT_TYPES.map((t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  <select
-                    className="docs-filter-select"
-                    value={selectedCategory}
-                    onChange={(e) => {
-                      setSelectedCategory(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                  >
-                    {DOCUMENT_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-
-                  <select
-                    className="docs-filter-select"
-                    value={selectedType}
-                    onChange={(e) => {
-                      setSelectedType(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                  >
-                    {DOCUMENT_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Documents Table */}
-                <div className="docs-table-responsive">
-                  <table className="docs-table">
-                    <thead>
-                      <tr>
-                        <th className="th-icon"></th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Uploaded By</th>
-                        <th>Uploaded On</th>
-                        <th>Size</th>
-                        <th className="th-actions">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {displayedDocuments.length > 0 ? (
-                        displayedDocuments.map((doc) => {
-                          const catColor = CATEGORY_COLORS[doc.category] || {
-                            bg: '#f1f5f9',
-                            text: '#475569',
-                            border: '#e2e8f0',
-                          };
-                          const isMenuOpen = activeMenuDocId === doc.id;
-
-                          return (
-                            <tr key={doc.id}>
-                              <td className="td-icon">{renderDocIcon(doc.type)}</td>
-                              <td
-                                className="td-name"
-                                title={doc.name}
-                                onClick={() => {
-                                  showToast(`Opening preview for ${doc.name}...`);
-                                }}
-                              >
-                                {doc.name}
-                              </td>
-                              <td>
-                                <span
-                                  className="docs-cat-badge"
-                                  style={{
-                                    background: catColor.bg,
-                                    color: catColor.text,
-                                    borderColor: catColor.border,
-                                  }}
-                                >
-                                  {doc.category}
-                                </span>
-                              </td>
-                              <td>
-                                <span className="docs-type-badge">{doc.type}</span>
-                              </td>
-                              <td>
-                                <span className="docs-uploader">{doc.uploadedBy}</span>
-                              </td>
-                              <td>
-                                <span className="docs-date">{doc.uploadedOn}</span>
-                              </td>
-                              <td>
-                                <span className="docs-size">{doc.size}</span>
-                              </td>
-                              <td style={{ position: 'relative', textAlign: 'center' }}>
-                                <button
-                                  type="button"
-                                  className="docs-action-btn"
-                                  title="Actions"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveMenuDocId(isMenuOpen ? null : doc.id);
-                                  }}
-                                >
-                                  <MoreHorizontal size={16} />
-                                </button>
-
-                                {isMenuOpen && (
-                                  <div className="docs-action-menu-dropdown" ref={menuRef}>
-                                    <button
-                                      type="button"
-                                      className="docs-action-menu-item"
-                                      onClick={() => {
-                                        showToast(`Downloading ${doc.name}...`);
-                                        setActiveMenuDocId(null);
-                                      }}
-                                    >
-                                      <Download size={13} />
-                                      <span>Download</span>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="docs-action-menu-item"
-                                      onClick={() => {
-                                        showToast(`Opening preview for ${doc.name}`);
-                                        setActiveMenuDocId(null);
-                                      }}
-                                    >
-                                      <Eye size={13} />
-                                      <span>Preview</span>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="docs-action-menu-item"
-                                      onClick={() => {
-                                        showToast(`Share link copied for ${doc.name}`);
-                                        setActiveMenuDocId(null);
-                                      }}
-                                    >
-                                      <Share2 size={13} />
-                                      <span>Share Link</span>
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="docs-action-menu-item danger"
-                                      onClick={() => {
-                                        setDocuments((prev) => prev.filter((d) => d.id !== doc.id));
-                                        showToast(`Removed ${doc.name}`);
-                                        setActiveMenuDocId(null);
-                                      }}
-                                    >
-                                      <Trash2 size={13} />
-                                      <span>Delete</span>
-                                    </button>
-                                  </div>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
+                  {/* Documents Table */}
+                  <div className="docs-table-responsive">
+                    <table className="docs-table">
+                      <thead>
                         <tr>
-                          <td colSpan={8}>
-                            <div className="docs-empty-state">
-                              <FileText size={36} className="docs-empty-state-icon" />
-                              <h4 className="docs-empty-state-title">No documents found</h4>
-                              <p className="docs-empty-state-text">
-                                Try adjusting your search query or category filters.
-                              </p>
-                            </div>
-                          </td>
+                          <th className="th-icon"></th>
+                          <th>Name</th>
+                          <th>Category</th>
+                          <th>Type</th>
+                          <th>Uploaded By</th>
+                          <th>Uploaded On</th>
+                          <th>Size</th>
+                          <th className="th-actions">Actions</th>
                         </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {displayedDocuments.length > 0 ? (
+                          displayedDocuments.map((doc) => {
+                            const catColor = CATEGORY_COLORS[doc.category] || {
+                              bg: '#f1f5f9',
+                              text: '#475569',
+                              border: '#e2e8f0',
+                            };
+                            const isMenuOpen = activeMenuDocId === doc.id;
 
-                {/* Pagination Bar */}
-                <div className="docs-pagination-bar">
-                  <span className="docs-pagination-count">
-                    Showing 1 to {Math.min(displayedDocuments.length, itemsPerPage)} of 248 documents
-                  </span>
-                  <div className="docs-pagination-buttons">
-                    <button
-                      type="button"
-                      className="docs-page-btn"
-                      disabled={currentPage === 1}
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                    >
-                      &lt;
-                    </button>
-                    <button
-                      type="button"
-                      className={`docs-page-btn ${currentPage === 1 ? 'active' : ''}`}
-                      onClick={() => setCurrentPage(1)}
-                    >
-                      1
-                    </button>
-                    <button
-                      type="button"
-                      className={`docs-page-btn ${currentPage === 2 ? 'active' : ''}`}
-                      onClick={() => setCurrentPage(2)}
-                    >
-                      2
-                    </button>
-                    <button
-                      type="button"
-                      className={`docs-page-btn ${currentPage === 3 ? 'active' : ''}`}
-                      onClick={() => setCurrentPage(3)}
-                    >
-                      3
-                    </button>
-                    <span className="docs-page-ellipsis">...</span>
-                    <button
-                      type="button"
-                      className="docs-page-btn"
-                      onClick={() => setCurrentPage(25)}
-                    >
-                      25
-                    </button>
-                    <button
-                      type="button"
-                      className="docs-page-btn"
-                      disabled={currentPage >= 25}
-                      onClick={() => setCurrentPage((prev) => prev + 1)}
-                    >
-                      &gt;
-                    </button>
+                            return (
+                              <tr key={doc.id}>
+                                <td className="td-icon">{renderDocIcon(doc.type)}</td>
+                                <td
+                                  className="td-name"
+                                  title={doc.name}
+                                  onClick={() => {
+                                    showToast(`Opening preview for ${doc.name}...`);
+                                  }}
+                                >
+                                  {doc.name}
+                                </td>
+                                <td>
+                                  <span
+                                    className="docs-cat-badge"
+                                    style={{
+                                      background: catColor.bg,
+                                      color: catColor.text,
+                                      borderColor: catColor.border,
+                                    }}
+                                  >
+                                    {doc.category}
+                                  </span>
+                                </td>
+                                <td>
+                                  <span className="docs-type-badge">{doc.type}</span>
+                                </td>
+                                <td>
+                                  <span className="docs-uploader">{doc.uploadedBy}</span>
+                                </td>
+                                <td>
+                                  <span className="docs-date">{doc.uploadedOn}</span>
+                                </td>
+                                <td>
+                                  <span className="docs-size">{doc.size}</span>
+                                </td>
+                                <td style={{ position: 'relative', textAlign: 'center' }}>
+                                  <button
+                                    type="button"
+                                    className="docs-action-btn"
+                                    title="Actions"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setActiveMenuDocId(isMenuOpen ? null : doc.id);
+                                    }}
+                                  >
+                                    <MoreHorizontal size={16} />
+                                  </button>
+
+                                  {isMenuOpen && (
+                                    <div className="docs-action-menu-dropdown" ref={menuRef}>
+                                      <button
+                                        type="button"
+                                        className="docs-action-menu-item"
+                                        onClick={() => {
+                                          showToast(`Downloading ${doc.name}...`);
+                                          setActiveMenuDocId(null);
+                                        }}
+                                      >
+                                        <Download size={13} />
+                                        <span>Download</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="docs-action-menu-item"
+                                        onClick={() => {
+                                          showToast(`Opening preview for ${doc.name}`);
+                                          setActiveMenuDocId(null);
+                                        }}
+                                      >
+                                        <Eye size={13} />
+                                        <span>Preview</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="docs-action-menu-item"
+                                        onClick={() => {
+                                          showToast(`Share link copied for ${doc.name}`);
+                                          setActiveMenuDocId(null);
+                                        }}
+                                      >
+                                        <Share2 size={13} />
+                                        <span>Share Link</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="docs-action-menu-item danger"
+                                        onClick={() => {
+                                          setDocuments((prev) => prev.filter((d) => d.id !== doc.id));
+                                          showToast(`Removed ${doc.name}`);
+                                          setActiveMenuDocId(null);
+                                        }}
+                                      >
+                                        <Trash2 size={13} />
+                                        <span>Delete</span>
+                                      </button>
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        ) : (
+                          <tr>
+                            <td colSpan={8}>
+                              <div className="docs-empty-state">
+                                <FileText size={36} className="docs-empty-state-icon" />
+                                <h4 className="docs-empty-state-title">No documents found</h4>
+                                <p className="docs-empty-state-text">
+                                  Try adjusting your search query or category filters.
+                                </p>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination Bar */}
+                  <div className="docs-pagination-bar">
+                    <span className="docs-pagination-count">
+                      Showing 1 to {Math.min(displayedDocuments.length, itemsPerPage)} of 248 documents
+                    </span>
+                    <div className="docs-pagination-buttons">
+                      <button
+                        type="button"
+                        className="docs-page-btn"
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      >
+                        &lt;
+                      </button>
+                      <button
+                        type="button"
+                        className={`docs-page-btn ${currentPage === 1 ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(1)}
+                      >
+                        1
+                      </button>
+                      <button
+                        type="button"
+                        className={`docs-page-btn ${currentPage === 2 ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(2)}
+                      >
+                        2
+                      </button>
+                      <button
+                        type="button"
+                        className={`docs-page-btn ${currentPage === 3 ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(3)}
+                      >
+                        3
+                      </button>
+                      <span className="docs-page-ellipsis">...</span>
+                      <button
+                        type="button"
+                        className="docs-page-btn"
+                        onClick={() => setCurrentPage(25)}
+                      >
+                        25
+                      </button>
+                      <button
+                        type="button"
+                        className="docs-page-btn"
+                        disabled={currentPage >= 25}
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                      >
+                        &gt;
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* End of DESKTOP EXPERIENCE */}
+            {/* End of DESKTOP EXPERIENCE */}
 
             {/* MOBILE EXPERIENCE (<= 900px) */}
             <div className="docs-mobile-view">

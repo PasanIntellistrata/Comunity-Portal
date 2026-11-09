@@ -472,358 +472,358 @@ const PaymentPlanPage = ({ onLogout }) => {
               <div className="payment-plan-desktop-view">
                 {/* Breadcrumb & Title Bar (Matching other portal pages) */}
                 <div className="payment-plan-title-row">
-                <div>
-                  <nav className="payment-plan-breadcrumbs" aria-label="Breadcrumb">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        try {
-                          f7.views.main.router.navigate('/home/', { animate: false, reloadCurrent: true });
-                        } catch {
-                          window.location.href = '/home/';
-                        }
+                  <div>
+                    <nav className="payment-plan-breadcrumbs" aria-label="Breadcrumb">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          try {
+                            f7.views.main.router.navigate('/home/', { animate: false, reloadCurrent: true });
+                          } catch {
+                            window.location.href = '/home/';
+                          }
+                        }}
+                      >
+                        Home
+                      </button>
+                      <span>&bull;</span>
+                      <span>Payment Plan</span>
+                    </nav>
+                    <h1 className="payment-plan-page-title">
+                      <span>Payment Plan</span>
+                    </h1>
+                  </div>
+
+                  {/* Header Actions: LotSelector + Status Badge + Actions */}
+                  <div className="payment-plan-header-actions">
+                    <LotSelector
+                      selectedLot={effectiveLot}
+                      lots={
+                        selectedProperty?.lots || [
+                          'All Lots',
+                          'Lot A-01',
+                          'Lot A-02',
+                          'Lot A-03',
+                          'Lot B-01',
+                          'Lot B-02',
+                        ]
+                      }
+                      propertyName={selectedProperty?.name || 'Green Valley Residence'}
+                      onSelectLot={(lot) => {
+                        setSelectedLot(lot);
+                        showToast(`Selected ${lot}`, 'info');
                       }}
-                    >
-                      Home
-                    </button>
-                    <span>&bull;</span>
-                    <span>Payment Plan</span>
-                  </nav>
-                  <h1 className="payment-plan-page-title">
-                    <span>Payment Plan</span>
-                  </h1>
-                </div>
-
-                {/* Header Actions: LotSelector + Status Badge + Actions */}
-                <div className="payment-plan-header-actions">
-                  <LotSelector
-                    selectedLot={effectiveLot}
-                    lots={
-                      selectedProperty?.lots || [
-                        'All Lots',
-                        'Lot A-01',
-                        'Lot A-02',
-                        'Lot A-03',
-                        'Lot B-01',
-                        'Lot B-02',
-                      ]
-                    }
-                    propertyName={selectedProperty?.name || 'Green Valley Residence'}
-                    onSelectLot={(lot) => {
-                      setSelectedLot(lot);
-                      showToast(`Selected ${lot}`, 'info');
-                    }}
-                  />
-
-                  {/* Status Pill */}
-                  <span className={`payment-plan-status-pill ${currentPlan.statusType || 'none'}`}>
-                    <span className="payment-plan-status-dot" />
-                    <span>{currentPlan.statusLabel || 'NO PAYMENT PLAN'}</span>
-                  </span>
-
-                  {/* Action buttons */}
-                  {currentPlan.hasPlan && currentPlan.statusType === 'active' ? (
-                    <button
-                      type="button"
-                      className="payment-plan-btn-pay"
-                      onClick={() => setIsPayModalOpen(true)}
-                    >
-                      <DollarSign size={16} />
-                      <span>Make Payment</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="payment-plan-btn-apply"
-                      onClick={() => setIsApplyModalOpen(true)}
-                    >
-                      <Plus size={16} />
-                      <span>Apply for Payment Plan</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Main White Card Wrapper */}
-              <div className="payment-plan-card-wrapper">
-
-                {/* Notice Alert Banner (as in screenshot: "No payment plan exist." or Active details) */}
-                <div className={`payment-plan-notice-card ${currentPlan.hasPlan ? 'active-plan' : 'no-plan'}`}>
-                  <div className="payment-plan-notice-left">
-                    <AlertCircle size={18} className={`payment-plan-notice-icon ${!currentPlan.hasPlan ? 'muted' : ''}`} />
-                    <span>{currentPlan.notice}</span>
-                  </div>
-                  {!currentPlan.hasPlan && (
-                    <button
-                      type="button"
-                      className="payment-plan-notice-link"
-                      onClick={() => setIsApplyModalOpen(true)}
-                    >
-                      Request a Plan &rarr;
-                    </button>
-                  )}
-                </div>
-
-                {/* 4 KPI Metric Summary Cards (Agreed Amount, Due Amount, Amount Paid, Paid On Time) */}
-                <div className="payment-plan-metrics-grid">
-                  {/* 1. Agreed Amount */}
-                  <div className="payment-plan-metric-card agreed">
-                    <div className="payment-plan-metric-header">
-                      <span className="payment-plan-metric-label">Agreed Amount</span>
-                      <div className="payment-plan-metric-icon-wrap">
-                        <FileText size={16} />
-                      </div>
-                    </div>
-                    <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.agreedAmount)}</h3>
-                    <p className="payment-plan-metric-sub">
-                      {currentPlan.hasPlan ? `${currentPlan.totalInstallments} scheduled installments` : 'No agreement active'}
-                    </p>
-                  </div>
-
-                  {/* 2. Due Amount */}
-                  <div className="payment-plan-metric-card due">
-                    <div className="payment-plan-metric-header">
-                      <span className="payment-plan-metric-label">Due Amount</span>
-                      <div className="payment-plan-metric-icon-wrap">
-                        <Clock size={16} />
-                      </div>
-                    </div>
-                    <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.dueAmount)}</h3>
-                    <p className="payment-plan-metric-sub">
-                      {currentPlan.hasPlan && currentPlan.dueAmount > 0
-                        ? `Next: ${formatCurrency(currentPlan.nextPaymentAmount)} on ${currentPlan.nextPaymentDate}`
-                        : 'No pending installments'}
-                    </p>
-                  </div>
-
-                  {/* 3. Amount Paid */}
-                  <div className="payment-plan-metric-card paid">
-                    <div className="payment-plan-metric-header">
-                      <span className="payment-plan-metric-label">Amount Paid</span>
-                      <div className="payment-plan-metric-icon-wrap">
-                        <TrendingUp size={16} />
-                      </div>
-                    </div>
-                    <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.amountPaid)}</h3>
-                    <p className="payment-plan-metric-sub">
-                      {currentPlan.hasPlan
-                        ? `${currentPlan.completedInstallments} of ${currentPlan.totalInstallments} paid`
-                        : '$0.00 settled'}
-                    </p>
-                  </div>
-
-                  {/* 4. Paid On Time */}
-                  <div className="payment-plan-metric-card ontime">
-                    <div className="payment-plan-metric-header">
-                      <span className="payment-plan-metric-label">Paid On Time</span>
-                      <div className="payment-plan-metric-icon-wrap">
-                        <CheckCircle2 size={16} />
-                      </div>
-                    </div>
-                    <h3 className="payment-plan-metric-val">{currentPlan.paidOnTime}</h3>
-                    <p className="payment-plan-metric-sub">
-                      {currentPlan.paidOnTime.includes('Yes') ? 'Zero dishonour notices' : 'Standard schedule'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Overall Progress Section */}
-                <div className="payment-plan-progress-card">
-                  <div className="payment-plan-progress-header">
-                    <div className="payment-plan-progress-title">
-                      <TrendingUp size={18} />
-                      <span>Overall Progress</span>
-                    </div>
-                    <span className="payment-plan-progress-pct">{progressPct}%</span>
-                  </div>
-
-                  {/* Progress Bar Track */}
-                  <div className="payment-plan-progress-bar-track" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
-                    <div
-                      className="payment-plan-progress-bar-fill"
-                      style={{ width: `${progressPct}%` }}
                     />
-                  </div>
 
-                  <div className="payment-plan-progress-caption-row">
-                    <span className="payment-plan-progress-caption-main">
-                      Paid {formatCurrency(currentPlan.amountPaid)} of {formatCurrency(currentPlan.agreedAmount)}
+                    {/* Status Pill */}
+                    <span className={`payment-plan-status-pill ${currentPlan.statusType || 'none'}`}>
+                      <span className="payment-plan-status-dot" />
+                      <span>{currentPlan.statusLabel || 'NO PAYMENT PLAN'}</span>
                     </span>
-                    {currentPlan.hasPlan && currentPlan.dueAmount > 0 && (
-                      <span className="payment-plan-progress-caption-next">
-                        <Calendar size={13} />
-                        Next instalment: {formatCurrency(currentPlan.nextPaymentAmount)} on {currentPlan.nextPaymentDate}
-                      </span>
+
+                    {/* Action buttons */}
+                    {currentPlan.hasPlan && currentPlan.statusType === 'active' ? (
+                      <button
+                        type="button"
+                        className="payment-plan-btn-pay"
+                        onClick={() => setIsPayModalOpen(true)}
+                      >
+                        <DollarSign size={16} />
+                        <span>Make Payment</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="payment-plan-btn-apply"
+                        onClick={() => setIsApplyModalOpen(true)}
+                      >
+                        <Plus size={16} />
+                        <span>Apply for Payment Plan</span>
+                      </button>
                     )}
                   </div>
                 </div>
 
-                {/* 2-Column Content Grid: Payment Status & Payment History */}
-                <div className="payment-plan-content-grid">
-                  {/* Left Column: Payment Status Card */}
-                  <div className="payment-plan-inner-card">
-                    <div className="payment-plan-inner-card-header">
-                      <h3 className="payment-plan-inner-card-title">
-                        <AlertCircle size={18} />
-                        <span>Payment Status</span>
-                      </h3>
-                      <span className={`payment-plan-status-pill ${currentPlan.statusType || 'none'}`} style={{ padding: '3px 10px', fontSize: 11 }}>
-                        {currentPlan.statusLabel}
-                      </span>
+                {/* Main White Card Wrapper */}
+                <div className="payment-plan-card-wrapper">
+
+                  {/* Notice Alert Banner (as in screenshot: "No payment plan exist." or Active details) */}
+                  <div className={`payment-plan-notice-card ${currentPlan.hasPlan ? 'active-plan' : 'no-plan'}`}>
+                    <div className="payment-plan-notice-left">
+                      <AlertCircle size={18} className={`payment-plan-notice-icon ${!currentPlan.hasPlan ? 'muted' : ''}`} />
+                      <span>{currentPlan.notice}</span>
+                    </div>
+                    {!currentPlan.hasPlan && (
+                      <button
+                        type="button"
+                        className="payment-plan-notice-link"
+                        onClick={() => setIsApplyModalOpen(true)}
+                      >
+                        Request a Plan &rarr;
+                      </button>
+                    )}
+                  </div>
+
+                  {/* 4 KPI Metric Summary Cards (Agreed Amount, Due Amount, Amount Paid, Paid On Time) */}
+                  <div className="payment-plan-metrics-grid">
+                    {/* 1. Agreed Amount */}
+                    <div className="payment-plan-metric-card agreed">
+                      <div className="payment-plan-metric-header">
+                        <span className="payment-plan-metric-label">Agreed Amount</span>
+                        <div className="payment-plan-metric-icon-wrap">
+                          <FileText size={16} />
+                        </div>
+                      </div>
+                      <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.agreedAmount)}</h3>
+                      <p className="payment-plan-metric-sub">
+                        {currentPlan.hasPlan ? `${currentPlan.totalInstallments} scheduled installments` : 'No agreement active'}
+                      </p>
                     </div>
 
-                    <div className="payment-plan-inner-card-body">
-                      <div className="payment-plan-detail-list">
-                        <div className="payment-plan-detail-item">
-                          <span className="payment-plan-detail-key">Plan Status</span>
-                          <span className="payment-plan-detail-val">
-                            <span className="payment-plan-status-dot" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />
-                            <span>{currentPlan.statusLabel}</span>
-                          </span>
+                    {/* 2. Due Amount */}
+                    <div className="payment-plan-metric-card due">
+                      <div className="payment-plan-metric-header">
+                        <span className="payment-plan-metric-label">Due Amount</span>
+                        <div className="payment-plan-metric-icon-wrap">
+                          <Clock size={16} />
                         </div>
+                      </div>
+                      <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.dueAmount)}</h3>
+                      <p className="payment-plan-metric-sub">
+                        {currentPlan.hasPlan && currentPlan.dueAmount > 0
+                          ? `Next: ${formatCurrency(currentPlan.nextPaymentAmount)} on ${currentPlan.nextPaymentDate}`
+                          : 'No pending installments'}
+                      </p>
+                    </div>
 
-                        <div className="payment-plan-detail-item">
-                          <span className="payment-plan-detail-key">Frequency</span>
-                          <span className="payment-plan-detail-val">{currentPlan.frequency}</span>
+                    {/* 3. Amount Paid */}
+                    <div className="payment-plan-metric-card paid">
+                      <div className="payment-plan-metric-header">
+                        <span className="payment-plan-metric-label">Amount Paid</span>
+                        <div className="payment-plan-metric-icon-wrap">
+                          <TrendingUp size={16} />
                         </div>
+                      </div>
+                      <h3 className="payment-plan-metric-val">{formatCurrency(currentPlan.amountPaid)}</h3>
+                      <p className="payment-plan-metric-sub">
+                        {currentPlan.hasPlan
+                          ? `${currentPlan.completedInstallments} of ${currentPlan.totalInstallments} paid`
+                          : '$0.00 settled'}
+                      </p>
+                    </div>
 
-                        <div className="payment-plan-detail-item">
-                          <span className="payment-plan-detail-key">Plan Started</span>
-                          <span className="payment-plan-detail-val">{currentPlan.planStarted}</span>
+                    {/* 4. Paid On Time */}
+                    <div className="payment-plan-metric-card ontime">
+                      <div className="payment-plan-metric-header">
+                        <span className="payment-plan-metric-label">Paid On Time</span>
+                        <div className="payment-plan-metric-icon-wrap">
+                          <CheckCircle2 size={16} />
                         </div>
+                      </div>
+                      <h3 className="payment-plan-metric-val">{currentPlan.paidOnTime}</h3>
+                      <p className="payment-plan-metric-sub">
+                        {currentPlan.paidOnTime.includes('Yes') ? 'Zero dishonour notices' : 'Standard schedule'}
+                      </p>
+                    </div>
+                  </div>
 
-                        <div className="payment-plan-detail-item">
-                          <span className="payment-plan-detail-key">Plan Ends</span>
-                          <span className="payment-plan-detail-val">{currentPlan.planEnds}</span>
+                  {/* Overall Progress Section */}
+                  <div className="payment-plan-progress-card">
+                    <div className="payment-plan-progress-header">
+                      <div className="payment-plan-progress-title">
+                        <TrendingUp size={18} />
+                        <span>Overall Progress</span>
+                      </div>
+                      <span className="payment-plan-progress-pct">{progressPct}%</span>
+                    </div>
+
+                    {/* Progress Bar Track */}
+                    <div className="payment-plan-progress-bar-track" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100}>
+                      <div
+                        className="payment-plan-progress-bar-fill"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+
+                    <div className="payment-plan-progress-caption-row">
+                      <span className="payment-plan-progress-caption-main">
+                        Paid {formatCurrency(currentPlan.amountPaid)} of {formatCurrency(currentPlan.agreedAmount)}
+                      </span>
+                      {currentPlan.hasPlan && currentPlan.dueAmount > 0 && (
+                        <span className="payment-plan-progress-caption-next">
+                          <Calendar size={13} />
+                          Next instalment: {formatCurrency(currentPlan.nextPaymentAmount)} on {currentPlan.nextPaymentDate}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 2-Column Content Grid: Payment Status & Payment History */}
+                  <div className="payment-plan-content-grid">
+                    {/* Left Column: Payment Status Card */}
+                    <div className="payment-plan-inner-card">
+                      <div className="payment-plan-inner-card-header">
+                        <h3 className="payment-plan-inner-card-title">
+                          <AlertCircle size={18} />
+                          <span>Payment Status</span>
+                        </h3>
+                        <span className={`payment-plan-status-pill ${currentPlan.statusType || 'none'}`} style={{ padding: '3px 10px', fontSize: 11 }}>
+                          {currentPlan.statusLabel}
+                        </span>
+                      </div>
+
+                      <div className="payment-plan-inner-card-body">
+                        <div className="payment-plan-detail-list">
+                          <div className="payment-plan-detail-item">
+                            <span className="payment-plan-detail-key">Plan Status</span>
+                            <span className="payment-plan-detail-val">
+                              <span className="payment-plan-status-dot" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />
+                              <span>{currentPlan.statusLabel}</span>
+                            </span>
+                          </div>
+
+                          <div className="payment-plan-detail-item">
+                            <span className="payment-plan-detail-key">Frequency</span>
+                            <span className="payment-plan-detail-val">{currentPlan.frequency}</span>
+                          </div>
+
+                          <div className="payment-plan-detail-item">
+                            <span className="payment-plan-detail-key">Plan Started</span>
+                            <span className="payment-plan-detail-val">{currentPlan.planStarted}</span>
+                          </div>
+
+                          <div className="payment-plan-detail-item">
+                            <span className="payment-plan-detail-key">Plan Ends</span>
+                            <span className="payment-plan-detail-val">{currentPlan.planEnds}</span>
+                          </div>
+
+                          {currentPlan.hasPlan && (
+                            <>
+                              <div className="payment-plan-detail-item">
+                                <span className="payment-plan-detail-key">Installment Amount</span>
+                                <span className="payment-plan-detail-val" style={{ color: 'var(--color-primary, #0d9488)', fontWeight: 700 }}>
+                                  {formatCurrency(currentPlan.installmentAmount)}
+                                </span>
+                              </div>
+
+                              <div className="payment-plan-detail-item">
+                                <span className="payment-plan-detail-key">Payment Method</span>
+                                <span className="payment-plan-detail-val">{currentPlan.paymentMethod}</span>
+                              </div>
+
+                              <div className="payment-plan-detail-item">
+                                <span className="payment-plan-detail-key">Levy Reference</span>
+                                <span className="payment-plan-detail-val" style={{ fontSize: 12.5 }}>
+                                  {currentPlan.levyReference}
+                                </span>
+                              </div>
+                            </>
+                          )}
                         </div>
+                      </div>
+                    </div>
 
-                        {currentPlan.hasPlan && (
-                          <>
-                            <div className="payment-plan-detail-item">
-                              <span className="payment-plan-detail-key">Installment Amount</span>
-                              <span className="payment-plan-detail-val" style={{ color: 'var(--color-primary, #0d9488)', fontWeight: 700 }}>
-                                {formatCurrency(currentPlan.installmentAmount)}
-                              </span>
+                    {/* Right Column: Payment History Card */}
+                    <div className="payment-plan-inner-card">
+                      <div className="payment-plan-inner-card-header">
+                        <h3 className="payment-plan-inner-card-title">
+                          <Clock size={18} />
+                          <span>Payment History</span>
+                        </h3>
+                        {currentPlan.history && currentPlan.history.length > 0 && (
+                          <button
+                            type="button"
+                            className="payment-plan-receipt-btn"
+                            onClick={() => showToast('Payment statement exported to PDF!', 'success')}
+                          >
+                            <Download size={13} />
+                            <span>Export PDF</span>
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="payment-plan-inner-card-body" style={{ padding: 0 }}>
+                        {currentPlan.history && currentPlan.history.length > 0 ? (
+                          <div className="payment-plan-history-table-wrap">
+                            <table className="payment-plan-history-table">
+                              <thead>
+                                <tr>
+                                  <th>Payment Date</th>
+                                  <th>Amount</th>
+                                  <th>Paid Levy</th>
+                                  <th>Status</th>
+                                  <th style={{ textAlign: 'right' }}>Receipt</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {currentPlan.history.map((item) => (
+                                  <tr key={item.id}>
+                                    <td>
+                                      <div style={{ fontWeight: 600 }}>{item.paymentDate}</div>
+                                      <span className="payment-plan-ref-pill">{item.receiptNo}</span>
+                                    </td>
+                                    <td className="payment-plan-amount-cell">
+                                      {formatCurrency(item.amount)}
+                                    </td>
+                                    <td>
+                                      <div style={{ fontWeight: 500 }}>{item.paidLevy}</div>
+                                      <div style={{ fontSize: 11, color: 'var(--color-slate-400, #94a3b8)' }}>{item.method}</div>
+                                    </td>
+                                    <td>
+                                      <span className="payment-plan-history-status-pill">
+                                        <CheckCircle2 size={12} />
+                                        <span>{item.status}</span>
+                                      </span>
+                                    </td>
+                                    <td style={{ textAlign: 'right' }}>
+                                      <button
+                                        type="button"
+                                        className="payment-plan-receipt-btn"
+                                        title="View Receipt"
+                                        onClick={() => setSelectedReceipt(item)}
+                                      >
+                                        <Receipt size={13} />
+                                        <span>View</span>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <div className="payment-plan-empty-history">
+                            <div className="payment-plan-empty-icon-wrap">
+                              <Receipt size={28} />
                             </div>
-
-                            <div className="payment-plan-detail-item">
-                              <span className="payment-plan-detail-key">Payment Method</span>
-                              <span className="payment-plan-detail-val">{currentPlan.paymentMethod}</span>
-                            </div>
-
-                            <div className="payment-plan-detail-item">
-                              <span className="payment-plan-detail-key">Levy Reference</span>
-                              <span className="payment-plan-detail-val" style={{ fontSize: 12.5 }}>
-                                {currentPlan.levyReference}
-                              </span>
-                            </div>
-                          </>
+                            <h4 className="payment-plan-empty-title">No Payment History Recorded</h4>
+                            <p className="payment-plan-empty-desc">
+                              There are no installment transactions recorded for {effectiveLot} under an active payment agreement.
+                            </p>
+                            <button
+                              type="button"
+                              className="payment-plan-btn-apply"
+                              style={{ marginTop: 8 }}
+                              onClick={() => setIsApplyModalOpen(true)}
+                            >
+                              <Plus size={15} />
+                              <span>Request Payment Arrangement</span>
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
 
-                  {/* Right Column: Payment History Card */}
-                  <div className="payment-plan-inner-card">
-                    <div className="payment-plan-inner-card-header">
-                      <h3 className="payment-plan-inner-card-title">
-                        <Clock size={18} />
-                        <span>Payment History</span>
-                      </h3>
-                      {currentPlan.history && currentPlan.history.length > 0 && (
-                        <button
-                          type="button"
-                          className="payment-plan-receipt-btn"
-                          onClick={() => showToast('Payment statement exported to PDF!', 'success')}
-                        >
-                          <Download size={13} />
-                          <span>Export PDF</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="payment-plan-inner-card-body" style={{ padding: 0 }}>
-                      {currentPlan.history && currentPlan.history.length > 0 ? (
-                        <div className="payment-plan-history-table-wrap">
-                          <table className="payment-plan-history-table">
-                            <thead>
-                              <tr>
-                                <th>Payment Date</th>
-                                <th>Amount</th>
-                                <th>Paid Levy</th>
-                                <th>Status</th>
-                                <th style={{ textAlign: 'right' }}>Receipt</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {currentPlan.history.map((item) => (
-                                <tr key={item.id}>
-                                  <td>
-                                    <div style={{ fontWeight: 600 }}>{item.paymentDate}</div>
-                                    <span className="payment-plan-ref-pill">{item.receiptNo}</span>
-                                  </td>
-                                  <td className="payment-plan-amount-cell">
-                                    {formatCurrency(item.amount)}
-                                  </td>
-                                  <td>
-                                    <div style={{ fontWeight: 500 }}>{item.paidLevy}</div>
-                                    <div style={{ fontSize: 11, color: 'var(--color-slate-400, #94a3b8)' }}>{item.method}</div>
-                                  </td>
-                                  <td>
-                                    <span className="payment-plan-history-status-pill">
-                                      <CheckCircle2 size={12} />
-                                      <span>{item.status}</span>
-                                    </span>
-                                  </td>
-                                  <td style={{ textAlign: 'right' }}>
-                                    <button
-                                      type="button"
-                                      className="payment-plan-receipt-btn"
-                                      title="View Receipt"
-                                      onClick={() => setSelectedReceipt(item)}
-                                    >
-                                      <Receipt size={13} />
-                                      <span>View</span>
-                                    </button>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : (
-                        <div className="payment-plan-empty-history">
-                          <div className="payment-plan-empty-icon-wrap">
-                            <Receipt size={28} />
-                          </div>
-                          <h4 className="payment-plan-empty-title">No Payment History Recorded</h4>
-                          <p className="payment-plan-empty-desc">
-                            There are no installment transactions recorded for {effectiveLot} under an active payment agreement.
-                          </p>
-                          <button
-                            type="button"
-                            className="payment-plan-btn-apply"
-                            style={{ marginTop: 8 }}
-                            onClick={() => setIsApplyModalOpen(true)}
-                          >
-                            <Plus size={15} />
-                            <span>Request Payment Arrangement</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                  {/* Footer Meta Row */}
+                  <div className="payment-plan-footer-row">
+                    <span>Last updated: {new Date().toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                    <span className="payment-plan-footer-secure">
+                      <ShieldCheck size={14} />
+                      <span>Secure payment plan &bull; Encrypted with 256-bit bank-grade SSL</span>
+                    </span>
                   </div>
                 </div>
-
-                {/* Footer Meta Row */}
-                <div className="payment-plan-footer-row">
-                  <span>Last updated: {new Date().toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                  <span className="payment-plan-footer-secure">
-                    <ShieldCheck size={14} />
-                    <span>Secure payment plan &bull; Encrypted with 256-bit bank-grade SSL</span>
-                  </span>
-                </div>
-              </div>
               </div>
 
               {/* MOBILE EXPERIENCE (<= 900px) */}

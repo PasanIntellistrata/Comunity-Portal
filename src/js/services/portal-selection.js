@@ -22,6 +22,14 @@ class PortalSelectionService {
         const found = PROPERTIES.find((p) => p.id === savedId || p.name === savedId);
         if (found) return found;
       }
+      const rawUser = localStorage.getItem('cp_auth_user') || sessionStorage.getItem('cp_auth_user');
+      if (rawUser) {
+        const authUser = JSON.parse(rawUser);
+        if (authUser?.propertyId) {
+          const userProp = PROPERTIES.find((p) => p.id === authUser.propertyId || p.name === authUser.propertyId);
+          if (userProp) return userProp;
+        }
+      }
     } catch (e) {
       // fallback
     }
@@ -30,11 +38,18 @@ class PortalSelectionService {
 
   getLot() {
     try {
+      const currentProp = this.getProperty();
       const savedLot = localStorage.getItem(STORAGE_KEY_LOT);
       if (savedLot) {
-        const currentProp = this.getProperty();
         if (currentProp.lots && currentProp.lots.includes(savedLot)) {
           return savedLot;
+        }
+      }
+      const rawUser = localStorage.getItem('cp_auth_user') || sessionStorage.getItem('cp_auth_user');
+      if (rawUser) {
+        const authUser = JSON.parse(rawUser);
+        if (authUser?.lotNumber && currentProp.lots && currentProp.lots.includes(authUser.lotNumber)) {
+          return authUser.lotNumber;
         }
       }
     } catch (e) {

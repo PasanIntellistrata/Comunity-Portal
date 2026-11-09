@@ -11,8 +11,9 @@ supabase/
 ├── migrations/
 │   └── 20261012000000_auth_configuration.sql   # Base configuration & auth directives
 ├── seed/
-│   ├── seed_dummy_users.sql                   # SQL seed script for test accounts
-│   └── create-test-users.js                   # Node CLI script via Supabase Admin API
+│   ├── user-mapping.json                      # Structured user mapping configuration
+│   ├── create-test-users.js                   # Safe repeatable Node CLI provisioning script
+│   └── seed_dummy_users.sql                   # SQL seed script for test accounts (SQL fallback)
 └── README.md                                  # This documentation
 ```
 
@@ -36,33 +37,60 @@ To enforce this at the database level:
 
 ---
 
-## 3. Predefined Test Accounts (Development)
+## 3. Predefined Test Accounts & User Mapping
 
-The seed scripts provision the following test users for development and testing:
+All predefined accounts, roles, and internal strata mappings are maintained in [`supabase/seed/user-mapping.json`](file:///c:/Users/pasan/OneDrive/Desktop/Intellistrata/community_portal/supabase/seed/user-mapping.json):
 
-| Email | Role | Unit | Name | Development Password |
-|---|---|---|---|---|
-| `resident.owner@intellistrata.test` | Resident Owner | 101 | Pasan Udara | `TestPass123!` |
-| `committee.member@intellistrata.test` | Strata Committee Member | 205 | Alice Smith | `TestPass123!` |
-| `strata.manager@intellistrata.test` | Strata Manager | 100 | Admin Manager | `TestPass123!` |
+| Username | Email | Name | Role | Unit | Internal User ID | Property ID | Lot ID | Development Password |
+|---|---|---|---|---|---|---|---|---|
+| `resident.owner` | `resident.owner@intellistrata.test` | Pasan Udara | Resident Owner | 101 | `usr_pasan` | `prop-1` | `Lot A-03` | `TestPass123!` |
+| `committee.member` | `committee.member@intellistrata.test` | Alice Smith | Strata Committee Member | 205 | `usr_alice` | `prop-1` | `Lot A-01` | `TestPass123!` |
+| `strata.manager` | `strata.manager@intellistrata.test` | Admin Manager | Strata Manager | 100 | `usr_admin` | `prop-1` | `All Lots` | `TestPass123!` |
+| `admin` | `admin@intellistrata.com` | Admin Manager | Strata Manager | 100 | `usr_admin` | `prop-1` | `All Lots` | `TestPass123!` |
+| `bob` | `bob@demo.com` | Bob Johnson | Strata Committee Member | 205 | `usr_bob` | `prop-1` | `Lot B-01` | `TestPass123!` |
+| `charlie` | `charlie@demo.com` | Charlie Brown | Resident Owner | 304 | `usr_charlie` | `prop-1` | `Lot B-02` | `TestPass123!` |
 
-> **Security Warning**: The password `TestPass123!` is strictly for local and development sandbox environments. Never deploy seed scripts containing default passwords to production.
+> **Security Warning**: The default password `TestPass123!` is strictly for local and development sandbox environments. Never deploy seed scripts containing default passwords to production.
 
-### How to Run the Seed Scripts
+---
 
-#### Option A: Via Supabase Dashboard (SQL Editor)
-1. Open your Supabase project dashboard.
-2. Go to the **SQL Editor**.
-3. Copy and run the contents of [`supabase/seed/seed_dummy_users.sql`](file:///c:/Users/pasan/OneDrive/Desktop/Intellistrata/community_portal/supabase/seed/seed_dummy_users.sql).
+## 4. How to Run the Safe Provisioning Script
 
-#### Option B: Via Node.js Admin API Script
-Run the provisioning script using your project URL and service role key (kept in environment variables only):
+The provisioning script [`supabase/seed/create-test-users.js`](file:///c:/Users/pasan/OneDrive/Desktop/Intellistrata/community_portal/supabase/seed/create-test-users.js) uses the official Supabase JavaScript client Auth Admin API (`supabaseAdmin.auth.admin`).
 
-```bash
-SUPABASE_URL=https://your-dev-project.supabase.co \
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key \
-node supabase/seed/create-test-users.js
-```
+### Safety Guarantees:
+- **Repeatable & Idempotent:** Queries existing users first via `listUsers()`. Existing accounts are safely skipped; passwords are **never** unexpectedly reset or duplicated.
+- **Credential Protection:** Passwords, access tokens, and secret keys are **never** logged to the console or stored in Git.
+- **Separation of Secrets:** Reads the `SUPABASE_SERVICE_ROLE_KEY` from a private, gitignored environment file (`.env.seed.local`). It is never prefixed with `VITE_` or exposed to frontend client code.
+
+### Step-by-Step Setup & Execution:
+
+1. **Create your local provisioning environment file** (excluded from Git):
+   ```bash
+   cp .env.seed.example .env.seed.local
+   ```
+
+2. **Configure credentials in `.env.seed.local`**:
+   - Set `SUPABASE_URL` to your Supabase project URL (e.g. from `.env`).
+   - Set `SUPABASE_SERVICE_ROLE_KEY` (from Supabase Dashboard -> **Project Settings** -> **API** -> `service_role (secret)`).
+   - *(Optional)* Set `TEST_USER_PASSWORD` if you wish to use a different development password.
+
+3. **Run the provisioning script**:
+   ```bash
+   npm run seed:users
+   ```
+   Or directly via Node:
+   ```bash
+   node supabase/seed/create-test-users.js
+   ```
+
+4. **Verify the Results**:
+   - Check the terminal output summary (shows newly created vs skipped accounts).
+   - Open **Supabase Dashboard** -> **Authentication** -> **Users** to confirm all test accounts are present with `email_confirmed_at` populated.
+   - Start the dev server (`npm run dev`) and log in at `http://localhost:5173/login`:
+     - Test logging in using the **Email** (e.g. `resident.owner@intellistrata.test`).
+     - Test logging in using the **Username** (e.g. `resident.owner`).
+     - Password: `TestPass123!` (or your configured `TEST_USER_PASSWORD`).
 
 ---
 

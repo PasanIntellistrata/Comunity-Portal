@@ -474,426 +474,422 @@ const LevyOverviewPage = ({ onLogout }) => {
             <div className="levy-desktop-view">
               {/* Breadcrumb Navigation */}
               <nav className="invoice-breadcrumb" aria-label="Breadcrumb">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  try {
-                    f7.views.main.router.navigate('/');
-                  } catch (err) {
-                    window.location.href = '/';
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    try {
+                      f7.views.main.router.navigate('/');
+                    } catch (err) {
+                      window.location.href = '/';
+                    }
+                  }}
+                >
+                  Dashboard
+                </a>
+                <span className="sep">›</span>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  My Levy
+                </a>
+                <span className="sep">›</span>
+                <span className="current">Levy Overview</span>
+              </nav>
+
+              {/* Title Row */}
+              <div className="invoice-page-title-row">
+                <div>
+                  <h1 className="invoice-page-title">Levy Overview</h1>
+                  <p className="invoice-page-subtitle">
+                    Managing{' '}
+                    <span className="property-highlight">
+                      {selectedProperty?.name || 'All Properties'}
+                    </span>{' '}
+                    &bull; <span className="lot-highlight">{selectedLot}</span>
+                  </p>
+                </div>
+
+                <LotSelector
+                  selectedLot={selectedLot}
+                  lots={
+                    selectedProperty?.lots || [
+                      'All Lots',
+                      'Lot A-01',
+                      'Lot A-02',
+                      'Lot A-03',
+                      'Lot B-01',
+                      'Lot B-02',
+                    ]
                   }
-                }}
-              >
-                Dashboard
-              </a>
-              <span className="sep">›</span>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                My Levy
-              </a>
-              <span className="sep">›</span>
-              <span className="current">Levy Overview</span>
-            </nav>
-
-            {/* Title Row */}
-            <div className="invoice-page-title-row">
-              <div>
-                <h1 className="invoice-page-title">Levy Overview</h1>
-                <p className="invoice-page-subtitle">
-                  Managing{' '}
-                  <span className="property-highlight">
-                    {selectedProperty?.name || 'All Properties'}
-                  </span>{' '}
-                  &bull; <span className="lot-highlight">{selectedLot}</span>
-                </p>
+                  propertyName={selectedProperty?.name || 'Green Valley Residence'}
+                  onSelectLot={handleSelectLot}
+                />
               </div>
 
-              <LotSelector
-                selectedLot={selectedLot}
-                lots={
-                  selectedProperty?.lots || [
-                    'All Lots',
-                    'Lot A-01',
-                    'Lot A-02',
-                    'Lot A-03',
-                    'Lot B-01',
-                    'Lot B-02',
-                  ]
-                }
-                propertyName={selectedProperty?.name || 'Green Valley Residence'}
-                onSelectLot={handleSelectLot}
-              />
-            </div>
+              {/* Levy Dashboard Main Container */}
+              <div className="levy-content-container">
 
-            {/* Levy Dashboard Main Container */}
-            <div className="levy-content-container">
-
-            {/* Top 3 Cards in the Same Line: Total Due, Next Payment, Levy Breakdown */}
-            <div className="levy-top-row">
-              {/* Card 1: Total Levy Due */}
-              <div className="levy-kpi-card">
-                <div className="levy-kpi-icon-wrap teal">
-                  <Wallet size={24} />
-                </div>
-                <div className="levy-kpi-body">
-                  <div className="levy-kpi-label">Total Levy Due</div>
-                  <div className="levy-kpi-value">${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                  <div className="levy-kpi-badge-due">Due in 15 days</div>
-                </div>
-              </div>
-
-              {/* Card 2: Next Payment */}
-              <div className="levy-kpi-card">
-                <div className="levy-kpi-icon-wrap blue">
-                  <Calendar size={24} />
-                </div>
-                <div className="levy-kpi-body">
-                  <div className="levy-kpi-label">Next Payment</div>
-                  <div className="levy-kpi-value">20 Aug 2026</div>
-                  <div className="levy-kpi-subtext">$810.00</div>
-                </div>
-              </div>
-
-              {/* Card 3: Levy Breakdown Section */}
-              <div className="levy-card levy-breakdown-card">
-                <div className="levy-card-header">
-                  <h3 className="levy-card-title">Levy Breakdown</h3>
-                  <div className="levy-time-dropdown-wrap">
-                    <select
-                      className="levy-select-time"
-                      value={timeRange}
-                      onChange={(e) => {
-                        setTimeRange(e.target.value);
-                        showToast(`Viewing breakdown for ${e.target.value}`);
-                      }}
-                    >
-                      <option value="This Year">This Year</option>
-                      <option value="Last Year">Last Year</option>
-                      <option value="All Time">All Time</option>
-                    </select>
+                {/* Top 3 Cards in the Same Line: Total Due, Next Payment, Levy Breakdown */}
+                <div className="levy-top-row">
+                  {/* Card 1: Total Levy Due */}
+                  <div className="levy-kpi-card">
+                    <div className="levy-kpi-icon-wrap teal">
+                      <Wallet size={24} />
+                    </div>
+                    <div className="levy-kpi-body">
+                      <div className="levy-kpi-label">Total Levy Due</div>
+                      <div className="levy-kpi-value">${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                      <div className="levy-kpi-badge-due">Due in 15 days</div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="levy-breakdown-content">
-                  {/* SVG Donut Chart with Flat Non-Curved Segment Edges */}
-                  <div className="levy-chart-container">
-                    <svg
-                      className="levy-donut-svg"
-                      viewBox="0 0 200 200"
-                      width="100%"
-                      height="100%"
-                    >
-                      {/* Background track */}
-                      <circle
-                        cx="100"
-                        cy="100"
-                        r={radius}
-                        fill="none"
-                        stroke="#f1f5f9"
-                        strokeWidth="18"
-                      />
+                  {/* Card 2: Next Payment */}
+                  <div className="levy-kpi-card">
+                    <div className="levy-kpi-icon-wrap blue">
+                      <Calendar size={24} />
+                    </div>
+                    <div className="levy-kpi-body">
+                      <div className="levy-kpi-label">Next Payment</div>
+                      <div className="levy-kpi-value">20 Aug 2026</div>
+                      <div className="levy-kpi-subtext">$810.00</div>
+                    </div>
+                  </div>
 
-                      {/* Donut Segments with flat edges (strokeLinecap="butt") */}
-                      {donutSegments.map((segment) => {
-                        const isHovered = hoveredSegment === segment.id;
-                        return (
+                  {/* Card 3: Levy Breakdown Section */}
+                  <div className="levy-card levy-breakdown-card">
+                    <div className="levy-card-header">
+                      <h3 className="levy-card-title">Levy Breakdown</h3>
+                      <div className="levy-time-dropdown-wrap">
+                        <select
+                          className="levy-select-time"
+                          value={timeRange}
+                          onChange={(e) => {
+                            setTimeRange(e.target.value);
+                            showToast(`Viewing breakdown for ${e.target.value}`);
+                          }}
+                        >
+                          <option value="This Year">This Year</option>
+                          <option value="Last Year">Last Year</option>
+                          <option value="All Time">All Time</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="levy-breakdown-content">
+                      {/* SVG Donut Chart with Flat Non-Curved Segment Edges */}
+                      <div className="levy-chart-container">
+                        <svg
+                          className="levy-donut-svg"
+                          viewBox="0 0 200 200"
+                          width="100%"
+                          height="100%"
+                        >
+                          {/* Background track */}
                           <circle
-                            key={segment.id}
                             cx="100"
                             cy="100"
                             r={radius}
                             fill="none"
-                            stroke={segment.color}
-                            strokeWidth={isHovered ? 21 : 17}
-                            strokeDasharray={segment.strokeDasharray}
-                            strokeDashoffset={segment.strokeDashoffset}
-                            strokeLinecap="butt"
-                            className="levy-donut-segment"
-                            style={{
-                              transform: 'rotate(-90deg)',
-                              transformOrigin: '100px 100px',
-                              transition: 'all 0.25s ease',
-                              cursor: 'pointer',
-                            }}
-                            onMouseEnter={() => setHoveredSegment(segment.id)}
-                            onMouseLeave={() => setHoveredSegment(null)}
-                            onClick={() => {
-                              showToast(
-                                `${segment.name}: $${segment.amount.toLocaleString()} (${segment.percentage}%)`
-                              );
-                            }}
+                            stroke="#f1f5f9"
+                            strokeWidth="18"
                           />
-                        );
-                      })}
 
-                      {/* Center Total Text */}
-                      <text
-                        x="100"
-                        y="92"
-                        textAnchor="middle"
-                        className="levy-donut-center-label"
-                      >
-                        Total
-                      </text>
-                      <text
-                        x="100"
-                        y="114"
-                        textAnchor="middle"
-                        className="levy-donut-center-value"
-                      >
-                        ${totalAmount.toLocaleString()}
-                      </text>
-                    </svg>
-                  </div>
+                          {/* Donut Segments with flat edges (strokeLinecap="butt") */}
+                          {donutSegments.map((segment) => {
+                            const isHovered = hoveredSegment === segment.id;
+                            return (
+                              <circle
+                                key={segment.id}
+                                cx="100"
+                                cy="100"
+                                r={radius}
+                                fill="none"
+                                stroke={segment.color}
+                                strokeWidth={isHovered ? 21 : 17}
+                                strokeDasharray={segment.strokeDasharray}
+                                strokeDashoffset={segment.strokeDashoffset}
+                                strokeLinecap="butt"
+                                className="levy-donut-segment"
+                                style={{
+                                  transform: 'rotate(-90deg)',
+                                  transformOrigin: '100px 100px',
+                                  transition: 'all 0.25s ease',
+                                  cursor: 'pointer',
+                                }}
+                                onMouseEnter={() => setHoveredSegment(segment.id)}
+                                onMouseLeave={() => setHoveredSegment(null)}
+                                onClick={() => {
+                                  showToast(
+                                    `${segment.name}: $${segment.amount.toLocaleString()} (${segment.percentage}%)`
+                                  );
+                                }}
+                              />
+                            );
+                          })}
 
-                  {/* Fund Breakdown List */}
-                  <div className="levy-breakdown-list">
-                    {LEVY_FUNDS.map((fund) => {
-                      const isHovered = hoveredSegment === fund.id;
-                      return (
-                        <div
-                          key={fund.id}
-                          className={`levy-breakdown-row ${isHovered ? 'highlighted' : ''}`}
-                          onMouseEnter={() => setHoveredSegment(fund.id)}
-                          onMouseLeave={() => setHoveredSegment(null)}
-                        >
-                          <div className="levy-fund-left">
-                            <span
-                              className="levy-fund-dot"
-                              style={{ background: fund.color }}
-                            />
-                            <span className="levy-fund-name">{fund.name}</span>
-                          </div>
-                          <div className="levy-fund-right">
-                            <span className="levy-fund-amount">
-                              ${fund.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                            </span>
-                            <span className="levy-fund-pct">{fund.percentage}%</span>
-                          </div>
+                          {/* Center Total Text */}
+                          <text
+                            x="100"
+                            y="92"
+                            textAnchor="middle"
+                            className="levy-donut-center-label"
+                          >
+                            Total
+                          </text>
+                          <text
+                            x="100"
+                            y="114"
+                            textAnchor="middle"
+                            className="levy-donut-center-value"
+                          >
+                            ${totalAmount.toLocaleString()}
+                          </text>
+                        </svg>
+                      </div>
+
+                      {/* Fund Breakdown List */}
+                      <div className="levy-breakdown-list">
+                        {LEVY_FUNDS.map((fund) => {
+                          const isHovered = hoveredSegment === fund.id;
+                          return (
+                            <div
+                              key={fund.id}
+                              className={`levy-breakdown-row ${isHovered ? 'highlighted' : ''}`}
+                              onMouseEnter={() => setHoveredSegment(fund.id)}
+                              onMouseLeave={() => setHoveredSegment(null)}
+                            >
+                              <div className="levy-fund-left">
+                                <span
+                                  className="levy-fund-dot"
+                                  style={{ background: fund.color }}
+                                />
+                                <span className="levy-fund-name">{fund.name}</span>
+                              </div>
+                              <div className="levy-fund-right">
+                                <span className="levy-fund-amount">
+                                  ${fund.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                                </span>
+                                <span className="levy-fund-pct">{fund.percentage}%</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        <div className="levy-breakdown-divider" />
+
+                        {/* Total Row */}
+                        <div className="levy-breakdown-total-row">
+                          <span className="levy-total-label">Total</span>
+                          <span className="levy-total-amount">
+                            ${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                          </span>
                         </div>
-                      );
-                    })}
-
-                    <div className="levy-breakdown-divider" />
-
-                    {/* Total Row */}
-                    <div className="levy-breakdown-total-row">
-                      <span className="levy-total-label">Total</span>
-                      <span className="levy-total-amount">
-                        ${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Payments Table Card */}
-            <div className="levy-card levy-payments-card">
-              {/* Card Header: Title + Download Statement Action */}
-              <div className="levy-card-header payments-header">
-                <div className="levy-payments-header-title-wrap">
-                  <h3 className="levy-card-title">Payments</h3>
-                </div>
-                <button
-                  type="button"
-                  className="levy-btn-download-statement"
-                  onClick={() => {
-                    showToast(`Downloading Levy Statement for ${selectedLot} (PDF)...`);
-                  }}
-                  aria-label="Download Statement"
-                >
-                  <ArrowDownToLine size={14} />
-                  <span className="levy-download-btn-text">Download Statement</span>
-                </button>
-              </div>
+                {/* Payments Table Card */}
+                <div className="levy-card levy-payments-card">
+                  {/* Card Header: Title + Download Statement Action */}
+                  <div className="levy-card-header payments-header">
+                    <div className="levy-payments-header-title-wrap">
+                      <h3 className="levy-card-title">Payments</h3>
+                    </div>
+                    <button
+                      type="button"
+                      className="levy-btn-download-statement"
+                      onClick={() => {
+                        showToast(`Downloading Levy Statement for ${selectedLot} (PDF)...`);
+                      }}
+                      aria-label="Download Statement"
+                    >
+                      <ArrowDownToLine size={14} />
+                      <span className="levy-download-btn-text">Download Statement</span>
+                    </button>
+                  </div>
 
-              {/* Payments Tab Strip with View All Toggle */}
-              <div className="levy-payments-tab-strip" role="tablist">
-                <div className="levy-payments-tabs-left">
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={activePaymentsTab === 'history'}
-                    className={`levy-tab-btn ${
-                      activePaymentsTab === 'history' ? 'active' : ''
-                    }`}
-                    onClick={() => setActivePaymentsTab('history')}
-                  >
-                    <span>Payment History</span>
-                    <span className="levy-tab-count">{PAYMENT_HISTORY.length}</span>
-                  </button>
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={activePaymentsTab === 'upcoming'}
-                    className={`levy-tab-btn ${
-                      activePaymentsTab === 'upcoming' ? 'active' : ''
-                    }`}
-                    onClick={() => setActivePaymentsTab('upcoming')}
-                  >
-                    <span>Upcoming Payment Plan</span>
-                    <span className="levy-tab-count">{UPCOMING_PAYMENTS.length}</span>
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  className="levy-btn-view-all"
-                  onClick={() => setShowAllPayments((prev) => !prev)}
-                >
-                  {showAllPayments ? 'Show Less' : 'View All'}
-                </button>
-              </div>
-              <div className="levy-table-responsive">
-                <table className="levy-table">
-                  <thead>
-                    <tr>
-                      <th>Invoice No.</th>
-                      <th>Due Date</th>
-                      <th>Amount</th>
-                      <th>{activePaymentsTab === 'history' ? 'Paid Date' : 'Status Date'}</th>
-                      <th>Status</th>
-                      <th>Payment Method</th>
-                      <th className="th-action">Receipt</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {displayedPayments.map((p) => (
-                      <tr key={p.id}>
-                        <td className="td-inv-no">
-                          <strong>{p.id}</strong>
-                        </td>
-                        <td>{p.dueDate}</td>
-                        <td className="td-amount">{p.amount}</td>
-                        <td>{p.paidDate}</td>
-                        <td>
-                          <span
-                            className={`levy-status-pill ${
-                              p.status.toLowerCase() === 'paid'
-                                ? 'paid'
-                                : p.status.toLowerCase() === 'pending'
-                                ? 'pending'
-                                : 'scheduled'
-                            }`}
-                          >
-                            {p.status}
-                          </span>
-                        </td>
-                        <td>{p.method}</td>
-                        <td className="td-action">
-                          <button
-                            type="button"
-                            className="levy-btn-receipt"
-                            onClick={() =>
-                              showToast(`Downloading Receipt for ${p.id} (PDF)...`)
-                            }
-                            title="Download Receipt"
-                            aria-label={`Download Receipt for ${p.id}`}
-                          >
-                            <FileText size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile Card List — hidden on desktop */}
-              <div className="levy-mobile-list">
-                {displayedPayments.length === 0 ? (
-                  <div className="levy-mobile-empty">No payments found.</div>
-                ) : (
-                  displayedPayments.map((p) => (
-                    <div key={p.id} className="levy-mobile-payment-card">
-                      {/* Top: Invoice ID + Status badge */}
-                      <div className="levy-mobile-card-top">
-                        <strong className="levy-mobile-inv-id">{p.id}</strong>
-                        <span
-                          className={`levy-status-pill ${
-                            p.status.toLowerCase() === 'paid'
-                              ? 'paid'
-                              : p.status.toLowerCase() === 'pending'
-                              ? 'pending'
-                              : 'scheduled'
+                  {/* Payments Tab Strip with View All Toggle */}
+                  <div className="levy-payments-tab-strip" role="tablist">
+                    <div className="levy-payments-tabs-left">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={activePaymentsTab === 'history'}
+                        className={`levy-tab-btn ${activePaymentsTab === 'history' ? 'active' : ''
                           }`}
-                        >
-                          {p.status}
-                        </span>
-                      </div>
-
-                      {/* Meta grid: Due date, Amount, Paid/Status date, Method */}
-                      <div className="levy-mobile-card-meta">
-                        <div className="levy-mobile-meta-item">
-                          <span className="levy-mobile-meta-label">Due Date</span>
-                          <span className="levy-mobile-meta-value">{p.dueDate}</span>
-                        </div>
-                        <div className="levy-mobile-meta-item">
-                          <span className="levy-mobile-meta-label">Amount</span>
-                          <span className="levy-mobile-meta-value levy-mobile-amount">{p.amount}</span>
-                        </div>
-                        <div className="levy-mobile-meta-item">
-                          <span className="levy-mobile-meta-label">
-                            {activePaymentsTab === 'history' ? 'Paid Date' : 'Status Date'}
-                          </span>
-                          <span className="levy-mobile-meta-value">{p.paidDate}</span>
-                        </div>
-                        <div className="levy-mobile-meta-item">
-                          <span className="levy-mobile-meta-label">Method</span>
-                          <span className="levy-mobile-meta-value">{p.method}</span>
-                        </div>
-                      </div>
-
-                      {/* Footer: receipt button */}
-                      <div className="levy-mobile-card-footer">
-                        <button
-                          type="button"
-                          className="levy-mobile-receipt-btn"
-                          onClick={() => showToast(`Downloading Receipt for ${p.id} (PDF)...`)}
-                          aria-label={`Download Receipt for ${p.id}`}
-                        >
-                          <FileText size={14} />
-                          <span>Download Receipt</span>
-                        </button>
-                      </div>
+                        onClick={() => setActivePaymentsTab('history')}
+                      >
+                        <span>Payment History</span>
+                        <span className="levy-tab-count">{PAYMENT_HISTORY.length}</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={activePaymentsTab === 'upcoming'}
+                        className={`levy-tab-btn ${activePaymentsTab === 'upcoming' ? 'active' : ''
+                          }`}
+                        onClick={() => setActivePaymentsTab('upcoming')}
+                      >
+                        <span>Upcoming Payment Plan</span>
+                        <span className="levy-tab-count">{UPCOMING_PAYMENTS.length}</span>
+                      </button>
                     </div>
-                  ))
-                )}
+
+                    <button
+                      type="button"
+                      className="levy-btn-view-all"
+                      onClick={() => setShowAllPayments((prev) => !prev)}
+                    >
+                      {showAllPayments ? 'Show Less' : 'View All'}
+                    </button>
+                  </div>
+                  <div className="levy-table-responsive">
+                    <table className="levy-table">
+                      <thead>
+                        <tr>
+                          <th>Invoice No.</th>
+                          <th>Due Date</th>
+                          <th>Amount</th>
+                          <th>{activePaymentsTab === 'history' ? 'Paid Date' : 'Status Date'}</th>
+                          <th>Status</th>
+                          <th>Payment Method</th>
+                          <th className="th-action">Receipt</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {displayedPayments.map((p) => (
+                          <tr key={p.id}>
+                            <td className="td-inv-no">
+                              <strong>{p.id}</strong>
+                            </td>
+                            <td>{p.dueDate}</td>
+                            <td className="td-amount">{p.amount}</td>
+                            <td>{p.paidDate}</td>
+                            <td>
+                              <span
+                                className={`levy-status-pill ${p.status.toLowerCase() === 'paid'
+                                    ? 'paid'
+                                    : p.status.toLowerCase() === 'pending'
+                                      ? 'pending'
+                                      : 'scheduled'
+                                  }`}
+                              >
+                                {p.status}
+                              </span>
+                            </td>
+                            <td>{p.method}</td>
+                            <td className="td-action">
+                              <button
+                                type="button"
+                                className="levy-btn-receipt"
+                                onClick={() =>
+                                  showToast(`Downloading Receipt for ${p.id} (PDF)...`)
+                                }
+                                title="Download Receipt"
+                                aria-label={`Download Receipt for ${p.id}`}
+                              >
+                                <FileText size={16} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card List — hidden on desktop */}
+                  <div className="levy-mobile-list">
+                    {displayedPayments.length === 0 ? (
+                      <div className="levy-mobile-empty">No payments found.</div>
+                    ) : (
+                      displayedPayments.map((p) => (
+                        <div key={p.id} className="levy-mobile-payment-card">
+                          {/* Top: Invoice ID + Status badge */}
+                          <div className="levy-mobile-card-top">
+                            <strong className="levy-mobile-inv-id">{p.id}</strong>
+                            <span
+                              className={`levy-status-pill ${p.status.toLowerCase() === 'paid'
+                                  ? 'paid'
+                                  : p.status.toLowerCase() === 'pending'
+                                    ? 'pending'
+                                    : 'scheduled'
+                                }`}
+                            >
+                              {p.status}
+                            </span>
+                          </div>
+
+                          {/* Meta grid: Due date, Amount, Paid/Status date, Method */}
+                          <div className="levy-mobile-card-meta">
+                            <div className="levy-mobile-meta-item">
+                              <span className="levy-mobile-meta-label">Due Date</span>
+                              <span className="levy-mobile-meta-value">{p.dueDate}</span>
+                            </div>
+                            <div className="levy-mobile-meta-item">
+                              <span className="levy-mobile-meta-label">Amount</span>
+                              <span className="levy-mobile-meta-value levy-mobile-amount">{p.amount}</span>
+                            </div>
+                            <div className="levy-mobile-meta-item">
+                              <span className="levy-mobile-meta-label">
+                                {activePaymentsTab === 'history' ? 'Paid Date' : 'Status Date'}
+                              </span>
+                              <span className="levy-mobile-meta-value">{p.paidDate}</span>
+                            </div>
+                            <div className="levy-mobile-meta-item">
+                              <span className="levy-mobile-meta-label">Method</span>
+                              <span className="levy-mobile-meta-value">{p.method}</span>
+                            </div>
+                          </div>
+
+                          {/* Footer: receipt button */}
+                          <div className="levy-mobile-card-footer">
+                            <button
+                              type="button"
+                              className="levy-mobile-receipt-btn"
+                              onClick={() => showToast(`Downloading Receipt for ${p.id} (PDF)...`)}
+                              aria-label={`Download Receipt for ${p.id}`}
+                            >
+                              <FileText size={14} />
+                              <span>Download Receipt</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* MOBILE EXPERIENCE (<= 900px) */}
-        <MobileLevyView
-          selectedProperty={selectedProperty}
-          selectedLot={selectedLot}
-          properties={properties}
-          onSelectProperty={handleSelectProperty}
-          onSelectLot={handleSelectLot}
-          totalAmount={totalAmount}
-          levyFunds={LEVY_FUNDS}
-          donutSegments={donutSegments}
-          paymentHistory={PAYMENT_HISTORY}
-          upcomingPayments={UPCOMING_PAYMENTS}
-          showToast={showToast}
-          onNavigate={(path) => {
-            try {
-              f7.views.main.router.navigate(path, { animate: false, reloadCurrent: true });
-            } catch (e) {
-              window.location.href = path;
-            }
-          }}
-        />
-      </main>
+            {/* MOBILE EXPERIENCE (<= 900px) */}
+            <MobileLevyView
+              selectedProperty={selectedProperty}
+              selectedLot={selectedLot}
+              properties={properties}
+              onSelectProperty={handleSelectProperty}
+              onSelectLot={handleSelectLot}
+              totalAmount={totalAmount}
+              levyFunds={LEVY_FUNDS}
+              donutSegments={donutSegments}
+              paymentHistory={PAYMENT_HISTORY}
+              upcomingPayments={UPCOMING_PAYMENTS}
+              showToast={showToast}
+              onNavigate={(path) => {
+                try {
+                  f7.views.main.router.navigate(path, { animate: false, reloadCurrent: true });
+                } catch (e) {
+                  window.location.href = path;
+                }
+              }}
+            />
+          </main>
+        </div>
       </div>
-    </div>
 
       {/* ===== FLOATING ACTION BUTTONS ===== */}
       <FloatingActionButtons

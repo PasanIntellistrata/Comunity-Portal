@@ -1,0 +1,32 @@
+[
+  {
+    "id": "a1",
+    "title": "Water Shutoff Notice",
+    "body": "Water supply will be temporarily shut off for routine plumbing maintenance tomorrow between 10:00 AM and 2:00 PM.",
+    "date": "2026-08-31",
+    "authorId": "usr_admin",
+    "authorName": "Admin Manager",
+    "category": "Maintenance",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "a2",
+    "title": "Annual Summer Resident Gathering",
+    "body": "The annual community gathering is taking place this Saturday at the rooftop terrace and BBQ pavilion. Refreshments provided!",
+    "date": "2026-09-01",
+    "authorId": "usr_alice",
+    "authorName": "Alice Smith (Chairperson)",
+    "category": "Social",
+    "propertyId": "prop-1"
+  },
+  {
+    "id": "a3",
+    "title": "Fire Alarm & Sprinkler Testing",
+    "body": "Contractors will be testing common area sounders and smoke dampers between 9:00 AM and 12:00 PM. No evacuation required.",
+    "date": "2026-09-15",
+    "authorId": "usr_admin",
+    "authorName": "Admin Manager",
+    "category": "Compliance",
+    "propertyId": "prop-1"
+  }
+]

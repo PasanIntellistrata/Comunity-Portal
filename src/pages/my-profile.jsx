@@ -46,6 +46,7 @@ import {
   Info
 } from 'lucide-react';
 import { authService } from '../js/services/auth.js';
+import { api } from '../js/services/api.js';
 import { NAV_ITEMS as BASE_NAV_ITEMS } from '../js/data/invoice-data.js';
 import { usePortalSelection } from '../js/services/portal-selection.js';
 import AppSidebar from '../components/AppSidebar.jsx';
@@ -118,6 +119,64 @@ const MyProfilePage = () => {
     },
   });
 
+  // Fetch full user profile from the centralized API service
+  React.useEffect(() => {
+    let isMounted = true;
+    const targetUserId = authUser.id || 'usr_pasan';
+
+    // 1. Check local saved profile first so saved secondary email and edits persist immediately
+    try {
+      const localProfile = localStorage.getItem(`intellistrata_saved_profile_${targetUserId}`);
+      if (localProfile) {
+        const parsed = JSON.parse(localProfile);
+        if (isMounted && parsed) {
+          setUserProfile((prev) => ({ ...prev, ...parsed }));
+          setEditForm((prev) => ({ ...prev, ...parsed }));
+        }
+      }
+    } catch (e) { }
+
+    api.getUserById(targetUserId)
+      .then((data) => {
+        if (isMounted && data) {
+          setUserProfile((prev) => ({
+            ...prev,
+            ...data,
+            fullName: data.fullName || prev.fullName,
+            preferredName: data.preferredName || prev.preferredName,
+            role: data.role || prev.role,
+            email: data.email || prev.email,
+            secondaryEmail: data.secondaryEmail !== undefined ? data.secondaryEmail : prev.secondaryEmail,
+            lotNumber: data.lotNumber || prev.lotNumber,
+            unitNumber: data.unitNumber || prev.unitNumber,
+            building: data.building || prev.building,
+            address: data.address || prev.address,
+            unitEntitlement: data.unitEntitlement || prev.unitEntitlement,
+            parkingBay: data.parkingBay || prev.parkingBay,
+            storageLot: data.storageLot || prev.storageLot,
+            occupancyType: data.occupancyType || prev.occupancyType,
+            initials: data.initials || authInitials,
+            emergencyContact: data.emergencyContact || prev.emergencyContact,
+            manager: data.manager || prev.manager,
+            security: data.security || prev.security,
+            notifications: data.notifications || prev.notifications,
+          }));
+          setEditForm((prev) => ({
+            ...prev,
+            ...data,
+            secondaryEmail: data.secondaryEmail !== undefined ? data.secondaryEmail : prev.secondaryEmail,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not load user profile from API service:', err.message);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authUser?.id, authInitials]);
+
   const currentUser = {
     name: userProfile.fullName,
     role: userProfile.role,
@@ -132,6 +191,15 @@ const MyProfilePage = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const [navbarSearch, setNavbarSearch] = useState('');
   const [copiedField, setCopiedField] = useState(null);
+
+  // Linked SSO Accounts State
+  const [linkedAccounts, setLinkedAccounts] = useState(() => {
+    const existing = typeof authService.getLinkedAccounts === 'function' ? authService.getLinkedAccounts(authUser?.id) : null;
+    return existing || {
+      google: authUser?.googleEmail || null,
+      microsoft: authUser?.microsoftEmail || null,
+    };
+  });
 
   // Edit Modal State
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -327,15 +395,51 @@ const MyProfilePage = () => {
     }
   };
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
-    setUserProfile((prev) => ({
-      ...prev,
-      ...editForm,
-      emergencyContact: prev.emergencyContact,
-    }));
-    setEditModalOpen(false);
-    showToast('Profile information updated successfully!');
+    try {
+      const targetUserId = authUser.id || 'usr_pasan';
+
+      // 1. If primary or secondary email is provided, persist to Supabase Auth and register for login
+      if (editForm.email || editForm.secondaryEmail) {
+        try {
+          await authService.updateUserEmail(editForm.email || authUser.email || 'resident.owner@intellistrata.test', {
+            fullName: editForm.fullName,
+            phone: editForm.phone,
+            secondaryEmail: editForm.secondaryEmail,
+            secondaryPhone: editForm.secondaryPhone,
+            address: editForm.address,
+          });
+        } catch (authErr) {
+          console.warn('Could not sync email to Supabase auth:', authErr.message);
+        }
+      }
+
+      // 2. Persist to API service (gracefully falls back if internal backend is offline)
+      try {
+        await api.updateUserProfile(targetUserId, editForm);
+      } catch (apiErr) {
+        console.warn('Could not update profile via API service:', apiErr.message);
+      }
+
+      const updatedProfile = {
+        ...userProfile,
+        ...editForm,
+        emergencyContact: userProfile.emergencyContact || editForm.emergencyContact,
+      };
+
+      setUserProfile(updatedProfile);
+
+      // 3. Persist to localStorage so edits and secondary emails persist across sessions
+      try {
+        localStorage.setItem(`intellistrata_saved_profile_${targetUserId}`, JSON.stringify(updatedProfile));
+      } catch (e) { }
+
+      setEditModalOpen(false);
+      showToast('Profile and secondary email updated successfully!');
+    } catch (err) {
+      showToast(err.message || 'Failed to update profile');
+    }
   };
 
   const handleToggleNotification = (key) => {
@@ -365,6 +469,80 @@ const MyProfilePage = () => {
       };
     });
   };
+
+  const handleLinkGoogle = useCallback(() => {
+    f7.dialog.prompt(
+      'Enter your personal or business Gmail address to link with your strata account:',
+      'Link Google Account',
+      async (email) => {
+        const clean = (email || '').trim().toLowerCase();
+        if (!clean || !clean.includes('@')) {
+          f7.toast.create({ text: 'Please enter a valid email address.', position: 'top', closeTimeout: 2500, cssClass: 'color-red' }).open();
+          return;
+        }
+        const res = await authService.updateLinkedAccounts({ google: clean });
+        if (res.success) {
+          setLinkedAccounts(res.linkedAccounts);
+          showToast(`Google account successfully linked to ${clean}`);
+        } else {
+          f7.toast.create({ text: res.error || 'Failed to link account.', position: 'top', closeTimeout: 3000, cssClass: 'color-red' }).open();
+        }
+      },
+      () => { },
+      linkedAccounts.google || ''
+    );
+  }, [linkedAccounts.google, showToast]);
+
+  const handleUnlinkGoogle = useCallback(() => {
+    f7.dialog.confirm(
+      'Are you sure you want to unlink your Google account? You will no longer be able to sign in via Google.',
+      'Unlink Google Account',
+      async () => {
+        const res = await authService.updateLinkedAccounts({ google: null });
+        if (res.success) {
+          setLinkedAccounts(res.linkedAccounts);
+          showToast('Google account unlinked.');
+        }
+      }
+    );
+  }, [showToast]);
+
+  const handleLinkMicrosoft = useCallback(() => {
+    f7.dialog.prompt(
+      'Enter your Outlook, Hotmail, or Microsoft 365 work address:',
+      'Link Microsoft Account',
+      async (email) => {
+        const clean = (email || '').trim().toLowerCase();
+        if (!clean || !clean.includes('@')) {
+          f7.toast.create({ text: 'Please enter a valid email address.', position: 'top', closeTimeout: 2500, cssClass: 'color-red' }).open();
+          return;
+        }
+        const res = await authService.updateLinkedAccounts({ microsoft: clean });
+        if (res.success) {
+          setLinkedAccounts(res.linkedAccounts);
+          showToast(`Microsoft account successfully linked to ${clean}`);
+        } else {
+          f7.toast.create({ text: res.error || 'Failed to link account.', position: 'top', closeTimeout: 3000, cssClass: 'color-red' }).open();
+        }
+      },
+      () => { },
+      linkedAccounts.microsoft || ''
+    );
+  }, [linkedAccounts.microsoft, showToast]);
+
+  const handleUnlinkMicrosoft = useCallback(() => {
+    f7.dialog.confirm(
+      'Are you sure you want to unlink your Microsoft account? You will no longer be able to sign in via Microsoft.',
+      'Unlink Microsoft Account',
+      async () => {
+        const res = await authService.updateLinkedAccounts({ microsoft: null });
+        if (res.success) {
+          setLinkedAccounts(res.linkedAccounts);
+          showToast('Microsoft account unlinked.');
+        }
+      }
+    );
+  }, [showToast]);
 
   const handleAvatarChange = () => {
     const input = document.createElement('input');
@@ -426,1098 +604,1233 @@ const MyProfilePage = () => {
             {/* DESKTOP EXPERIENCE (> 900px) */}
             <div className="profile-desktop-view">
               {/* Breadcrumbs & Title Bar */}
-            <div className="profile-v2-header-bar">
-              <div>
-                <h1 className="profile-v2-main-title">My Profile</h1>
-                <nav className="profile-v2-breadcrumb" aria-label="Breadcrumb">
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      try {
-                        f7.views.main.router.navigate('/');
-                      } catch (err) {
-                        window.location.href = '/';
-                      }
-                    }}
-                  >
-                    Dashboard
-                  </a>
-                  <span className="profile-v2-crumb-sep">/</span>
-                  <span>Profile</span>
-                  <span className="profile-v2-crumb-sep">/</span>
-                  <span className="active">{activeTab}</span>
-                </nav>
-              </div>
-
-              <div className="profile-v2-header-quick-actions">
-                <button
-                  type="button"
-                  className="profile-v2-btn-primary"
-                  onClick={() => {
-                    setEditForm({ ...userProfile });
-                    setEditModalOpen(true);
-                  }}
-                >
-                  <Pencil size={14} />
-                  <span>Edit Profile</span>
-                </button>
-              </div>
-            </div>
-
-            {/* HERO PROFILE CARD */}
-            <div className="profile-hero-card">
-              {/* Cover Gradient / Pattern Banner */}
-              <div className="profile-hero-banner">
-                <div className="profile-hero-banner-pattern" />
-                <div className="profile-hero-badge-pill">
-                  <ShieldCheck size={14} />
-                  <span>Strata Verified Resident</span>
-                </div>
-              </div>
-
-              {/* Identity Row */}
-              <div className="profile-hero-content">
-                <div className="profile-hero-avatar-wrapper">
-                  <div className="profile-hero-avatar">
-                    <span>{userProfile.initials}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="profile-hero-camera-btn"
-                    onClick={handleAvatarChange}
-                    title="Change Profile Photo"
-                  >
-                    <Camera size={15} />
-                  </button>
-                  <span className="profile-hero-status-indicator" title="Active Resident" />
+              <div className="profile-v2-header-bar">
+                <div>
+                  <h1 className="profile-v2-main-title">My Profile</h1>
+                  <nav className="profile-v2-breadcrumb" aria-label="Breadcrumb">
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        try {
+                          f7.views.main.router.navigate('/');
+                        } catch (err) {
+                          window.location.href = '/';
+                        }
+                      }}
+                    >
+                      Dashboard
+                    </a>
+                    <span className="profile-v2-crumb-sep">/</span>
+                    <span>Profile</span>
+                    <span className="profile-v2-crumb-sep">/</span>
+                    <span className="active">{activeTab}</span>
+                  </nav>
                 </div>
 
-                <div className="profile-hero-info">
-                  <div className="profile-hero-name-row">
-                    <h2 className="profile-hero-name">{userProfile.fullName}</h2>
-                    <span className="profile-hero-role-tag">{userProfile.role}</span>
-                    <span className="profile-hero-committee-tag">
-                      <Award size={13} />
-                      <span>{userProfile.committeeRole}</span>
-                    </span>
-                  </div>
-
-                  <div className="profile-hero-meta-row">
-                    <span className="profile-hero-meta-item">
-                      <Building size={14} className="profile-hero-meta-icon" />
-                      <span>{userProfile.building}</span>
-                    </span>
-                    <span className="profile-hero-meta-dot">•</span>
-                    <span className="profile-hero-meta-item">
-                      <Home size={14} className="profile-hero-meta-icon" />
-                      <strong>{userProfile.lotNumber}</strong> ({userProfile.unitNumber})
-                    </span>
-                    <span className="profile-hero-meta-dot">•</span>
-                    <span className="profile-hero-meta-item">
-                      <Calendar size={14} className="profile-hero-meta-icon" />
-                      <span>Joined {userProfile.joinedOn}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="profile-hero-actions">
+                <div className="profile-v2-header-quick-actions">
                   <button
                     type="button"
-                    className="profile-hero-action-btn secondary"
-                    onClick={() => {
-                      showToast('Profile link generated and copied to clipboard!');
-                    }}
-                    title="Share Profile"
-                  >
-                    <Share2 size={15} />
-                    <span>Share</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="profile-hero-action-btn primary"
+                    className="profile-v2-btn-primary"
                     onClick={() => {
                       setEditForm({ ...userProfile });
                       setEditModalOpen(true);
                     }}
                   >
-                    <Pencil size={15} />
+                    <Pencil size={14} />
                     <span>Edit Profile</span>
                   </button>
                 </div>
               </div>
 
-              {/* Horizontal Navigation Tabs */}
-              <div className="profile-hero-tabs-bar">
-                {[
-                  { id: 'Overview', label: 'Overview', icon: LayoutDashboard },
-                  { id: 'Personal Details', label: 'Personal Details', icon: User },
-                  { id: 'Property & Lot', label: 'Property & Lot', icon: Home },
-                  { id: 'Security', label: 'Security & Access', icon: Shield },
-                  { id: 'Notifications', label: 'Preferences', icon: Bell },
-                  { id: 'Activity Log', label: 'Activity Log', icon: Clock },
-                ].map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
+              {/* HERO PROFILE CARD */}
+              <div className="profile-hero-card">
+                {/* Cover Gradient / Pattern Banner */}
+                <div className="profile-hero-banner">
+                  <div className="profile-hero-banner-pattern" />
+                  <div className="profile-hero-badge-pill">
+                    <ShieldCheck size={14} />
+                    <span>Strata Verified Resident</span>
+                  </div>
+                </div>
+
+                {/* Identity Row */}
+                <div className="profile-hero-content">
+                  <div className="profile-hero-avatar-wrapper">
+                    <div className="profile-hero-avatar">
+                      <span>{userProfile.initials}</span>
+                    </div>
                     <button
-                      key={tab.id}
                       type="button"
-                      className={`profile-hero-tab-btn ${isActive ? 'active' : ''}`}
+                      className="profile-hero-camera-btn"
+                      onClick={handleAvatarChange}
+                      title="Change Profile Photo"
+                    >
+                      <Camera size={15} />
+                    </button>
+                    <span className="profile-hero-status-indicator" title="Active Resident" />
+                  </div>
+
+                  <div className="profile-hero-info">
+                    <div className="profile-hero-name-row">
+                      <h2 className="profile-hero-name">{userProfile.fullName}</h2>
+                      <span className="profile-hero-role-tag">{userProfile.role}</span>
+                      <span className="profile-hero-committee-tag">
+                        <Award size={13} />
+                        <span>{userProfile.committeeRole}</span>
+                      </span>
+                    </div>
+
+                    <div className="profile-hero-meta-row">
+                      <span className="profile-hero-meta-item">
+                        <Building size={14} className="profile-hero-meta-icon" />
+                        <span>{userProfile.building}</span>
+                      </span>
+                      <span className="profile-hero-meta-dot">•</span>
+                      <span className="profile-hero-meta-item">
+                        <Home size={14} className="profile-hero-meta-icon" />
+                        <strong>{userProfile.lotNumber}</strong> ({userProfile.unitNumber})
+                      </span>
+                      <span className="profile-hero-meta-dot">•</span>
+                      <span className="profile-hero-meta-item">
+                        <Calendar size={14} className="profile-hero-meta-icon" />
+                        <span>Joined {userProfile.joinedOn}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="profile-hero-actions">
+                    <button
+                      type="button"
+                      className="profile-hero-action-btn secondary"
                       onClick={() => {
-                        setActiveTab(tab.id);
-                        showToast(`Switched to ${tab.label}`);
+                        showToast('Profile link generated and copied to clipboard!');
+                      }}
+                      title="Share Profile"
+                    >
+                      <Share2 size={15} />
+                      <span>Share</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="profile-hero-action-btn primary"
+                      onClick={() => {
+                        setEditForm({ ...userProfile });
+                        setEditModalOpen(true);
                       }}
                     >
-                      <Icon size={16} />
-                      <span>{tab.label}</span>
+                      <Pencil size={15} />
+                      <span>Edit Profile</span>
                     </button>
-                  );
-                })}
-              </div>
-            </div>
+                  </div>
+                </div>
 
-            {/* MAIN 2-COLUMN PROFILE CONTENT */}
-            <div className="profile-v2-main-grid">
-              {/* LEFT COLUMN: Main Tab Content */}
-              <div className="profile-v2-left-col">
-                {/* 1. OVERVIEW TAB */}
-                {activeTab === 'Overview' && (
-                  <div className="profile-tab-section-fade">
-                    {/* Next Milestone Banner (If profile not 100%) */}
-                    {completionPercentage < 100 && nextIncompleteMilestone && (
-                      <div className="profile-nudge-banner">
-                        <div className="profile-nudge-left">
-                          <div className="profile-nudge-icon-wrap">
-                            <Sparkles size={18} />
+                {/* Horizontal Navigation Tabs */}
+                <div className="profile-hero-tabs-bar">
+                  {[
+                    { id: 'Overview', label: 'Overview', icon: LayoutDashboard },
+                    { id: 'Personal Details', label: 'Personal Details', icon: User },
+                    { id: 'Property & Lot', label: 'Property & Lot', icon: Home },
+                    { id: 'Security', label: 'Security & Access', icon: Shield },
+                    { id: 'Notifications', label: 'Preferences', icon: Bell },
+                    { id: 'Activity Log', label: 'Activity Log', icon: Clock },
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        className={`profile-hero-tab-btn ${isActive ? 'active' : ''}`}
+                        onClick={() => {
+                          setActiveTab(tab.id);
+                          showToast(`Switched to ${tab.label}`);
+                        }}
+                      >
+                        <Icon size={16} />
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* MAIN 2-COLUMN PROFILE CONTENT */}
+              <div className="profile-v2-main-grid">
+                {/* LEFT COLUMN: Main Tab Content */}
+                <div className="profile-v2-left-col">
+                  {/* 1. OVERVIEW TAB */}
+                  {activeTab === 'Overview' && (
+                    <div className="profile-tab-section-fade">
+                      {/* Next Milestone Banner (If profile not 100%) */}
+                      {completionPercentage < 100 && nextIncompleteMilestone && (
+                        <div className="profile-nudge-banner">
+                          <div className="profile-nudge-left">
+                            <div className="profile-nudge-icon-wrap">
+                              <Sparkles size={18} />
+                            </div>
+                            <div>
+                              <h4 className="profile-nudge-title">
+                                Complete Your Profile ({completionPercentage}% Finished)
+                              </h4>
+                              <p className="profile-nudge-sub">
+                                Next milestone: <strong>{nextIncompleteMilestone.label}</strong> — {nextIncompleteMilestone.desc}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="profile-nudge-title">
-                              Complete Your Profile ({completionPercentage}% Finished)
-                            </h4>
-                            <p className="profile-nudge-sub">
-                              Next milestone: <strong>{nextIncompleteMilestone.label}</strong> — {nextIncompleteMilestone.desc}
-                            </p>
-                          </div>
+                          <button
+                            type="button"
+                            className="profile-nudge-btn"
+                            onClick={() => {
+                              if (nextIncompleteMilestone.id === 'notifications') {
+                                setActiveTab('Notifications');
+                              } else {
+                                setEditForm({ ...userProfile });
+                                setEditModalOpen(true);
+                              }
+                            }}
+                          >
+                            <span>Complete Now</span>
+                            <ArrowRight size={14} />
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          className="profile-nudge-btn"
-                          onClick={() => {
-                            if (nextIncompleteMilestone.id === 'notifications') {
-                              setActiveTab('Notifications');
-                            } else {
+                      )}
+
+                      {/* Personal Information Card */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon blue">
+                              <User size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Personal Information</h3>
+                              <p className="profile-card-subheading">Personal details and primary resident identification</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="profile-btn-ghost"
+                            onClick={() => {
                               setEditForm({ ...userProfile });
                               setEditModalOpen(true);
-                            }
-                          }}
-                        >
-                          <span>Complete Now</span>
-                          <ArrowRight size={14} />
-                        </button>
-                      </div>
-                    )}
+                            }}
+                          >
+                            <Pencil size={13} />
+                            <span>Edit</span>
+                          </button>
+                        </div>
 
-                    {/* Personal Information Card */}
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon blue">
-                            <User size={18} />
+                        <div className="profile-details-grid">
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Legal Full Name</span>
+                            <span className="profile-detail-value font-semibold">{userProfile.fullName}</span>
                           </div>
-                          <div>
-                            <h3 className="profile-card-heading">Personal Information</h3>
-                            <p className="profile-card-subheading">Personal details and primary resident identification</p>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Preferred Name</span>
+                            <span className="profile-detail-value">{userProfile.preferredName}</span>
                           </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="profile-btn-ghost"
-                          onClick={() => {
-                            setEditForm({ ...userProfile });
-                            setEditModalOpen(true);
-                          }}
-                        >
-                          <Pencil size={13} />
-                          <span>Edit</span>
-                        </button>
-                      </div>
 
-                      <div className="profile-details-grid">
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Legal Full Name</span>
-                          <span className="profile-detail-value font-semibold">{userProfile.fullName}</span>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Preferred Name</span>
-                          <span className="profile-detail-value">{userProfile.preferredName}</span>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Primary Email Address</span>
-                          <div className="profile-detail-value-wrap">
-                            <span className="profile-detail-value">{userProfile.email}</span>
-                            <span className="profile-verified-badge" title="Verified email">
-                              <CheckCircle2 size={12} />
-                              <span>Verified</span>
-                            </span>
-                            <button
-                              type="button"
-                              className="profile-btn-copy"
-                              onClick={() => handleCopy(userProfile.email, 'email')}
-                              title="Copy Primary Email"
-                            >
-                              {copiedField === 'email' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Secondary Email Address</span>
-                          <div className="profile-detail-value-wrap">
-                            <span className="profile-detail-value">{userProfile.secondaryEmail || 'None added'}</span>
-                            {userProfile.secondaryEmail && (
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Primary Email Address</span>
+                            <div className="profile-detail-value-wrap">
+                              <span className="profile-detail-value">{userProfile.email}</span>
+                              <span className="profile-verified-badge" title="Verified email">
+                                <CheckCircle2 size={12} />
+                                <span>Verified</span>
+                              </span>
                               <button
                                 type="button"
                                 className="profile-btn-copy"
-                                onClick={() => handleCopy(userProfile.secondaryEmail, 'secondaryEmail')}
-                                title="Copy Secondary Email"
+                                onClick={() => handleCopy(userProfile.email, 'email')}
+                                title="Copy Primary Email"
                               >
-                                {copiedField === 'secondaryEmail' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                                {copiedField === 'email' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
                               </button>
-                            )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Primary Mobile Phone</span>
-                          <div className="profile-detail-value-wrap">
-                            <span className="profile-detail-value">{userProfile.phone}</span>
-                            <span className="profile-verified-badge" title="Verified phone">
-                              <CheckCircle2 size={12} />
-                              <span>Verified</span>
-                            </span>
-                            <button
-                              type="button"
-                              className="profile-btn-copy"
-                              onClick={() => handleCopy(userProfile.phone, 'phone')}
-                              title="Copy Primary Phone"
-                            >
-                              {copiedField === 'phone' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
-                            </button>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Secondary Email Address</span>
+                            <div className="profile-detail-value-wrap">
+                              <span className="profile-detail-value">{userProfile.secondaryEmail || 'None added'}</span>
+                              {userProfile.secondaryEmail && (
+                                <button
+                                  type="button"
+                                  className="profile-btn-copy"
+                                  onClick={() => handleCopy(userProfile.secondaryEmail, 'secondaryEmail')}
+                                  title="Copy Secondary Email"
+                                >
+                                  {copiedField === 'secondaryEmail' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Secondary Mobile Phone</span>
-                          <div className="profile-detail-value-wrap">
-                            <span className="profile-detail-value">{userProfile.secondaryPhone || 'None added'}</span>
-                            {userProfile.secondaryPhone && (
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Primary Mobile Phone</span>
+                            <div className="profile-detail-value-wrap">
+                              <span className="profile-detail-value">{userProfile.phone}</span>
+                              <span className="profile-verified-badge" title="Verified phone">
+                                <CheckCircle2 size={12} />
+                                <span>Verified</span>
+                              </span>
                               <button
                                 type="button"
                                 className="profile-btn-copy"
-                                onClick={() => handleCopy(userProfile.secondaryPhone, 'secondaryPhone')}
-                                title="Copy Secondary Phone"
+                                onClick={() => handleCopy(userProfile.phone, 'phone')}
+                                title="Copy Primary Phone"
                               >
-                                {copiedField === 'secondaryPhone' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                                {copiedField === 'phone' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
                               </button>
-                            )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Date of Birth</span>
-                          <div className="profile-detail-value-wrap">
-                            <Calendar size={14} className="profile-detail-icon" />
-                            <span className="profile-detail-value">{userProfile.dob}</span>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Secondary Mobile Phone</span>
+                            <div className="profile-detail-value-wrap">
+                              <span className="profile-detail-value">{userProfile.secondaryPhone || 'None added'}</span>
+                              {userProfile.secondaryPhone && (
+                                <button
+                                  type="button"
+                                  className="profile-btn-copy"
+                                  onClick={() => handleCopy(userProfile.secondaryPhone, 'secondaryPhone')}
+                                  title="Copy Secondary Phone"
+                                >
+                                  {copiedField === 'secondaryPhone' ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="profile-detail-item full-width">
-                          <span className="profile-detail-label">Registered Strata Address</span>
-                          <div className="profile-detail-value-wrap">
-                            <MapPin size={14} className="profile-detail-icon" />
-                            <span className="profile-detail-value">{userProfile.address}</span>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Date of Birth</span>
+                            <div className="profile-detail-value-wrap">
+                              <Calendar size={14} className="profile-detail-icon" />
+                              <span className="profile-detail-value">{userProfile.dob}</span>
+                            </div>
+                          </div>
+
+                          <div className="profile-detail-item full-width">
+                            <span className="profile-detail-label">Registered Strata Address</span>
+                            <div className="profile-detail-value-wrap">
+                              <MapPin size={14} className="profile-detail-icon" />
+                              <span className="profile-detail-value">{userProfile.address}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Property & Strata Lot Card */}
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon green">
-                            <Building size={18} />
+                      {/* Property & Strata Lot Card */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon green">
+                              <Building size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Property & Lot Ownership</h3>
+                              <p className="profile-card-subheading">Strata plan details, lot allocations, and unit entitlement</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="profile-card-heading">Property & Lot Ownership</h3>
-                            <p className="profile-card-subheading">Strata plan details, lot allocations, and unit entitlement</p>
-                          </div>
-                        </div>
-                        <span className="profile-badge-pill green">
-                          <Home size={12} />
-                          <span>{userProfile.occupancyType}</span>
-                        </span>
-                      </div>
-
-                      <div className="profile-details-grid">
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Strata Plan Lot</span>
-                          <span className="profile-detail-value font-bold text-primary">{userProfile.lotNumber}</span>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Unit / Apartment</span>
-                          <span className="profile-detail-value">{userProfile.unitNumber}</span>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Unit Entitlement</span>
-                          <span className="profile-detail-value font-semibold">{userProfile.unitEntitlement}</span>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Allocated Parking</span>
-                          <div className="profile-detail-value-wrap">
-                            <Car size={14} className="profile-detail-icon" />
-                            <span className="profile-detail-value">{userProfile.parkingBay}</span>
-                          </div>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Storage Locker</span>
-                          <div className="profile-detail-value-wrap">
-                            <Box size={14} className="profile-detail-icon" />
-                            <span className="profile-detail-value">{userProfile.storageLot}</span>
-                          </div>
-                        </div>
-
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Committee Appointment</span>
-                          <span className="profile-detail-value font-semibold text-primary">
-                            {userProfile.committeeRole}
+                          <span className="profile-badge-pill green">
+                            <Home size={12} />
+                            <span>{userProfile.occupancyType}</span>
                           </span>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* Security & Access Quick Overview */}
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon purple">
-                            <Shield size={18} />
+                        <div className="profile-details-grid">
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Strata Plan Lot</span>
+                            <span className="profile-detail-value font-bold text-primary">{userProfile.lotNumber}</span>
                           </div>
-                          <div>
-                            <h3 className="profile-card-heading">Security & Account Safeguards</h3>
-                            <p className="profile-card-subheading">Authentication methods, active logins, and portal security</p>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Unit / Apartment</span>
+                            <span className="profile-detail-value">{userProfile.unitNumber}</span>
+                          </div>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Unit Entitlement</span>
+                            <span className="profile-detail-value font-semibold">{userProfile.unitEntitlement}</span>
+                          </div>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Allocated Parking</span>
+                            <div className="profile-detail-value-wrap">
+                              <Car size={14} className="profile-detail-icon" />
+                              <span className="profile-detail-value">{userProfile.parkingBay}</span>
+                            </div>
+                          </div>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Storage Locker</span>
+                            <div className="profile-detail-value-wrap">
+                              <Box size={14} className="profile-detail-icon" />
+                              <span className="profile-detail-value">{userProfile.storageLot}</span>
+                            </div>
+                          </div>
+
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Committee Appointment</span>
+                            <span className="profile-detail-value font-semibold text-primary">
+                              {userProfile.committeeRole}
+                            </span>
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          className="profile-btn-ghost"
-                          onClick={() => setActiveTab('Security')}
-                        >
-                          <span>Manage Security</span>
-                          <ChevronRight size={14} />
-                        </button>
                       </div>
 
-                      <div className="profile-security-row-list">
-                        <div className="profile-security-tile">
-                          <div className="profile-security-tile-icon-box">
-                            <Lock size={18} />
-                          </div>
-                          <div className="profile-security-tile-body">
-                            <span className="profile-security-tile-title">Password Security</span>
-                            <span className="profile-security-tile-desc">
-                              Last changed on {userProfile.security.lastPasswordChange} • Strong
-                            </span>
+                      {/* Security & Access Quick Overview */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon purple">
+                              <Shield size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Security & Account Safeguards</h3>
+                              <p className="profile-card-subheading">Authentication methods, active logins, and portal security</p>
+                            </div>
                           </div>
                           <button
                             type="button"
-                            className="profile-btn-outline-xs"
-                            onClick={() => showToast('Password change link sent to your email!')}
+                            className="profile-btn-ghost"
+                            onClick={() => setActiveTab('Security')}
                           >
-                            Change
+                            <span>Manage Security</span>
+                            <ChevronRight size={14} />
                           </button>
                         </div>
 
-                        <div className="profile-security-tile">
-                          <div className="profile-security-tile-icon-box green">
-                            <Smartphone size={18} />
-                          </div>
-                          <div className="profile-security-tile-body">
-                            <div className="profile-security-title-wrap">
-                              <span className="profile-security-tile-title">Two-Factor Authentication (2FA)</span>
-                              <span className={`profile-status-pill ${userProfile.security.twoFactorEnabled ? 'active' : 'inactive'}`}>
-                                {userProfile.security.twoFactorEnabled ? 'Enabled' : 'Disabled'}
+                        <div className="profile-security-row-list">
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box">
+                              <Lock size={18} />
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <span className="profile-security-tile-title">Password Security</span>
+                              <span className="profile-security-tile-desc">
+                                Last changed on {userProfile.security.lastPasswordChange} • Strong
                               </span>
                             </div>
-                            <span className="profile-security-tile-desc">
-                              Secured via Authenticator App & SMS OTP
-                            </span>
+                            <button
+                              type="button"
+                              className="profile-btn-outline-xs"
+                              onClick={() => showToast('Password change link sent to your email!')}
+                            >
+                              Change
+                            </button>
                           </div>
-                          <button
-                            type="button"
-                            className="profile-btn-toggle"
-                            onClick={handleToggle2FA}
-                            title="Toggle 2FA"
-                          >
-                            {userProfile.security.twoFactorEnabled ? (
-                              <ToggleRight size={28} color="#0d9488" />
-                            ) : (
-                              <ToggleLeft size={28} color="#94a3b8" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
-                {/* 2. PERSONAL DETAILS TAB */}
-                {activeTab === 'Personal Details' && (
-                  <div className="profile-tab-section-fade">
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon blue">
-                            <User size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Personal & Contact Record</h3>
-                            <p className="profile-card-subheading">Update your official strata roll contact details</p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="profile-v2-btn-primary"
-                          onClick={() => {
-                            setEditForm({ ...userProfile });
-                            setEditModalOpen(true);
-                          }}
-                        >
-                          <Pencil size={14} />
-                          <span>Edit Details</span>
-                        </button>
-                      </div>
-
-                      <div className="profile-details-grid">
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Full Name</span>
-                          <span className="profile-detail-value font-semibold">{userProfile.fullName}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Role in Scheme</span>
-                          <span className="profile-detail-value">{userProfile.role}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Primary Email Address</span>
-                          <span className="profile-detail-value">{userProfile.email}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Secondary Email Address</span>
-                          <span className="profile-detail-value">{userProfile.secondaryEmail || 'None added'}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Primary Mobile Phone</span>
-                          <span className="profile-detail-value">{userProfile.phone}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Secondary Mobile Phone</span>
-                          <span className="profile-detail-value">{userProfile.secondaryPhone || 'None added'}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Date of Birth</span>
-                          <span className="profile-detail-value">{userProfile.dob}</span>
-                        </div>
-                        <div className="profile-detail-item full-width">
-                          <span className="profile-detail-label">Physical Address</span>
-                          <span className="profile-detail-value">{userProfile.address}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Emergency Contact */}
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon red">
-                            <AlertCircle size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Emergency Contact (Next of Kin)</h3>
-                            <p className="profile-card-subheading">Contacted only during building emergencies or urgent strata notices</p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="profile-btn-ghost"
-                          onClick={() => {
-                            showToast('To update Next of Kin / Emergency contacts, please contact your Strata Manager.');
-                          }}
-                        >
-                          <Pencil size={13} />
-                          <span>Request Change</span>
-                        </button>
-                      </div>
-
-                      <div className="profile-details-grid">
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Contact Name</span>
-                          <span className="profile-detail-value font-semibold">{userProfile.emergencyContact.name}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Relationship</span>
-                          <span className="profile-detail-value">{userProfile.emergencyContact.relationship}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Emergency Phone</span>
-                          <span className="profile-detail-value">{userProfile.emergencyContact.phone}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Emergency Email</span>
-                          <span className="profile-detail-value">{userProfile.emergencyContact.email}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. PROPERTY & LOT TAB */}
-                {activeTab === 'Property & Lot' && (
-                  <div className="profile-tab-section-fade">
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon green">
-                            <Building size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Strata Plan & Lot Specifications</h3>
-                            <p className="profile-card-subheading">Official registry data for SP 94820 - Green Valley Residence</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="profile-details-grid">
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Strata Plan Scheme</span>
-                          <span className="profile-detail-value font-semibold">SP 94820 (Green Valley)</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Lot Allocation</span>
-                          <span className="profile-detail-value font-bold text-primary">{userProfile.lotNumber}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Unit Entitlement</span>
-                          <span className="profile-detail-value">{userProfile.unitEntitlement}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Occupancy Status</span>
-                          <span className="profile-detail-value">{userProfile.occupancyType}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Parking Allocation</span>
-                          <span className="profile-detail-value">{userProfile.parkingBay}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Storage Allocation</span>
-                          <span className="profile-detail-value">{userProfile.storageLot}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">Move-In / Settlement Date</span>
-                          <span className="profile-detail-value">{userProfile.joinedOn}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                          <span className="profile-detail-label">By-Laws Acknowledgment</span>
-                          <span className="profile-verified-badge">
-                            <CheckCircle2 size={12} />
-                            <span>Signed & Compliant</span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 4. SECURITY TAB */}
-                {activeTab === 'Security' && (
-                  <div className="profile-tab-section-fade">
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon purple">
-                            <Shield size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Password & Authentication</h3>
-                            <p className="profile-card-subheading">Manage your credentials, 2-factor verification, and session control</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="profile-security-row-list">
-                        <div className="profile-security-tile">
-                          <div className="profile-security-tile-icon-box">
-                            <Lock size={18} />
-                          </div>
-                          <div className="profile-security-tile-body">
-                            <span className="profile-security-tile-title">Account Password</span>
-                            <span className="profile-security-tile-desc">
-                              Last changed {userProfile.security.lastPasswordChange} • Strength: Strong
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            className="profile-btn-primary-sm"
-                            onClick={() => showToast('Password reset link dispatched!')}
-                          >
-                            Update Password
-                          </button>
-                        </div>
-
-                        <div className="profile-security-tile">
-                          <div className="profile-security-tile-icon-box green">
-                            <Smartphone size={18} />
-                          </div>
-                          <div className="profile-security-tile-body">
-                            <div className="profile-security-title-wrap">
-                              <span className="profile-security-tile-title">Two-Factor Authentication (2FA)</span>
-                              <span className={`profile-status-pill ${userProfile.security.twoFactorEnabled ? 'active' : 'inactive'}`}>
-                                {userProfile.security.twoFactorEnabled ? 'Active' : 'Inactive'}
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box green">
+                              <Smartphone size={18} />
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <div className="profile-security-title-wrap">
+                                <span className="profile-security-tile-title">Two-Factor Authentication (2FA)</span>
+                                <span className={`profile-status-pill ${userProfile.security.twoFactorEnabled ? 'active' : 'inactive'}`}>
+                                  {userProfile.security.twoFactorEnabled ? 'Enabled' : 'Disabled'}
+                                </span>
+                              </div>
+                              <span className="profile-security-tile-desc">
+                                Secured via Authenticator App & SMS OTP
                               </span>
-                            </div>
-                            <span className="profile-security-tile-desc">
-                              Requires 6-digit verification code when logging in from new browsers
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            className="profile-btn-toggle"
-                            onClick={handleToggle2FA}
-                          >
-                            {userProfile.security.twoFactorEnabled ? (
-                              <ToggleRight size={28} color="#0d9488" />
-                            ) : (
-                              <ToggleLeft size={28} color="#94a3b8" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Active Sessions */}
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon blue">
-                            <Laptop size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Active Browser Sessions</h3>
-                            <p className="profile-card-subheading">Devices currently authenticated to your strata account</p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="profile-btn-outline-xs text-red"
-                          onClick={() => showToast('Logged out of all other devices')}
-                        >
-                          Revoke Other Sessions
-                        </button>
-                      </div>
-
-                      <div className="profile-sessions-list">
-                        <div className="profile-session-item">
-                          <div className="profile-session-device-icon">
-                            <Laptop size={18} />
-                          </div>
-                          <div className="profile-session-info">
-                            <div className="profile-session-name-row">
-                              <span className="profile-session-name">Windows PC • Chrome 124.0</span>
-                              <span className="profile-session-current-badge">Current Device</span>
-                            </div>
-                            <span className="profile-session-meta">Colombo, Sri Lanka • IP: 112.134.x.x • Active now</span>
-                          </div>
-                        </div>
-
-                        <div className="profile-session-item">
-                          <div className="profile-session-device-icon">
-                            <Smartphone size={18} />
-                          </div>
-                          <div className="profile-session-info">
-                            <div className="profile-session-name-row">
-                              <span className="profile-session-name">Apple iPhone 15 Pro • Safari Mobile</span>
-                            </div>
-                            <span className="profile-session-meta">Nugegoda, Sri Lanka • IP: 175.157.x.x • Last active 3 hours ago</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 5. NOTIFICATIONS TAB */}
-                {activeTab === 'Notifications' && (
-                  <div className="profile-tab-section-fade">
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon amber">
-                            <Bell size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Communication & Notification Preferences</h3>
-                            <p className="profile-card-subheading">Choose how and when you receive strata updates and financial alerts</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="profile-preference-list">
-                        {[
-                          {
-                            key: 'emailNotices',
-                            title: 'Official Strata Notices & Minutes',
-                            desc: 'Receive AGM announcements, committee meeting minutes, and by-law notices via email',
-                            enabled: userProfile.notifications.emailNotices,
-                          },
-                          {
-                            key: 'smsLevyAlerts',
-                            title: 'SMS Payment & Levy Reminders',
-                            desc: 'Receive instant SMS alerts 7 days prior to quarterly levy due dates',
-                            enabled: userProfile.notifications.smsLevyAlerts,
-                          },
-                          {
-                            key: 'pushMaintenance',
-                            title: 'Building Maintenance & Lift Notices',
-                            desc: 'Immediate notifications for water shutdowns, lift maintenance, and contractor visits',
-                            enabled: userProfile.notifications.pushMaintenance,
-                          },
-                          {
-                            key: 'communityEvents',
-                            title: 'Community News & Resident Events',
-                            desc: 'Social updates, neighbor notices, and community BBQ announcements',
-                            enabled: userProfile.notifications.communityEvents,
-                          },
-                        ].map((pref) => (
-                          <div key={pref.key} className="profile-preference-item">
-                            <div className="profile-preference-info">
-                              <span className="profile-preference-title">{pref.title}</span>
-                              <span className="profile-preference-desc">{pref.desc}</span>
                             </div>
                             <button
                               type="button"
                               className="profile-btn-toggle"
-                              onClick={() => handleToggleNotification(pref.key)}
+                              onClick={handleToggle2FA}
+                              title="Toggle 2FA"
                             >
-                              {pref.enabled ? (
+                              {userProfile.security.twoFactorEnabled ? (
                                 <ToggleRight size={28} color="#0d9488" />
                               ) : (
                                 <ToggleLeft size={28} color="#94a3b8" />
                               )}
                             </button>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 6. ACTIVITY LOG TAB */}
-                {activeTab === 'Activity Log' && (
-                  <div className="profile-tab-section-fade">
-                    <div className="profile-content-card">
-                      <div className="profile-card-header">
-                        <div className="profile-card-title-group">
-                          <div className="profile-card-header-icon blue">
-                            <Clock size={18} />
-                          </div>
-                          <div>
-                            <h3 className="profile-card-heading">Account Activity History</h3>
-                            <p className="profile-card-subheading">Chronological record of logins, profile modifications, and committee actions</p>
-                          </div>
                         </div>
-                        <button
-                          type="button"
-                          className="profile-btn-ghost"
-                          onClick={() => showToast('Activity log refreshed')}
-                        >
-                          <RefreshCw size={13} />
-                          <span>Refresh</span>
-                        </button>
                       </div>
+                    </div>
+                  )}
 
-                      <div className="profile-activity-timeline">
-                        {[
-                          {
-                            title: 'Logged in from Windows Desktop (Chrome)',
-                            time: 'Today at 10:32 AM',
-                            tag: 'Security',
-                            tagColor: 'blue',
-                            icon: RefreshCw,
-                          },
-                          {
-                            title: 'Approved Contractor Invoice #INV-2026-088 ($1,450.00)',
-                            time: 'Yesterday at 04:15 PM',
-                            tag: 'Committee',
-                            tagColor: 'green',
-                            icon: CheckCircle2,
-                          },
-                          {
-                            title: 'Updated Profile Contact & Emergency Information',
-                            time: '18 May 2026, 02:45 PM',
-                            tag: 'Profile',
-                            tagColor: 'purple',
-                            icon: User,
-                          },
-                          {
-                            title: 'Downloaded Quarterly Financial Statement Q1-2026.pdf',
-                            time: '15 May 2026, 11:20 AM',
-                            tag: 'Documents',
-                            tagColor: 'amber',
-                            icon: Box,
-                          },
-                          {
-                            title: 'Changed Account Password',
-                            time: '10 May 2026, 11:15 AM',
-                            tag: 'Security',
-                            tagColor: 'red',
-                            icon: Lock,
-                          },
-                          {
-                            title: 'Two-Factor Authentication Setup Verified',
-                            time: '12 Jan 2026, 09:20 AM',
-                            tag: 'Security',
-                            tagColor: 'green',
-                            icon: Shield,
-                          },
-                        ].map((act, idx) => {
-                          const ActIcon = act.icon;
-                          return (
-                            <div key={idx} className="profile-timeline-row">
-                              <div className={`profile-timeline-icon ${act.tagColor}`}>
-                                <ActIcon size={14} />
-                              </div>
-                              <div className="profile-timeline-content">
-                                <div className="profile-timeline-top">
-                                  <span className="profile-timeline-title">{act.title}</span>
-                                  <span className={`profile-timeline-badge ${act.tagColor}`}>{act.tag}</span>
-                                </div>
-                                <span className="profile-timeline-time">{act.time}</span>
-                              </div>
+                  {/* 2. PERSONAL DETAILS TAB */}
+                  {activeTab === 'Personal Details' && (
+                    <div className="profile-tab-section-fade">
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon blue">
+                              <User size={18} />
                             </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* RIGHT COLUMN: Profile Completion & Helper Cards */}
-              <div className="profile-v2-right-col">
-                {/* 1. PROMINENT PROFILE COMPLETION WIDGET */}
-                <div className="profile-completion-card-v2">
-                  <div className="profile-completion-header">
-                    <div className="profile-completion-title-wrap">
-                      <h3 className="profile-completion-title">Profile Completion</h3>
-                      <p className="profile-completion-sub">
-                        {completionPercentage === 100
-                          ? 'All milestones reached! Your profile is complete.'
-                          : 'Complete your profile to unlock full strata verification.'}
-                      </p>
-                    </div>
-
-                    <div className="profile-completion-badge-tag">
-                      {completionPercentage === 100 ? '100% Complete' : `${completionPercentage}%`}
-                    </div>
-                  </div>
-
-                  {/* Circular Gauge Progress */}
-                  <div className="profile-gauge-container">
-                    <div className="profile-gauge-svg-wrap">
-                      <svg viewBox="0 0 120 120" width="100" height="100">
-                        {/* Background Track */}
-                        <circle
-                          cx="60"
-                          cy="60"
-                          r="48"
-                          fill="none"
-                          stroke="#e2e8f0"
-                          strokeWidth="10"
-                        />
-                        {/* Dynamic Colored Progress Arc */}
-                        {/* Circumference = 2 * PI * 48 = 301.59 */}
-                        <circle
-                          cx="60"
-                          cy="60"
-                          r="48"
-                          fill="none"
-                          stroke={completionPercentage === 100 ? '#10b981' : '#0d9488'}
-                          strokeWidth="10"
-                          strokeLinecap="round"
-                          strokeDasharray="301.59"
-                          strokeDashoffset={301.59 - (301.59 * completionPercentage) / 100}
-                          transform="rotate(-90 60 60)"
-                          style={{ transition: 'stroke-dashoffset 0.8s ease' }}
-                        />
-                      </svg>
-                      <div className="profile-gauge-center-text">
-                        <span className="profile-gauge-number">{completionPercentage}%</span>
-                        <span className="profile-gauge-caption">Completed</span>
-                      </div>
-                    </div>
-
-                    <div className="profile-gauge-status-box">
-                      <div className="profile-gauge-status-title">
-                        {completionPercentage === 100 ? (
-                          <span className="text-emerald-600 font-bold flex items-center gap-1">
-                            <Sparkles size={14} /> Full Verification
-                          </span>
-                        ) : (
-                          <span className="text-slate-800 font-bold">Good Progress!</span>
-                        )}
-                      </div>
-                      <p className="profile-gauge-status-desc">
-                        {completionPercentage === 100
-                          ? 'Your resident file is up to date with committee records.'
-                          : `Just ${100 - completionPercentage}% remaining to achieve complete verification.`}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Checklist Milestones */}
-                  <div className="profile-checklist-v2">
-                    {completionMilestones.map((m) => (
-                      <div
-                        key={m.id}
-                        className={`profile-checklist-item-v2 ${m.completed ? 'done' : 'pending'}`}
-                        onClick={() => {
-                          if (!m.completed) {
-                            if (m.id === 'notifications') {
-                              setActiveTab('Notifications');
-                            } else {
+                            <div>
+                              <h3 className="profile-card-heading">Personal & Contact Record</h3>
+                              <p className="profile-card-subheading">Update your official strata roll contact details</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="profile-v2-btn-primary"
+                            onClick={() => {
                               setEditForm({ ...userProfile });
                               setEditModalOpen(true);
-                            }
-                          }
-                        }}
-                      >
-                        <div className="profile-checklist-status-icon">
-                          {m.completed ? (
-                            <CheckCircle2 size={18} color="#10b981" />
-                          ) : (
-                            <Circle size={18} color="#94a3b8" />
-                          )}
-                        </div>
-                        <div className="profile-checklist-item-text">
-                          <span className="profile-checklist-name">{m.label}</span>
-                          <span className="profile-checklist-weight">+{m.weight}%</span>
-                        </div>
-                        {!m.completed && (
-                          <button type="button" className="profile-checklist-add-btn">
-                            Add
+                            }}
+                          >
+                            <Pencil size={14} />
+                            <span>Edit Details</span>
                           </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                        </div>
 
-                  {/* Bottom Action */}
-                  {completionPercentage < 100 ? (
-                    <button
-                      type="button"
-                      className="profile-completion-cta-btn"
-                      onClick={() => {
-                        if (nextIncompleteMilestone?.id === 'notifications') {
-                          setActiveTab('Notifications');
-                        } else {
-                          setEditForm({ ...userProfile });
-                          setEditModalOpen(true);
-                        }
-                      }}
-                    >
-                      <span>Complete Remaining Steps</span>
-                      <ArrowRight size={15} />
-                    </button>
-                  ) : (
-                    <div className="profile-completion-all-done">
-                      <CheckCircle2 size={16} color="#10b981" />
-                      <span>Profile is 100% verified</span>
+                        <div className="profile-details-grid">
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Full Name</span>
+                            <span className="profile-detail-value font-semibold">{userProfile.fullName}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Role in Scheme</span>
+                            <span className="profile-detail-value">{userProfile.role}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Primary Email Address</span>
+                            <span className="profile-detail-value">{userProfile.email}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Secondary Email Address</span>
+                            <span className="profile-detail-value">{userProfile.secondaryEmail || 'None added'}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Primary Mobile Phone</span>
+                            <span className="profile-detail-value">{userProfile.phone}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Secondary Mobile Phone</span>
+                            <span className="profile-detail-value">{userProfile.secondaryPhone || 'None added'}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Date of Birth</span>
+                            <span className="profile-detail-value">{userProfile.dob}</span>
+                          </div>
+                          <div className="profile-detail-item full-width">
+                            <span className="profile-detail-label">Physical Address</span>
+                            <span className="profile-detail-value">{userProfile.address}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Emergency Contact */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon red">
+                              <AlertCircle size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Emergency Contact (Next of Kin)</h3>
+                              <p className="profile-card-subheading">Contacted only during building emergencies or urgent strata notices</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="profile-btn-ghost"
+                            onClick={() => {
+                              showToast('To update Next of Kin / Emergency contacts, please contact your Strata Manager.');
+                            }}
+                          >
+                            <Pencil size={13} />
+                            <span>Request Change</span>
+                          </button>
+                        </div>
+
+                        <div className="profile-details-grid">
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Contact Name</span>
+                            <span className="profile-detail-value font-semibold">{userProfile.emergencyContact.name}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Relationship</span>
+                            <span className="profile-detail-value">{userProfile.emergencyContact.relationship}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Emergency Phone</span>
+                            <span className="profile-detail-value">{userProfile.emergencyContact.phone}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Emergency Email</span>
+                            <span className="profile-detail-value">{userProfile.emergencyContact.email}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. PROPERTY & LOT TAB */}
+                  {activeTab === 'Property & Lot' && (
+                    <div className="profile-tab-section-fade">
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon green">
+                              <Building size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Strata Plan & Lot Specifications</h3>
+                              <p className="profile-card-subheading">Official registry data for SP 94820 - Green Valley Residence</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-details-grid">
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Strata Plan Scheme</span>
+                            <span className="profile-detail-value font-semibold">SP 94820 (Green Valley)</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Lot Allocation</span>
+                            <span className="profile-detail-value font-bold text-primary">{userProfile.lotNumber}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Unit Entitlement</span>
+                            <span className="profile-detail-value">{userProfile.unitEntitlement}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Occupancy Status</span>
+                            <span className="profile-detail-value">{userProfile.occupancyType}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Parking Allocation</span>
+                            <span className="profile-detail-value">{userProfile.parkingBay}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Storage Allocation</span>
+                            <span className="profile-detail-value">{userProfile.storageLot}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">Move-In / Settlement Date</span>
+                            <span className="profile-detail-value">{userProfile.joinedOn}</span>
+                          </div>
+                          <div className="profile-detail-item">
+                            <span className="profile-detail-label">By-Laws Acknowledgment</span>
+                            <span className="profile-verified-badge">
+                              <CheckCircle2 size={12} />
+                              <span>Signed & Compliant</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 4. SECURITY TAB */}
+                  {activeTab === 'Security' && (
+                    <div className="profile-tab-section-fade">
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon purple">
+                              <Shield size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Password & Authentication</h3>
+                              <p className="profile-card-subheading">Manage your credentials, 2-factor verification, and session control</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-security-row-list">
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box">
+                              <Lock size={18} />
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <span className="profile-security-tile-title">Account Password</span>
+                              <span className="profile-security-tile-desc">
+                                Last changed {userProfile.security.lastPasswordChange} • Strength: Strong
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="profile-btn-primary-sm"
+                              onClick={() => showToast('Password reset link dispatched!')}
+                            >
+                              Update Password
+                            </button>
+                          </div>
+
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box green">
+                              <Smartphone size={18} />
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <div className="profile-security-title-wrap">
+                                <span className="profile-security-tile-title">Two-Factor Authentication (2FA)</span>
+                                <span className={`profile-status-pill ${userProfile.security.twoFactorEnabled ? 'active' : 'inactive'}`}>
+                                  {userProfile.security.twoFactorEnabled ? 'Active' : 'Inactive'}
+                                </span>
+                              </div>
+                              <span className="profile-security-tile-desc">
+                                Requires 6-digit verification code when logging in from new browsers
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              className="profile-btn-toggle"
+                              onClick={handleToggle2FA}
+                            >
+                              {userProfile.security.twoFactorEnabled ? (
+                                <ToggleRight size={28} color="#0d9488" />
+                              ) : (
+                                <ToggleLeft size={28} color="#94a3b8" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Linked Single Sign-On (SSO) Accounts */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon blue" style={{ background: '#e0e7ff', color: '#4f46e5' }}>
+                              <Key size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Linked Single Sign-On (SSO) Accounts</h3>
+                              <p className="profile-card-subheading">Connect Google or Microsoft to sign into the portal without passwords</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Security Policy Alert Banner */}
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '12px',
+                          padding: '12px 16px',
+                          background: '#f8fafc',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '10px',
+                          marginBottom: '16px',
+                          fontSize: '13px',
+                          color: '#475569',
+                          lineHeight: 1.5,
+                        }}>
+                          <ShieldCheck size={18} color="#0d9488" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <div>
+                            <strong style={{ color: '#0f172a' }}>Restricted Access Policy:</strong> For community safety, third-party sign-in via Google and Microsoft is restricted to registered members only. You must link your email accounts below before you can use them on the login page.
+                          </div>
+                        </div>
+
+                        <div className="profile-security-row-list">
+                          {/* Google Account */}
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box" style={{ background: '#fef2f2', color: '#ea4335' }}>
+                              <svg width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05" />
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335" />
+                              </svg>
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <div className="profile-security-title-wrap" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span className="profile-security-tile-title">Google Account</span>
+                                {linkedAccounts.google ? (
+                                  <span className="profile-status-pill active" style={{ fontSize: '11px', padding: '2px 8px' }}>Linked</span>
+                                ) : (
+                                  <span className="profile-status-pill inactive" style={{ fontSize: '11px', padding: '2px 8px' }}>Not Linked</span>
+                                )}
+                              </div>
+                              <span className="profile-security-tile-desc">
+                                {linkedAccounts.google ? (
+                                  <span style={{ color: '#0f172a', fontWeight: '500' }}>{linkedAccounts.google}</span>
+                                ) : (
+                                  'Link your Gmail to log in with one click'
+                                )}
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button
+                                type="button"
+                                className="profile-btn-primary-sm"
+                                onClick={handleLinkGoogle}
+                                style={{ whiteSpace: 'nowrap' }}
+                              >
+                                {linkedAccounts.google ? 'Update' : 'Link Google'}
+                              </button>
+                              {linkedAccounts.google && (
+                                <button
+                                  type="button"
+                                  className="profile-btn-outline-xs text-red"
+                                  onClick={handleUnlinkGoogle}
+                                  title="Unlink Google account"
+                                >
+                                  Unlink
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Microsoft Account */}
+                          <div className="profile-security-tile">
+                            <div className="profile-security-tile-icon-box" style={{ background: '#f0f9ff', color: '#0284c7' }}>
+                              <svg width="20" height="20" viewBox="0 0 24 24">
+                                <rect x="1" y="1" width="10" height="10" fill="#f25022" />
+                                <rect x="13" y="1" width="10" height="10" fill="#7fba00" />
+                                <rect x="1" y="13" width="10" height="10" fill="#00a4ef" />
+                                <rect x="13" y="13" width="10" height="10" fill="#ffb900" />
+                              </svg>
+                            </div>
+                            <div className="profile-security-tile-body">
+                              <div className="profile-security-title-wrap" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span className="profile-security-tile-title">Microsoft Account</span>
+                                {linkedAccounts.microsoft ? (
+                                  <span className="profile-status-pill active" style={{ fontSize: '11px', padding: '2px 8px' }}>Linked</span>
+                                ) : (
+                                  <span className="profile-status-pill inactive" style={{ fontSize: '11px', padding: '2px 8px' }}>Not Linked</span>
+                                )}
+                              </div>
+                              <span className="profile-security-tile-desc">
+                                {linkedAccounts.microsoft ? (
+                                  <span style={{ color: '#0f172a', fontWeight: '500' }}>{linkedAccounts.microsoft}</span>
+                                ) : (
+                                  'Link your Outlook or Microsoft 365 work account'
+                                )}
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <button
+                                type="button"
+                                className="profile-btn-primary-sm"
+                                onClick={handleLinkMicrosoft}
+                                style={{ whiteSpace: 'nowrap' }}
+                              >
+                                {linkedAccounts.microsoft ? 'Update' : 'Link Microsoft'}
+                              </button>
+                              {linkedAccounts.microsoft && (
+                                <button
+                                  type="button"
+                                  className="profile-btn-outline-xs text-red"
+                                  onClick={handleUnlinkMicrosoft}
+                                  title="Unlink Microsoft account"
+                                >
+                                  Unlink
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Active Sessions */}
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon blue">
+                              <Laptop size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Active Browser Sessions</h3>
+                              <p className="profile-card-subheading">Devices currently authenticated to your strata account</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="profile-btn-outline-xs text-red"
+                            onClick={() => showToast('Logged out of all other devices')}
+                          >
+                            Revoke Other Sessions
+                          </button>
+                        </div>
+
+                        <div className="profile-sessions-list">
+                          <div className="profile-session-item">
+                            <div className="profile-session-device-icon">
+                              <Laptop size={18} />
+                            </div>
+                            <div className="profile-session-info">
+                              <div className="profile-session-name-row">
+                                <span className="profile-session-name">Windows PC • Chrome 124.0</span>
+                                <span className="profile-session-current-badge">Current Device</span>
+                              </div>
+                              <span className="profile-session-meta">Colombo, Sri Lanka • IP: 112.134.x.x • Active now</span>
+                            </div>
+                          </div>
+
+                          <div className="profile-session-item">
+                            <div className="profile-session-device-icon">
+                              <Smartphone size={18} />
+                            </div>
+                            <div className="profile-session-info">
+                              <div className="profile-session-name-row">
+                                <span className="profile-session-name">Apple iPhone 15 Pro • Safari Mobile</span>
+                              </div>
+                              <span className="profile-session-meta">Nugegoda, Sri Lanka • IP: 175.157.x.x • Last active 3 hours ago</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. NOTIFICATIONS TAB */}
+                  {activeTab === 'Notifications' && (
+                    <div className="profile-tab-section-fade">
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon amber">
+                              <Bell size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Communication & Notification Preferences</h3>
+                              <p className="profile-card-subheading">Choose how and when you receive strata updates and financial alerts</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-preference-list">
+                          {[
+                            {
+                              key: 'emailNotices',
+                              title: 'Official Strata Notices & Minutes',
+                              desc: 'Receive AGM announcements, committee meeting minutes, and by-law notices via email',
+                              enabled: userProfile.notifications.emailNotices,
+                            },
+                            {
+                              key: 'smsLevyAlerts',
+                              title: 'SMS Payment & Levy Reminders',
+                              desc: 'Receive instant SMS alerts 7 days prior to quarterly levy due dates',
+                              enabled: userProfile.notifications.smsLevyAlerts,
+                            },
+                            {
+                              key: 'pushMaintenance',
+                              title: 'Building Maintenance & Lift Notices',
+                              desc: 'Immediate notifications for water shutdowns, lift maintenance, and contractor visits',
+                              enabled: userProfile.notifications.pushMaintenance,
+                            },
+                            {
+                              key: 'communityEvents',
+                              title: 'Community News & Resident Events',
+                              desc: 'Social updates, neighbor notices, and community BBQ announcements',
+                              enabled: userProfile.notifications.communityEvents,
+                            },
+                          ].map((pref) => (
+                            <div key={pref.key} className="profile-preference-item">
+                              <div className="profile-preference-info">
+                                <span className="profile-preference-title">{pref.title}</span>
+                                <span className="profile-preference-desc">{pref.desc}</span>
+                              </div>
+                              <button
+                                type="button"
+                                className="profile-btn-toggle"
+                                onClick={() => handleToggleNotification(pref.key)}
+                              >
+                                {pref.enabled ? (
+                                  <ToggleRight size={28} color="#0d9488" />
+                                ) : (
+                                  <ToggleLeft size={28} color="#94a3b8" />
+                                )}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 6. ACTIVITY LOG TAB */}
+                  {activeTab === 'Activity Log' && (
+                    <div className="profile-tab-section-fade">
+                      <div className="profile-content-card">
+                        <div className="profile-card-header">
+                          <div className="profile-card-title-group">
+                            <div className="profile-card-header-icon blue">
+                              <Clock size={18} />
+                            </div>
+                            <div>
+                              <h3 className="profile-card-heading">Account Activity History</h3>
+                              <p className="profile-card-subheading">Chronological record of logins, profile modifications, and committee actions</p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="profile-btn-ghost"
+                            onClick={() => showToast('Activity log refreshed')}
+                          >
+                            <RefreshCw size={13} />
+                            <span>Refresh</span>
+                          </button>
+                        </div>
+
+                        <div className="profile-activity-timeline">
+                          {[
+                            {
+                              title: 'Logged in from Windows Desktop (Chrome)',
+                              time: 'Today at 10:32 AM',
+                              tag: 'Security',
+                              tagColor: 'blue',
+                              icon: RefreshCw,
+                            },
+                            {
+                              title: 'Approved Contractor Invoice #INV-2026-088 ($1,450.00)',
+                              time: 'Yesterday at 04:15 PM',
+                              tag: 'Committee',
+                              tagColor: 'green',
+                              icon: CheckCircle2,
+                            },
+                            {
+                              title: 'Updated Profile Contact & Emergency Information',
+                              time: '18 May 2026, 02:45 PM',
+                              tag: 'Profile',
+                              tagColor: 'purple',
+                              icon: User,
+                            },
+                            {
+                              title: 'Downloaded Quarterly Financial Statement Q1-2026.pdf',
+                              time: '15 May 2026, 11:20 AM',
+                              tag: 'Documents',
+                              tagColor: 'amber',
+                              icon: Box,
+                            },
+                            {
+                              title: 'Changed Account Password',
+                              time: '10 May 2026, 11:15 AM',
+                              tag: 'Security',
+                              tagColor: 'red',
+                              icon: Lock,
+                            },
+                            {
+                              title: 'Two-Factor Authentication Setup Verified',
+                              time: '12 Jan 2026, 09:20 AM',
+                              tag: 'Security',
+                              tagColor: 'green',
+                              icon: Shield,
+                            },
+                          ].map((act, idx) => {
+                            const ActIcon = act.icon;
+                            return (
+                              <div key={idx} className="profile-timeline-row">
+                                <div className={`profile-timeline-icon ${act.tagColor}`}>
+                                  <ActIcon size={14} />
+                                </div>
+                                <div className="profile-timeline-content">
+                                  <div className="profile-timeline-top">
+                                    <span className="profile-timeline-title">{act.title}</span>
+                                    <span className={`profile-timeline-badge ${act.tagColor}`}>{act.tag}</span>
+                                  </div>
+                                  <span className="profile-timeline-time">{act.time}</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
 
-                {/* 2. ASSIGNED STRATA MANAGER CARD */}
-                <div className="profile-companion-card">
-                  <div className="profile-companion-header">
-                    <div className="profile-card-header-icon green">
-                      <UserCheck size={16} />
+                {/* RIGHT COLUMN: Profile Completion & Helper Cards */}
+                <div className="profile-v2-right-col">
+                  {/* 1. PROMINENT PROFILE COMPLETION WIDGET */}
+                  <div className="profile-completion-card-v2">
+                    <div className="profile-completion-header">
+                      <div className="profile-completion-title-wrap">
+                        <h3 className="profile-completion-title">Profile Completion</h3>
+                        <p className="profile-completion-sub">
+                          {completionPercentage === 100
+                            ? 'All milestones reached! Your profile is complete.'
+                            : 'Complete your profile to unlock full strata verification.'}
+                        </p>
+                      </div>
+
+                      <div className="profile-completion-badge-tag">
+                        {completionPercentage === 100 ? '100% Complete' : `${completionPercentage}%`}
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="profile-companion-title">Assigned Strata Manager</h4>
-                      <span className="profile-companion-sub">Primary building representative</span>
+
+                    {/* Circular Gauge Progress */}
+                    <div className="profile-gauge-container">
+                      <div className="profile-gauge-svg-wrap">
+                        <svg viewBox="0 0 120 120" width="100" height="100">
+                          {/* Background Track */}
+                          <circle
+                            cx="60"
+                            cy="60"
+                            r="48"
+                            fill="none"
+                            stroke="#e2e8f0"
+                            strokeWidth="10"
+                          />
+                          {/* Dynamic Colored Progress Arc */}
+                          {/* Circumference = 2 * PI * 48 = 301.59 */}
+                          <circle
+                            cx="60"
+                            cy="60"
+                            r="48"
+                            fill="none"
+                            stroke={completionPercentage === 100 ? '#10b981' : '#0d9488'}
+                            strokeWidth="10"
+                            strokeLinecap="round"
+                            strokeDasharray="301.59"
+                            strokeDashoffset={301.59 - (301.59 * completionPercentage) / 100}
+                            transform="rotate(-90 60 60)"
+                            style={{ transition: 'stroke-dashoffset 0.8s ease' }}
+                          />
+                        </svg>
+                        <div className="profile-gauge-center-text">
+                          <span className="profile-gauge-number">{completionPercentage}%</span>
+                          <span className="profile-gauge-caption">Completed</span>
+                        </div>
+                      </div>
+
+                      <div className="profile-gauge-status-box">
+                        <div className="profile-gauge-status-title">
+                          {completionPercentage === 100 ? (
+                            <span className="text-emerald-600 font-bold flex items-center gap-1">
+                              <Sparkles size={14} /> Full Verification
+                            </span>
+                          ) : (
+                            <span className="text-slate-800 font-bold">Good Progress!</span>
+                          )}
+                        </div>
+                        <p className="profile-gauge-status-desc">
+                          {completionPercentage === 100
+                            ? 'Your resident file is up to date with committee records.'
+                            : `Just ${100 - completionPercentage}% remaining to achieve complete verification.`}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Checklist Milestones */}
+                    <div className="profile-checklist-v2">
+                      {completionMilestones.map((m) => (
+                        <div
+                          key={m.id}
+                          className={`profile-checklist-item-v2 ${m.completed ? 'done' : 'pending'}`}
+                          onClick={() => {
+                            if (!m.completed) {
+                              if (m.id === 'notifications') {
+                                setActiveTab('Notifications');
+                              } else {
+                                setEditForm({ ...userProfile });
+                                setEditModalOpen(true);
+                              }
+                            }
+                          }}
+                        >
+                          <div className="profile-checklist-status-icon">
+                            {m.completed ? (
+                              <CheckCircle2 size={18} color="#10b981" />
+                            ) : (
+                              <Circle size={18} color="#94a3b8" />
+                            )}
+                          </div>
+                          <div className="profile-checklist-item-text">
+                            <span className="profile-checklist-name">{m.label}</span>
+                            <span className="profile-checklist-weight">+{m.weight}%</span>
+                          </div>
+                          {!m.completed && (
+                            <button type="button" className="profile-checklist-add-btn">
+                              Add
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Bottom Action */}
+                    {completionPercentage < 100 ? (
+                      <button
+                        type="button"
+                        className="profile-completion-cta-btn"
+                        onClick={() => {
+                          if (nextIncompleteMilestone?.id === 'notifications') {
+                            setActiveTab('Notifications');
+                          } else {
+                            setEditForm({ ...userProfile });
+                            setEditModalOpen(true);
+                          }
+                        }}
+                      >
+                        <span>Complete Remaining Steps</span>
+                        <ArrowRight size={15} />
+                      </button>
+                    ) : (
+                      <div className="profile-completion-all-done">
+                        <CheckCircle2 size={16} color="#10b981" />
+                        <span>Profile is 100% verified</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2. ASSIGNED STRATA MANAGER CARD */}
+                  <div className="profile-companion-card">
+                    <div className="profile-companion-header">
+                      <div className="profile-card-header-icon green">
+                        <UserCheck size={16} />
+                      </div>
+                      <div>
+                        <h4 className="profile-companion-title">Assigned Strata Manager</h4>
+                        <span className="profile-companion-sub">Primary building representative</span>
+                      </div>
+                    </div>
+
+                    <div className="profile-manager-details">
+                      <div className="profile-manager-name-row">
+                        <span className="profile-manager-name">{userProfile.manager.name}</span>
+                        <span className="profile-manager-badge">{userProfile.manager.title}</span>
+                      </div>
+                      <span className="profile-manager-agency">{userProfile.manager.agency}</span>
+
+                      <div className="profile-manager-contact-links">
+                        <a
+                          href={`tel:${userProfile.manager.phone}`}
+                          className="profile-manager-link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            showToast(`Calling ${userProfile.manager.phone}...`);
+                          }}
+                        >
+                          <Phone size={14} />
+                          <span>{userProfile.manager.phone}</span>
+                        </a>
+                        <a
+                          href={`mailto:${userProfile.manager.email}`}
+                          className="profile-manager-link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            showToast(`Drafting email to ${userProfile.manager.email}...`);
+                          }}
+                        >
+                          <Mail size={14} />
+                          <span>{userProfile.manager.email}</span>
+                        </a>
+                        <div className="profile-manager-hours">
+                          <Clock size={13} />
+                          <span>{userProfile.manager.hours}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="profile-manager-details">
-                    <div className="profile-manager-name-row">
-                      <span className="profile-manager-name">{userProfile.manager.name}</span>
-                      <span className="profile-manager-badge">{userProfile.manager.title}</span>
-                    </div>
-                    <span className="profile-manager-agency">{userProfile.manager.agency}</span>
-
-                    <div className="profile-manager-contact-links">
-                      <a
-                        href={`tel:${userProfile.manager.phone}`}
-                        className="profile-manager-link"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showToast(`Calling ${userProfile.manager.phone}...`);
-                        }}
-                      >
-                        <Phone size={14} />
-                        <span>{userProfile.manager.phone}</span>
-                      </a>
-                      <a
-                        href={`mailto:${userProfile.manager.email}`}
-                        className="profile-manager-link"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showToast(`Drafting email to ${userProfile.manager.email}...`);
-                        }}
-                      >
-                        <Mail size={14} />
-                        <span>{userProfile.manager.email}</span>
-                      </a>
-                      <div className="profile-manager-hours">
-                        <Clock size={13} />
-                        <span>{userProfile.manager.hours}</span>
+                  {/* 3. QUICK PROPERTY ID BADGE CARD */}
+                  <div className="profile-companion-card strata-id-card">
+                    <div className="profile-id-chip">
+                      <div className="profile-id-chip-top">
+                        <Building size={16} />
+                        <span>Green Valley Residence</span>
+                      </div>
+                      <div className="profile-id-number">{userProfile.lotNumber}</div>
+                      <div className="profile-id-footer">
+                        <span>{userProfile.fullName}</span>
+                        <span>{userProfile.occupancyType}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* 3. QUICK PROPERTY ID BADGE CARD */}
-                <div className="profile-companion-card strata-id-card">
-                  <div className="profile-id-chip">
-                    <div className="profile-id-chip-top">
-                      <Building size={16} />
-                      <span>Green Valley Residence</span>
-                    </div>
-                    <div className="profile-id-number">{userProfile.lotNumber}</div>
-                    <div className="profile-id-footer">
-                      <span>{userProfile.fullName}</span>
-                      <span>{userProfile.occupancyType}</span>
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
             </div>
 
             {/* MOBILE EXPERIENCE (<= 900px) */}
@@ -1535,6 +1848,11 @@ const MyProfilePage = () => {
               showToast={showToast}
               handleCopy={handleCopy}
               copiedField={copiedField}
+              linkedAccounts={linkedAccounts}
+              onLinkGoogle={handleLinkGoogle}
+              onUnlinkGoogle={handleUnlinkGoogle}
+              onLinkMicrosoft={handleLinkMicrosoft}
+              onUnlinkMicrosoft={handleUnlinkMicrosoft}
             />
           </main>
         </div>
